@@ -8,3 +8,16 @@ CREATE TABLE `SystemSettings` (
 
 INSERT INTO SystemSettings(Errors_Active) VALUES (1);
 
+-- Excel List definition 
+
+CREATE TABLE `excellist` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `excel_name` VARCHAR(255) NOT NULL,
+    `table_name` VARCHAR(255) NOT NULL,
+    `header_row` INT NOT NULL DEFAULT 1,
+    `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_excel_name` (`excel_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Inventory', 'inventory', 3, 1);
