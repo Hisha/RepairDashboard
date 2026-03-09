@@ -5,7 +5,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Repair Dashboard</title>
-<link rel="stylesheet" href="styles.css">
 </head>
 <header>
         <?php include(APP_ROOT . '/menu.php'); ?>
