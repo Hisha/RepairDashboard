@@ -1,15 +1,18 @@
-<?php
-?>
 <style>
-table {
-  border-spacing: 40px;
+.menu-bar {
   background-color: #808080;
-  width: 100%;
+  padding: 10px;
+}
+
+.menu-bar a {
+  margin-right: 30px;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
 }
 </style>
-<table>
-	<tr>
-		<a href="index.php">Home</a>
-		<a href="upload_excel.php">Upload Link</a>
-	</tr>
-</table>
+
+<div class="menu-bar">
+<a href="index.php">Home</a>
+<a href="upload_excel.php">Upload Link</a>
+</div>
