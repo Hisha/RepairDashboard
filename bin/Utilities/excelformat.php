@@ -61,6 +61,7 @@ class excelformat
                         `description` VARCHAR(255) NULL,
                         `niin` VARCHAR(12) NULL,
                         `materialcode` VARCHAR(2) NOT NULL,
+                        `onhandqty` INT(11) NOT NULL,
                         `subgrouptype` VARCHAR(50) NOT NULL,
                         `purposecode` VARCHAR(2) NOT NULL,
                         `storagebin` VARCHAR(50) NOT NULL,
