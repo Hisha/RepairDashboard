@@ -35,7 +35,6 @@ class excelformat
                 
                 'required_columns' => [
                     'primarypartno',
-                    'description',
                     'materialcode',
                     'onhandqty',
                     'subgrouptype',
@@ -59,7 +58,7 @@ class excelformat
                     CREATE TABLE `inventory` (
                         `id` INT NOT NULL AUTO_INCREMENT,
                         `primarypartno` VARCHAR(100) NOT NULL,
-                        `description` VARCHAR(255) NOT NULL,
+                        `description` VARCHAR(255) NULL,
                         `niin` VARCHAR(12) NULL,
                         `materialcode` VARCHAR(2) NOT NULL,
                         `subgrouptype` VARCHAR(50) NOT NULL,
