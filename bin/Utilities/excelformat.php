@@ -318,8 +318,7 @@ class excelformat
                     'createdate',
                     'wono',
                     'parentpart',
-                    'partinstalled',
-                    'qtyinstalled'
+                    'partinstalled'
                 ],
                 
                 'column_types' => [
