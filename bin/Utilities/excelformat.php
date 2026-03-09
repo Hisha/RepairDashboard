@@ -121,7 +121,6 @@ class excelformat
                     'priority',
                     'niin',
                     'part_number',
-                    'nomen',
                     'qty',
                     'status'
                 ],
@@ -156,7 +155,7 @@ class excelformat
                         `priority` VARCHAR(50) NOT NULL,
                         `niin` VARCHAR(12) NOT NULL,
                         `part_number` VARCHAR(100) NOT NULL,
-                        `nomen` VARCHAR(150) NOT NULL,
+                        `nomen` VARCHAR(150) NULL,
                         `qty` INT(11) NOT NULL,
                         `item_cost` DECIMAL(12,2) NULL,
                         `status` VARCHAR(100) NOT NULL,
