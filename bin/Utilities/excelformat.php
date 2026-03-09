@@ -125,7 +125,6 @@ class excelformat
                     'nomen',
                     'qty',
                     'status',
-                    'rt',
                     'goal',
                     'on_time'
                 ],
@@ -165,7 +164,7 @@ class excelformat
                         `item_cost` DECIMAL(12,2) NULL,
                         `status` VARCHAR(100) NOT NULL,
                         `notes` VARCHAR(255) NULL,
-                        `rt` INT(11) NOT NULL,
+                        `rt` INT(11) NULL,
                         `goal` INT(11) NOT NULL,
                         `on_time` INT(11) NOT NULL,
                         PRIMARY KEY (`id`)
