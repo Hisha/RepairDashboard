@@ -15,7 +15,7 @@ class CavRequisitions
                 DATE_FORMAT(date_recv, '%M %Y') AS month_label
             FROM {$this->_tableName}
             WHERE date_recv IS NOT NULL
-            ORDER BY month_value
+            ORDER BY month_value DESC
         ";
         
         return $db->query($sql)->fetchAll();
