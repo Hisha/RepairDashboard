@@ -63,9 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 0;
         }
 
+        .page-wrap {
+            padding: 20px;
+        }
+        
         .form-block {
             max-width: 500px;
-            margin-top: 20px;
         }
 
         .form-row {
