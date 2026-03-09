@@ -7,6 +7,7 @@ require_once APP_ROOT . '/bin/Utilities/excelformat.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 class excelupload
 {
@@ -84,10 +85,10 @@ class excelupload
 
             $columnCount = count($dbColumns);
 
-            // Validate header row
             $actualHeaders = [];
             for ($col = 1; $col <= $columnCount; $col++) {
-                $actualHeaders[] = trim((string)$sheet->getCellByColumnAndRow($col, $headerRow)->getValue());
+                $cellRef = Coordinate::stringFromColumnIndex($col) . $headerRow;
+                $actualHeaders[] = trim((string)$sheet->getCell($cellRef)->getValue());
             }
 
             if ($actualHeaders !== $expectedHeaders) {
@@ -97,21 +98,28 @@ class excelupload
                 );
             }
 
-            // Build normalized rows without using toArray()
             $preparedRows = [];
             $highestRow = $sheet->getHighestDataRow();
+            $emptyRowStreak = 0;
+            $maxEmptyRowStreak = 200;
 
             for ($rowNum = $headerRow + 1; $rowNum <= $highestRow; $rowNum++) {
                 $rawRow = [];
 
                 for ($col = 1; $col <= $columnCount; $col++) {
-                    $rawRow[] = $sheet->getCellByColumnAndRow($col, $rowNum)->getValue();
+                    $cellRef = Coordinate::stringFromColumnIndex($col) . $rowNum;
+                    $rawRow[] = $sheet->getCell($cellRef)->getValue();
                 }
 
                 if (self::isEmptyRow($rawRow)) {
+                    $emptyRowStreak++;
+                    if ($emptyRowStreak >= $maxEmptyRowStreak) {
+                        break;
+                    }
                     continue;
                 }
 
+                $emptyRowStreak = 0;
                 $normalizedRow = [];
 
                 foreach ($dbColumns as $i => $columnName) {
@@ -156,7 +164,6 @@ class excelupload
             }
 
             $db->beginTransaction();
-
             $db->query("TRUNCATE TABLE `{$tableName}`");
 
             $insertSql = self::buildInsertSql($tableName, $dbColumns);
@@ -281,5 +288,4 @@ class excelupload
         }
     }
 }
-
 ?>
