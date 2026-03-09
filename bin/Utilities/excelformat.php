@@ -10,7 +10,7 @@ class excelformat
                 'table_name' => 'inventory',
                 
                 'headers' => [
-                    'PRIMARYARTNO',
+                    'PRIMARYPARTNO',
                     'DESCRIPTION',
                     'NIIN',
                     'MATERIALCODE',
