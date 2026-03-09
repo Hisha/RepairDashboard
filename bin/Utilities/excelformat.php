@@ -288,6 +288,63 @@ class excelformat
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
+            ],
+            
+            'Installed' => [
+                'table_name' => 'installed',
+                'sheet_name' => 'Report',
+                
+                'headers' => [
+                    'CREATEDATE',
+                    'WONO',
+                    'PARENTPART',
+                    'PARTINSTALLED',
+                    'PARTNOMEN',
+                    'QTYINSTALLED',
+                    'PARTCOST'
+                ],
+                
+                'db_columns' => [
+                    'createdate',
+                    'wono',
+                    'parentpart',
+                    'partinstalled',
+                    'partnomen',
+                    'qtyinstalled',
+                    'partcost'
+                ],
+                
+                'required_columns' => [
+                    'createdate',
+                    'wono',
+                    'parentpart',
+                    'partinstalled',
+                    'qtyinstalled'
+                ],
+                
+                'column_types' => [
+                    'createdate'   => 'date',
+                    'wono' => 'string',
+                    'parentpart'   => 'string',
+                    'partinstalled'       => 'string',
+                    'partnomen'    => 'string',
+                    'qtyinstalled'   => 'int',
+                    'partcost'       => 'decimal'
+                ],
+                
+                'create_sql' => "
+                    CREATE TABLE `installed` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `createdate` DATE NOT NULL,
+                        `wono` VARCHAR(255) NOT NULL,
+                        `parentpart` VARCHAR(100) NOT NULL,
+                        `partinstalled` VARCHAR(100) NOT NULL,
+                        `partnomen` VARCHAR(255) NULL,
+                        `qtyinstalled` INT(11) NULL,
+                        `partcost` DECIMAL(12,2) NULL,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                "
             ]
             
         ];

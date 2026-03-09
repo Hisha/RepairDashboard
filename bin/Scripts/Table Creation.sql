@@ -24,6 +24,7 @@ INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) 
 INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Inventory', 'inventory', 3, 1);
 INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Batteries', 'batteries', 3, 1);
 INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('DRMO', 'drmo', 4, 1);
+INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Installed', 'installed', 3, 1);
 
 -- Program Mapping
 
