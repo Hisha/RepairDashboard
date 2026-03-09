@@ -14,13 +14,21 @@ class excelupload
     {
         $db = null;
 
+        // Extra headroom for larger spreadsheets
+        ini_set('memory_limit', '1536M');
+        set_time_limit(300);
+
         try {
             if (!isset($file['name'], $file['tmp_name'])) {
                 throw new Exception('No file received.');
             }
 
             if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-                throw new Exception('File upload failed.');
+                $errorCode = $file['error'] ?? UPLOAD_ERR_NO_FILE;
+                throw new Exception(
+                    'File upload failed. PHP upload error code: ' .
+                    $errorCode . ' - ' . self::getUploadErrorMessage($errorCode)
+                );
             }
 
             $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
@@ -52,9 +60,17 @@ class excelupload
                 throw new Exception("Configuration error: headers and db_columns count do not match for '{$excelKey}'.");
             }
 
-            $spreadsheet = IOFactory::load($file['tmp_name']);
+            // Read spreadsheet in data-only mode to reduce memory usage
+            $reader = IOFactory::createReaderForFile($file['tmp_name']);
+            $reader->setReadDataOnly(true);
+
+            $spreadsheet = $reader->load($file['tmp_name']);
             $sheet = $spreadsheet->getActiveSheet();
             $rows = $sheet->toArray(null, true, true, false);
+
+            // Free workbook memory as soon as we have the array
+            $spreadsheet->disconnectWorksheets();
+            unset($spreadsheet, $sheet, $reader);
 
             if (empty($rows)) {
                 throw new Exception('Spreadsheet is empty.');
@@ -78,7 +94,7 @@ class excelupload
                 );
             }
 
-            // Validate all rows before changing table contents
+            // Validate and normalize all rows before modifying database data
             $preparedRows = [];
             $dataRows = array_slice($rows, 1);
 
@@ -169,7 +185,7 @@ class excelupload
             return null;
         }
 
-        // Handle real Excel date serial values before string trimming
+        // Handle true Excel numeric date serials
         if ($type === 'date' && is_numeric($value)) {
             try {
                 return ExcelDate::excelToDateTimeObject($value)->format('Y-m-d');
@@ -221,5 +237,30 @@ class excelupload
         }
         return $refs;
     }
+
+    private static function getUploadErrorMessage(int $errorCode): string
+    {
+        switch ($errorCode) {
+            case UPLOAD_ERR_OK:
+                return 'There is no error.';
+            case UPLOAD_ERR_INI_SIZE:
+                return 'The uploaded file exceeds the upload_max_filesize limit in php.ini.';
+            case UPLOAD_ERR_FORM_SIZE:
+                return 'The uploaded file exceeds the MAX_FILE_SIZE limit in the HTML form.';
+            case UPLOAD_ERR_PARTIAL:
+                return 'The uploaded file was only partially uploaded.';
+            case UPLOAD_ERR_NO_FILE:
+                return 'No file was uploaded.';
+            case UPLOAD_ERR_NO_TMP_DIR:
+                return 'Missing a temporary folder.';
+            case UPLOAD_ERR_CANT_WRITE:
+                return 'Failed to write file to disk.';
+            case UPLOAD_ERR_EXTENSION:
+                return 'A PHP extension stopped the file upload.';
+            default:
+                return 'Unknown upload error.';
+        }
+    }
 }
+
 ?>
