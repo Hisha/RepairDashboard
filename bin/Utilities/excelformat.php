@@ -260,7 +260,6 @@ class excelformat
                     'date',
                     'document_number',
                     'part',
-                    'qty',
                     'program'
                 ],
                 
@@ -283,7 +282,7 @@ class excelformat
                         `niin` VARCHAR(12) NULL,
                         `part` VARCHAR(100) NOT NULL,
                         `nomenclature` VARCHAR(255) NULL,
-                        `qty` INT(11) NOT NULL,
+                        `qty` INT(11) NULL,
                         `unit_price` DECIMAL(12,2) NULL,
                         `program` VARCHAR(50) NOT NULL,
                         PRIMARY KEY (`id`)
