@@ -8,6 +8,7 @@ require_once APP_ROOT . '/bin/Utilities/excelformat.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
 
 class excelupload
 {
@@ -85,10 +86,12 @@ class excelupload
 
             $columnCount = count($dbColumns);
 
+            // Validate headers
             $actualHeaders = [];
             for ($col = 1; $col <= $columnCount; $col++) {
                 $cellRef = Coordinate::stringFromColumnIndex($col) . $headerRow;
-                $actualHeaders[] = trim((string)$sheet->getCell($cellRef)->getValue());
+                $cell = $sheet->getCell($cellRef);
+                $actualHeaders[] = trim((string) self::getCellDisplayValue($cell));
             }
 
             if ($actualHeaders !== $expectedHeaders) {
@@ -108,7 +111,8 @@ class excelupload
 
                 for ($col = 1; $col <= $columnCount; $col++) {
                     $cellRef = Coordinate::stringFromColumnIndex($col) . $rowNum;
-                    $rawRow[] = $sheet->getCell($cellRef)->getValue();
+                    $cell = $sheet->getCell($cellRef);
+                    $rawRow[] = self::getCellDisplayValue($cell);
                 }
 
                 if (self::isEmptyRow($rawRow)) {
@@ -206,6 +210,37 @@ class excelupload
         return "INSERT INTO `{$tableName}` ({$columnList}) VALUES ({$placeholders})";
     }
 
+    private static function getCellDisplayValue(Cell $cell)
+    {
+        $value = $cell->getValue();
+
+        if ($value === null) {
+            return null;
+        }
+
+        // Formula cell: prefer cached calculated value first, then calculate if needed
+        if (is_string($value) && strlen($value) > 0 && $value[0] === '=') {
+            $cached = $cell->getOldCalculatedValue();
+            if ($cached !== null) {
+                return $cached;
+            }
+
+            try {
+                $calculated = $cell->getCalculatedValue();
+
+                if (is_object($calculated) && method_exists($calculated, '__toString')) {
+                    return (string)$calculated;
+                }
+
+                return $calculated;
+            } catch (Exception $e) {
+                return null;
+            }
+        }
+
+        return $value;
+    }
+
     private static function normalizeValue($value, string $type)
     {
         if ($value === null) {
@@ -288,4 +323,5 @@ class excelupload
         }
     }
 }
+
 ?>
