@@ -21,7 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['excel_file'])) {
         .error { color:red; }
     </style>
 </head>
-
+<header>
+        <?php include(APP_ROOT . '/menu.php'); ?>
+</header>
 <body>
 
 <h2>Upload Excel Spreadsheet</h2>
