@@ -78,7 +78,7 @@ class excelformat
                 
                 'headers' => [
                     'Program',
-                    'DATE RECV',
+                    'DATE RECVD',
                     'DATE SHIPPED',
                     'COMMAND',
                     'REQ #',
