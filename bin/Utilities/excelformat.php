@@ -11,7 +11,7 @@ class excelformat
                 
                 'headers' => [
                     'PRIMARYARTNO',
-                    'DESXCRIPTION',
+                    'DESCRIPTION',
                     'NIIN',
                     'MATERIALCODE',
                     'ONHANDQTY',
