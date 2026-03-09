@@ -8,6 +8,7 @@ class excelformat
             
             'Inventory' => [
                 'table_name' => 'inventory',
+                'sheet_name' => 'Report',
                 
                 'headers' => [
                     'PRIMARYPARTNO',
@@ -73,6 +74,7 @@ class excelformat
             
             'CAV REQUISITIONS' => [
                 'table_name' => 'cav_requisitions',
+                'sheet_name' => 'DATA Sheet',
                 
                 'headers' => [
                     'Program',

@@ -13,8 +13,10 @@ class excelupload
     public static function processUpload(array $file): array
     {
         $db = null;
+        $spreadsheet = null;
+        $sheet = null;
+        $reader = null;
 
-        // Extra headroom for larger spreadsheets
         ini_set('memory_limit', '1536M');
         set_time_limit(300);
 
@@ -49,6 +51,7 @@ class excelupload
             }
 
             $tableName       = $config['table_name'];
+            $sheetName       = $config['sheet_name'] ?? null;
             $expectedHeaders = $config['headers'];
             $dbColumns       = $config['db_columns'];
             $requiredColumns = $config['required_columns'] ?? [];
@@ -60,80 +63,58 @@ class excelupload
                 throw new Exception("Configuration error: headers and db_columns count do not match for '{$excelKey}'.");
             }
 
-            // Read spreadsheet in data-only mode to reduce memory usage
             $reader = IOFactory::createReaderForFile($file['tmp_name']);
             $reader->setReadDataOnly(true);
 
             $spreadsheet = $reader->load($file['tmp_name']);
-            $sheet = $spreadsheet->getActiveSheet();
+            $availableSheets = $spreadsheet->getSheetNames();
 
-            $activeSheetTitle = $sheet->getTitle();
-            $sheetNames = $spreadsheet->getSheetNames();
+            if ($sheetName !== null && trim($sheetName) !== '') {
+                $sheet = $spreadsheet->getSheetByName($sheetName);
+
+                if ($sheet === null) {
+                    throw new Exception(
+                        "Configured sheet '{$sheetName}' was not found in workbook. Available sheets: [" .
+                        implode(', ', $availableSheets) . ']'
+                    );
+                }
+            } else {
+                $sheet = $spreadsheet->getActiveSheet();
+            }
+
             $highestColumn = $sheet->getHighestDataColumn();
-            $highestRow = $sheet->getHighestDataRow();
 
-            // Read just the configured header row directly
             $headerRange = 'A' . $headerRow . ':' . $highestColumn . $headerRow;
             $headerCells = $sheet->rangeToArray($headerRange, null, true, true, false);
             $actualHeaders = array_map(function ($value) {
                 return trim((string)$value);
             }, $headerCells[0] ?? []);
 
-            // Read full sheet into array for normal processing
+            if ($actualHeaders !== $expectedHeaders) {
+                throw new Exception(
+                    'Header mismatch. Expected: [' . implode(', ', $expectedHeaders) .
+                    '] Found: [' . implode(', ', $actualHeaders) . ']'
+                );
+            }
+
             $rows = $sheet->toArray(null, true, true, false);
 
-            // Keep spreadsheet objects alive until after debug checks
+            $spreadsheet->disconnectWorksheets();
+            unset($spreadsheet, $sheet, $reader);
+            $spreadsheet = null;
+            $sheet = null;
+            $reader = null;
+
             if (empty($rows)) {
-                $spreadsheet->disconnectWorksheets();
-                unset($spreadsheet, $sheet, $reader);
                 throw new Exception('Spreadsheet is empty.');
             }
 
-            // Make configured header row become row 0
             $rows = array_slice($rows, $headerRow - 1);
 
             if (empty($rows) || count($rows) < 2) {
-                $spreadsheet->disconnectWorksheets();
-                unset($spreadsheet, $sheet, $reader);
                 throw new Exception('Spreadsheet is empty or contains no usable data after applying header_row.');
             }
 
-            // TEMP DEBUG: if header mismatch, dump useful workbook/sheet/row info
-            if ($actualHeaders !== $expectedHeaders) {
-                $debugRows = [];
-                $maxDebugRows = min(5, count($rows));
-
-                for ($i = 0; $i < $maxDebugRows; $i++) {
-                    $rowValues = array_map(function ($v) {
-                        return trim((string)$v);
-                    }, $rows[$i]);
-
-                    $debugRows[] = 'Sheet row ' . ($headerRow + $i) . ': [' . implode(' | ', $rowValues) . ']';
-                }
-
-                $message =
-                    'Header mismatch. ' .
-                    'header_row=' . $headerRow .
-                    ' | active_sheet=' . $activeSheetTitle .
-                    ' | sheets=[' . implode(', ', $sheetNames) . ']' .
-                    ' | highest_column=' . $highestColumn .
-                    ' | highest_row=' . $highestRow .
-                    ' | header_range=' . $headerRange .
-                    ' | Expected: [' . implode(', ', $expectedHeaders) . ']' .
-                    ' | Found: [' . implode(', ', $actualHeaders) . ']' .
-                    ' | Debug Rows: ' . implode(' || ', $debugRows);
-
-                $spreadsheet->disconnectWorksheets();
-                unset($spreadsheet, $sheet, $reader);
-
-                throw new Exception($message);
-            }
-
-            // Now free workbook memory
-            $spreadsheet->disconnectWorksheets();
-            unset($spreadsheet, $sheet, $reader);
-
-            // Validate and normalize all rows before modifying database data
             $preparedRows = [];
             $dataRows = array_slice($rows, 1);
 
@@ -203,6 +184,12 @@ class excelupload
                 $db->rollback();
             }
 
+            if ($spreadsheet !== null) {
+                $spreadsheet->disconnectWorksheets();
+            }
+
+            unset($spreadsheet, $sheet, $reader);
+
             return [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -224,7 +211,6 @@ class excelupload
             return null;
         }
 
-        // Handle true Excel numeric date serials
         if ($type === 'date' && is_numeric($value)) {
             try {
                 return ExcelDate::excelToDateTimeObject($value)->format('Y-m-d');
