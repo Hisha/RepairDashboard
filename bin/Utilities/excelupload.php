@@ -18,7 +18,7 @@ class excelupload
         $reader = null;
 
         ini_set('memory_limit', '1536M');
-        set_time_limit(300);
+        set_time_limit(600);
 
         try {
             if (!isset($file['name'], $file['tmp_name'])) {
@@ -82,13 +82,13 @@ class excelupload
                 $sheet = $spreadsheet->getActiveSheet();
             }
 
-            $highestColumn = $sheet->getHighestDataColumn();
+            $columnCount = count($dbColumns);
 
-            $headerRange = 'A' . $headerRow . ':' . $highestColumn . $headerRow;
-            $headerCells = $sheet->rangeToArray($headerRange, null, true, true, false);
-            $actualHeaders = array_map(function ($value) {
-                return trim((string)$value);
-            }, $headerCells[0] ?? []);
+            // Validate header row
+            $actualHeaders = [];
+            for ($col = 1; $col <= $columnCount; $col++) {
+                $actualHeaders[] = trim((string)$sheet->getCellByColumnAndRow($col, $headerRow)->getValue());
+            }
 
             if ($actualHeaders !== $expectedHeaders) {
                 throw new Exception(
@@ -97,43 +97,31 @@ class excelupload
                 );
             }
 
-            $rows = $sheet->toArray(null, true, true, false);
-
-            $spreadsheet->disconnectWorksheets();
-            unset($spreadsheet, $sheet, $reader);
-            $spreadsheet = null;
-            $sheet = null;
-            $reader = null;
-
-            if (empty($rows)) {
-                throw new Exception('Spreadsheet is empty.');
-            }
-
-            $rows = array_slice($rows, $headerRow - 1);
-
-            if (empty($rows) || count($rows) < 2) {
-                throw new Exception('Spreadsheet is empty or contains no usable data after applying header_row.');
-            }
-
+            // Build normalized rows without using toArray()
             $preparedRows = [];
-            $dataRows = array_slice($rows, 1);
+            $highestRow = $sheet->getHighestDataRow();
 
-            foreach ($dataRows as $rowIndex => $row) {
-                if (self::isEmptyRow($row)) {
+            for ($rowNum = $headerRow + 1; $rowNum <= $highestRow; $rowNum++) {
+                $rawRow = [];
+
+                for ($col = 1; $col <= $columnCount; $col++) {
+                    $rawRow[] = $sheet->getCellByColumnAndRow($col, $rowNum)->getValue();
+                }
+
+                if (self::isEmptyRow($rawRow)) {
                     continue;
                 }
 
                 $normalizedRow = [];
 
                 foreach ($dbColumns as $i => $columnName) {
-                    $rawValue = $row[$i] ?? null;
+                    $rawValue = $rawRow[$i] ?? null;
                     $type = $columnTypes[$columnName] ?? 'string';
                     $normalizedValue = self::normalizeValue($rawValue, $type);
 
                     if (in_array($columnName, $requiredColumns, true)) {
                         if ($normalizedValue === null || $normalizedValue === '') {
-                            $sheetRowNumber = $headerRow + $rowIndex + 1;
-                            throw new Exception("Required value missing for '{$columnName}' on spreadsheet row {$sheetRowNumber}.");
+                            throw new Exception("Required value missing for '{$columnName}' on spreadsheet row {$rowNum}.");
                         }
                     }
 
@@ -142,6 +130,12 @@ class excelupload
 
                 $preparedRows[] = $normalizedRow;
             }
+
+            $spreadsheet->disconnectWorksheets();
+            unset($spreadsheet, $sheet, $reader);
+            $spreadsheet = null;
+            $sheet = null;
+            $reader = null;
 
             if (empty($preparedRows)) {
                 throw new Exception('No data rows were found to import.');
