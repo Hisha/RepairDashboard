@@ -166,6 +166,129 @@ class excelformat
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
+            ],
+            
+            'Batteries' => [
+                'table_name' => 'batteries',
+                'sheet_name' => 'Report',
+                
+                'headers' => [
+                    'PRIMARYPARTNO',
+                    'DESCRIPTION',
+                    'NIIN',
+                    'MATERIALCODE',
+                    'ONHANDQTY',
+                    'SUBGROUPTYPE',
+                    'PURPOSECODE',
+                    'STORAGEBIN'
+                ],
+                
+                'db_columns' => [
+                    'primarypartno',
+                    'description',
+                    'niin',
+                    'materialcode',
+                    'onhandqty',
+                    'subgrouptype',
+                    'purposecode',
+                    'storagebin'
+                ],
+                
+                'required_columns' => [
+                    'primarypartno',
+                    'materialcode',
+                    'onhandqty',
+                    'subgrouptype',
+                    'purposecode',
+                    'storagebin'
+                ],
+                
+                'column_types' => [
+                    'primarypartno'   => 'string',
+                    'description' => 'string',
+                    'niin'   => 'string',
+                    'materialcode'       => 'string',
+                    'onhandqty'    => 'int',
+                    'subgrouptype'   => 'string',
+                    'purposecode'       => 'string',
+                    'storagebin'    => 'string'
+                ],
+                
+                'create_sql' => "
+                    CREATE TABLE `batteries` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `primarypartno` VARCHAR(100) NOT NULL,
+                        `description` VARCHAR(255) NULL,
+                        `niin` VARCHAR(12) NULL,
+                        `materialcode` VARCHAR(2) NOT NULL,
+                        `onhandqty` INT(11) NOT NULL,
+                        `subgrouptype` VARCHAR(50) NOT NULL,
+                        `purposecode` VARCHAR(2) NOT NULL,
+                        `storagebin` VARCHAR(50) NOT NULL,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                "
+            ],
+            
+            'DRMO' => [
+                'table_name' => 'drmo',
+                'sheet_name' => 'Report',
+                
+                'headers' => [
+                    'Date',
+                    'Document Number',
+                    'NIIN',
+                    'Part',
+                    'Nomenclature',
+                    'QTY',
+                    'Unit Price',
+                    'Program'
+                ],
+                
+                'db_columns' => [
+                    'date',
+                    'document_number',
+                    'niin',
+                    'part',
+                    'nomenclature',
+                    'qty',
+                    'unit_price',
+                    'program'
+                ],
+                
+                'required_columns' => [
+                    'date',
+                    'document_number',
+                    'part',
+                    'qty',
+                    'program'
+                ],
+                
+                'column_types' => [
+                    'date'   => 'date',
+                    'document_number' => 'string',
+                    'niin'   => 'string',
+                    'part'       => 'string',
+                    'nomenclature'    => 'string',
+                    'qty'   => 'int',
+                    'unit_price'       => 'decimal',
+                    'program'    => 'string'
+                ],
+                
+                'create_sql' => "
+                    CREATE TABLE `drmo` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `date` DATE NOT NULL,
+                        `document_number` VARCHAR(255) NOT NULL,
+                        `niin` VARCHAR(12) NULL,
+                        `part` VARCHAR(100) NOT NULL,
+                        `nomenclature` VARCHAR(255) NULL,
+                        `qty` INT(11) NOT NULL,
+                        `unit_price` DECIMAL(12,2) NULL,
+                        `program` VARCHAR(50) NOT NULL,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                "
             ]
             
         ];
