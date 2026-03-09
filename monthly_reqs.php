@@ -3,9 +3,11 @@
 require_once __DIR__ . '/bootstrap.php';
 require_once APP_ROOT . '/bin/Model/ProgramMapping.php';
 require_once APP_ROOT . '/bin/Model/CavRequisitions.php';
+require_once APP_ROOT . '/bin/Model/PowerPointFiller.php';
 
 $programMapping = new ProgramMapping();
 $cavRequisitions = new CavRequisitions();
+$powerPointFiller = new PowerPointFiller();
 
 $message = '';
 $error = '';
@@ -25,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             $dateRanges = $cavRequisitions->getReportDateRanges($selectedMonth);
+            $fillerData = $powerPointFiller->getPPFiller($selectedProgram);
             
             $reportData = [
                 'program' => $selectedProgram,
@@ -35,7 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'ytd_start' => $dateRanges['ytd_start'],
                 'ytd_end' => $dateRanges['ytd_end'],
                 'month_line' => $dateRanges['month_line'],
-                'ytd_line' => $dateRanges['ytd_line']
+                'ytd_line' => $dateRanges['ytd_line'],
+                'title' => $fillerData['title'],
+                'pm' => $fillerData['pm'],
+                'programname' => $fillerData['programname']
             ];
             
             $message = 'Selections accepted. Report generation logic will be added next.';
@@ -191,6 +197,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tr>
                     <td>YTD Line</td>
                     <td><?= htmlspecialchars($reportData['ytd_line']) ?></td>
+                </tr>
+                <tr>
+                    <td>Title</td>
+                    <td><?= htmlspecialchars($reportData['title']) ?></td>
+                </tr>
+                <tr>
+                    <td>PM</td>
+                    <td><?= htmlspecialchars($reportData['pm']) ?></td>
+                </tr>
+                <tr>
+                    <td>Program Name</td>
+                    <td><?= htmlspecialchars($reportData['programname']) ?></td>
                 </tr>
             </table>
         </div>
