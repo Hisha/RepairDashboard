@@ -117,7 +117,6 @@ class excelformat
                 'required_columns' => [
                     'program',
                     'date_recv',
-                    'command',
                     'req_number',
                     'priority',
                     'niin',
@@ -152,7 +151,7 @@ class excelformat
                         `program` VARCHAR(100) NOT NULL,
                         `date_recv` DATE NOT NULL,
                         `date_shipped` DATE NULL,
-                        `command` VARCHAR(100) NOT NULL,
+                        `command` VARCHAR(100) NULL,
                         `req_number` VARCHAR(100) NOT NULL,
                         `priority` VARCHAR(50) NOT NULL,
                         `niin` VARCHAR(12) NOT NULL,
