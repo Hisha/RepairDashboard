@@ -20,4 +20,5 @@ CREATE TABLE `excellist` (
     UNIQUE KEY `uq_excel_name` (`excel_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('CAV REQUISITIONS', 'cav requisitions', 1, 1);
 INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Inventory', 'inventory', 3, 1);

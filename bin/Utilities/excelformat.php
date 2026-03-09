@@ -6,98 +6,170 @@ class excelformat
     {
         $formats = [
             
-            'Requisitions' => [
-                'table_name' => 'requisitions',
+            'Inventory' => [
+                'table_name' => 'inventory',
                 
                 'headers' => [
-                    'Req Number',
-                    'Requested By',
-                    'Department',
-                    'Status',
-                    'Open Date',
-                    'Close Date',
-                    'Amount'
+                    'PRIMARYARTNO',
+                    'DESXCRIPTION',
+                    'NIIN',
+                    'MATERIALCODE',
+                    'ONHANDQTY',
+                    'SUBGROUPTYPE',
+                    'PURPOSECODE',
+                    'STORAGEBIN',
+                    'AVERAGEPRICE'
                 ],
                 
                 'db_columns' => [
-                    'req_number',
-                    'requested_by',
-                    'department',
-                    'status',
-                    'open_date',
-                    'close_date',
-                    'amount'
+                    'primarypartno',
+                    'description',
+                    'niin',
+                    'materialcode',
+                    'onhandqty',
+                    'subgrouptype',
+                    'purposecode',
+                    'storagebin',
+                    'averageprice'
                 ],
                 
                 'required_columns' => [
-                    'req_number',
-                    'requested_by'
+                    'primarypartno',
+                    'description',
+                    'materialcode',
+                    'onhandqty',
+                    'subgrouptype',
+                    'purposecode',
+                    'storagebin'
                 ],
                 
                 'column_types' => [
-                    'req_number'   => 'string',
-                    'requested_by' => 'string',
-                    'department'   => 'string',
-                    'status'       => 'string',
-                    'open_date'    => 'date',
-                    'close_date'   => 'date',
-                    'amount'       => 'decimal'
+                    'primarypartno'   => 'string',
+                    'description' => 'string',
+                    'niin'   => 'string',
+                    'materialcode'       => 'string',
+                    'onhandqty'    => 'int',
+                    'subgrouptype'   => 'string',
+                    'purposecode'       => 'string',
+                    'storagebin'    => 'string',
+                    'averageprice'  => 'decimal'
                 ],
                 
                 'create_sql' => "
-                    CREATE TABLE `requisitions` (
+                    CREATE TABLE `inventory` (
                         `id` INT NOT NULL AUTO_INCREMENT,
-                        `req_number` VARCHAR(100) NOT NULL,
-                        `requested_by` VARCHAR(255) NOT NULL,
-                        `department` VARCHAR(255) NULL,
-                        `status` VARCHAR(100) NULL,
-                        `open_date` DATE NULL,
-                        `close_date` DATE NULL,
-                        `amount` DECIMAL(12,2) NULL,
+                        `primarypartno` VARCHAR(100) NOT NULL,
+                        `description` VARCHAR(255) NOT NULL,
+                        `niin` VARCHAR(12) NULL,
+                        `materialcode` VARCHAR(2) NOT NULL,
+                        `subgrouptype` VARCHAR(50) NOT NULL,
+                        `purposecode` VARCHAR(2) NOT NULL,
+                        `storagebin` VARCHAR(50) NOT NULL,
+                        `averageprice` DECIMAL(12,2) NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
             ],
             
-            'OpenPOs' => [
-                'table_name' => 'open_pos',
+            'CAV REQUISITIONS' => [
+                'table_name' => 'cav_requisitions',
                 
                 'headers' => [
-                    'PO Number',
-                    'Vendor',
-                    'Buyer',
-                    'PO Date',
-                    'Total'
+                    'Program',
+                    'DATE RECV',
+                    'DATE SHIPPED',
+                    'COMMAND',
+                    'REQ #',
+                    'PRIORITY',
+                    'NIIN',
+                    'PART #',
+                    'NOMEN',
+                    'QTY',
+                    'ITEM COST',
+                    'STATUS',
+                    'NOTES',
+                    'Part List Program',
+                    'RT',
+                    'Goal',
+                    'On Time'
                 ],
                 
                 'db_columns' => [
-                    'po_number',
-                    'vendor',
-                    'buyer',
-                    'po_date',
-                    'total'
+                    'program',
+                    'date_recv',
+                    'date_shipped',
+                    'command',
+                    'req_number',
+                    'priority',
+                    'niin',
+                    'part_number',
+                    'nomen',
+                    'qty',
+                    'item_cost',
+                    'status',
+                    'notes',
+                    'part_list_program',
+                    'rt',
+                    'goal',
+                    'on_time'
                 ],
                 
                 'required_columns' => [
-                    'po_number'
+                    'program',
+                    'date_recv',
+                    'command',
+                    'req_number',
+                    'priority',
+                    'niin',
+                    'part_number',
+                    'nomen',
+                    'qty',
+                    'status',
+                    'rt',
+                    'goal',
+                    'on_time'
                 ],
                 
                 'column_types' => [
-                    'po_number' => 'string',
-                    'vendor'    => 'string',
-                    'buyer'     => 'string',
-                    'po_date'   => 'date',
-                    'total'     => 'decimal'
+                    'program'    => 'string',
+                    'date_recv'    => 'date',
+                    'date_shipped'    => 'date',
+                    'command'    => 'string',
+                    'req_number'    => 'string',
+                    'priority'    => 'string',
+                    'niin'    => 'string',
+                    'part_number'    => 'string',
+                    'nomen'    => 'string',
+                    'qty'    => 'int',
+                    'item_cost'    => 'decimal',
+                    'status'    => 'string',
+                    'notes'    => 'string',
+                    'part_list_program'    => 'string',
+                    'rt'    => 'int',
+                    'goal'    => 'int',
+                    'on_time'    => 'int'
                 ],
                 
                 'create_sql' => "
-                    CREATE TABLE `open_pos` (
+                    CREATE TABLE `cav_requisitions` (
                         `id` INT NOT NULL AUTO_INCREMENT,
-                        `po_number` VARCHAR(100) NOT NULL,
-                        `vendor` VARCHAR(255) NULL,
-                        `buyer` VARCHAR(255) NULL,
-                        `po_date` DATE NULL,
-                        `total` DECIMAL(12,2) NULL,
+                        `program` VARCHAR(100) NOT NULL,
+                        `date_recv` DATE NOT NULL,
+                        `date_shipped` DATE NULL,
+                        `command` VARCHAR(100) NOT NULL,
+                        `req_number` VARCHAR(100) NOT NULL,
+                        `priority` VARCHAR(50) NOT NULL,
+                        `niin` VARCHAR(12) NOT NULL,
+                        `part_number` VARCHAR(100) NOT NULL,
+                        `nomen` VARCHAR(150) NOT NULL,
+                        `qty` INT(11) NOT NULL,
+                        `item_cost` DECIMAL(12,2) NULL,
+                        `status` VARCHAR(100) NOT NULL,
+                        `notes` VARCHAR(255) NULL,
+                        `part_list_program` VARCHAR(100) NULL,
+                        `rt` INT(11) NOT NULL,
+                        `goal` INT(11) NOT NULL,
+                        `on_time` INT(11) NOT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
