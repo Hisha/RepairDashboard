@@ -66,13 +66,26 @@ class excelupload
 
             $spreadsheet = $reader->load($file['tmp_name']);
             $sheet = $spreadsheet->getActiveSheet();
+
+            $activeSheetTitle = $sheet->getTitle();
+            $sheetNames = $spreadsheet->getSheetNames();
+            $highestColumn = $sheet->getHighestDataColumn();
+            $highestRow = $sheet->getHighestDataRow();
+
+            // Read just the configured header row directly
+            $headerRange = 'A' . $headerRow . ':' . $highestColumn . $headerRow;
+            $headerCells = $sheet->rangeToArray($headerRange, null, true, true, false);
+            $actualHeaders = array_map(function ($value) {
+                return trim((string)$value);
+            }, $headerCells[0] ?? []);
+
+            // Read full sheet into array for normal processing
             $rows = $sheet->toArray(null, true, true, false);
 
-            // Free workbook memory as soon as we have the array
-            $spreadsheet->disconnectWorksheets();
-            unset($spreadsheet, $sheet, $reader);
-
+            // Keep spreadsheet objects alive until after debug checks
             if (empty($rows)) {
+                $spreadsheet->disconnectWorksheets();
+                unset($spreadsheet, $sheet, $reader);
                 throw new Exception('Spreadsheet is empty.');
             }
 
@@ -80,19 +93,45 @@ class excelupload
             $rows = array_slice($rows, $headerRow - 1);
 
             if (empty($rows) || count($rows) < 2) {
+                $spreadsheet->disconnectWorksheets();
+                unset($spreadsheet, $sheet, $reader);
                 throw new Exception('Spreadsheet is empty or contains no usable data after applying header_row.');
             }
 
-            $actualHeaders = array_map(function ($value) {
-                return trim((string)$value);
-            }, $rows[0]);
-
+            // TEMP DEBUG: if header mismatch, dump useful workbook/sheet/row info
             if ($actualHeaders !== $expectedHeaders) {
-                throw new Exception(
-                    'Header mismatch. Expected: [' . implode(', ', $expectedHeaders) .
-                    '] Found: [' . implode(', ', $actualHeaders) . ']'
-                );
+                $debugRows = [];
+                $maxDebugRows = min(5, count($rows));
+
+                for ($i = 0; $i < $maxDebugRows; $i++) {
+                    $rowValues = array_map(function ($v) {
+                        return trim((string)$v);
+                    }, $rows[$i]);
+
+                    $debugRows[] = 'Sheet row ' . ($headerRow + $i) . ': [' . implode(' | ', $rowValues) . ']';
+                }
+
+                $message =
+                    'Header mismatch. ' .
+                    'header_row=' . $headerRow .
+                    ' | active_sheet=' . $activeSheetTitle .
+                    ' | sheets=[' . implode(', ', $sheetNames) . ']' .
+                    ' | highest_column=' . $highestColumn .
+                    ' | highest_row=' . $highestRow .
+                    ' | header_range=' . $headerRange .
+                    ' | Expected: [' . implode(', ', $expectedHeaders) . ']' .
+                    ' | Found: [' . implode(', ', $actualHeaders) . ']' .
+                    ' | Debug Rows: ' . implode(' || ', $debugRows);
+
+                $spreadsheet->disconnectWorksheets();
+                unset($spreadsheet, $sheet, $reader);
+
+                throw new Exception($message);
             }
+
+            // Now free workbook memory
+            $spreadsheet->disconnectWorksheets();
+            unset($spreadsheet, $sheet, $reader);
 
             // Validate and normalize all rows before modifying database data
             $preparedRows = [];
