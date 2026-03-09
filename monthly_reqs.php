@@ -69,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         .form-block {
             max-width: 500px;
+            margin-top: 20px;
         }
 
         .form-row {
