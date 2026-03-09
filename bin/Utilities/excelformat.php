@@ -88,7 +88,6 @@ class excelformat
                     'ITEM COST',
                     'STATUS',
                     'NOTES',
-                    'Part List Program',
                     'RT',
                     'Goal',
                     'On Time'
@@ -108,7 +107,6 @@ class excelformat
                     'item_cost',
                     'status',
                     'notes',
-                    'part_list_program',
                     'rt',
                     'goal',
                     'on_time'
@@ -144,7 +142,6 @@ class excelformat
                     'item_cost'    => 'decimal',
                     'status'    => 'string',
                     'notes'    => 'string',
-                    'part_list_program'    => 'string',
                     'rt'    => 'int',
                     'goal'    => 'int',
                     'on_time'    => 'int'
@@ -166,7 +163,6 @@ class excelformat
                         `item_cost` DECIMAL(12,2) NULL,
                         `status` VARCHAR(100) NOT NULL,
                         `notes` VARCHAR(255) NULL,
-                        `part_list_program` VARCHAR(100) NULL,
                         `rt` INT(11) NOT NULL,
                         `goal` INT(11) NOT NULL,
                         `on_time` INT(11) NOT NULL,

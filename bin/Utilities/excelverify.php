@@ -37,7 +37,7 @@ class excelverify
                 'success' => true,
                 'excel_key' => $result['excel_name'],
                 'table_name' => $result['table_name'],
-                `header_row` => (int)$result['needs_cleanup'],
+                'header_row' => (int)$result['header_row'],
                 'message' => 'Spreadsheet verified.'
             ];
     }
