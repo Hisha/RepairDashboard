@@ -122,10 +122,7 @@ class excelformat
                     'niin',
                     'part_number',
                     'qty',
-                    'status',
-                    'rt',
-                    'goal',
-                    'on_time'
+                    'status'
                 ],
                 
                 'column_types' => [
@@ -163,9 +160,9 @@ class excelformat
                         `item_cost` DECIMAL(12,2) NULL,
                         `status` VARCHAR(100) NOT NULL,
                         `notes` VARCHAR(255) NULL,
-                        `rt` INT(11) NOT NULL,
-                        `goal` INT(11) NOT NULL,
-                        `on_time` INT(11) NOT NULL,
+                        `rt` INT(11) NULL,
+                        `goal` INT(11) NULL,
+                        `on_time` INT(11) NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
