@@ -3,7 +3,7 @@
   "title": "Current Status",
   "width": 1000,
   "height": 700,
-  "output": "/home/mesc/git/RepairDashboard/chart_renderer/output/status_doughnut.png",
+  "output": "/var/www/html/dashboard/chart_renderer/output/status_doughnut.png",
   "legendDisplay": true,
   "legendPosition": "right",
   "data": {
