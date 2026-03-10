@@ -19,7 +19,7 @@ class excelverify
         
         $result = $db->query(
             "SELECT excel_name, table_name, header_row
-             FROM excellist
+             FROM SYS_excellist
              WHERE excel_name = ?
                AND is_active = 1
              LIMIT 1",
