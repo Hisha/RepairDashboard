@@ -48,6 +48,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $dateRanges['month_end']
                 );
             
+            $reportData = [
+                'program' => $selectedProgram,
+                'selected_month' => $selectedMonth,
+                'month_label' => $dateRanges['month_label'],
+                'month_start' => $dateRanges['month_start'],
+                'month_end' => $dateRanges['month_end'],
+                'ytd_start' => $dateRanges['ytd_start'],
+                'ytd_end' => $dateRanges['ytd_end'],
+                'month_line' => $dateRanges['month_line'],
+                'ytd_line' => $dateRanges['ytd_line'],
+                'title' => $fillerData['title'],
+                'pm' => $fillerData['pm'],
+                'programname' => $fillerData['programname']
+            ];
+            
             $chartOutput = APP_ROOT . '/reports/tmp/shipped_pie_' . uniqid() . '.png';
             
             $chartConfig = ShippedPieChart::build(
@@ -55,6 +70,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $pieData['shipped'],
                 $pieData['shippedBO']
                 );
+            
+            $shipped = (int)$pieData['shipped'];
+            $shippedBO = (int)$pieData['shippedBO'];
+            
+            $total = $shipped + $shippedBO;
+            
+            if ($total > 0) {
+                $shippedPct = round(($shipped / $total) * 100, 1);
+                $shippedBOPct = round(($shippedBO / $total) * 100, 1);
+            } else {
+                $shippedPct = 0;
+                $shippedBOPct = 0;
+            }
             
             $chartJsonName = 'shipped_pie_' . uniqid() . '.json';
             $shippedPiePath = $renderer->render($chartConfig, $chartJsonName);
@@ -68,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $chartShape = new File();
             $chartShape->setPath($shippedPiePath)
-            ->setWidth(500)
+            ->setWidth(350)
             ->setOffsetX(200)
             ->setOffsetY(180);
             
@@ -79,9 +107,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(300)
             ->setOffsetX(200)
             ->setOffsetY(520);
-            
-            $label1->createTextRun("Shipped: " . $pieData['shipped'])
-            ->getFont()->setSize(18);
+                        
+            $label1->createTextRun("B/O Shipped")->getFont()->setSize(14);
+            $label1->createBreak();
+            $label1->createTextRun($pieData['shippedBO'] . " Reqs")->getFont()->setSize(14);
+            $label1->createBreak();
+            $label1->createTextRun($shippedBOPct . "%")->getFont()->setSize(14);
             
             $label2 = $slide->createRichTextShape()
             ->setHeight(40)
@@ -89,8 +120,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetX(200)
             ->setOffsetY(560);
             
-            $label2->createTextRun("B/O Shipped: " . $pieData['shippedBO'])
-            ->getFont()->setSize(18);
+            $label2->createTextRun("Shipped ")->getFont()->setSize(14);
+            $label2->createBreak();
+            $label2->createTextRun($pieData['shipped'] . " Reqs")->getFont()->setSize(14);
+            $label2->createBreak();
+            $label2->createTextRun($shippedPct . "%")->getFont()->setSize(14);
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
@@ -108,25 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             readfile($output);
             exit;
             
-            $reportData = [
-                'program' => $selectedProgram,
-                'selected_month' => $selectedMonth,
-                'month_label' => $dateRanges['month_label'],
-                'month_start' => $dateRanges['month_start'],
-                'month_end' => $dateRanges['month_end'],
-                'ytd_start' => $dateRanges['ytd_start'],
-                'ytd_end' => $dateRanges['ytd_end'],
-                'month_line' => $dateRanges['month_line'],
-                'ytd_line' => $dateRanges['ytd_line'],
-                'title' => $fillerData['title'],
-                'pm' => $fillerData['pm'],
-                'programname' => $fillerData['programname'],
-                'shipped' => $pieData['shipped'],
-                'shippedBO' => $pieData['shippedBO'],
-                'shipped_pie_path' => $shippedPiePath
-            ];
-            
-            $message = 'Selections accepted and shipped pie chart generated successfully.';
+            /* $message = 'Selections accepted and shipped pie chart generated successfully.'; */
         } catch (Exception $e) {
             $error = $e->getMessage();
         }
