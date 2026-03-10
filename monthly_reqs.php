@@ -55,6 +55,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $chartJsonName = 'shipped_pie_' . uniqid() . '.json';
             $shippedPiePath = $renderer->render($chartConfig, $chartJsonName);
             
+            use PhpOffice\PhpPresentation\IOFactory;
+            use PhpOffice\PhpPresentation\Shape\Drawing\File;
+            use PhpOffice\PhpPresentation\Style\Alignment;
+            
+            $template = APP_ROOT . '/templates/MonthlyReqsTemplate.pptx';
+            
+            $reader = IOFactory::createReader('PowerPoint2007');
+            $ppt = $reader->load($template);
+            
+            $slide = $ppt->getSlide(0);
+            
+            $chartShape = new File();
+            $chartShape->setPath($shippedPiePath)
+            ->setWidth(500)
+            ->setOffsetX(200)
+            ->setOffsetY(180);
+            
+            $slide->addShape($chartShape);
+            
+            $label1 = $slide->createRichTextShape()
+            ->setHeight(40)
+            ->setWidth(300)
+            ->setOffsetX(200)
+            ->setOffsetY(520);
+            
+            $label1->createTextRun("Shipped: " . $pieData['shipped'])
+            ->getFont()->setSize(18);
+            
+            $label2 = $slide->createRichTextShape()
+            ->setHeight(40)
+            ->setWidth(300)
+            ->setOffsetX(200)
+            ->setOffsetY(560);
+            
+            $label2->createTextRun("B/O Shipped: " . $pieData['shippedBO'])
+            ->getFont()->setSize(18);
+            
+            $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
+            
+            $writer = IOFactory::createWriter($ppt, 'PowerPoint2007');
+            $writer->save($output);
+            
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
+            
+            header('Content-Type: application/vnd.openxmlformats-officedocument.presentationml.presentation');
+            header('Content-Disposition: attachment; filename="Monthly_Report.pptx"');
+            header('Content-Length: ' . filesize($output));
+            
+            readfile($output);
+            exit;
+            
             $reportData = [
                 'program' => $selectedProgram,
                 'selected_month' => $selectedMonth,
