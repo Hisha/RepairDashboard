@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(60)
             ->setWidth(95)
             ->setOffsetX(485)
-            ->setOffsetY(150);
+            ->setOffsetY(125);
             
             // center text
             $label1->getActiveParagraph()
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(60)
             ->setWidth(85)
             ->setOffsetX(385)
-            ->setOffsetY(400);
+            ->setOffsetY(425);
             
             // center text
             $label2->getActiveParagraph()
