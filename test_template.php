@@ -46,5 +46,5 @@ try {
 } catch (Throwable $e) {
     
     echo "<h2>Error</h2>";
-    echo "<pre>" . htmlspecialchars($e->getMessage()) . "</pre>;
+    echo "<pre>" . htmlspecialchars($e->getMessage()) . "</pre>";
 }
