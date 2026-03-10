@@ -443,8 +443,7 @@ class excelformat
                     'partnotobuild',
                     'serialno',
                     'subgrouptype',
-                    'materialcode',
-                    'technicalpocname'
+                    'materialcode'
                 ],
                 
                 'column_types' => [
@@ -474,7 +473,7 @@ class excelformat
                         `subgrouptype` VARCHAR(50) NOT NULL,
                         `materialcode` VARCHAR(2) NOT NULL,
                         `hours` DECIMAL(12,2) NULL,
-                        `technicalpocname` VARCHAR(100) NOT NULL,
+                        `technicalpocname` VARCHAR(100) NULL,
                         `problem` VARCHAR(255) NULL,
                         `correctiveaction` VARCHAR(255) NULL,
                         PRIMARY KEY (`id`)
