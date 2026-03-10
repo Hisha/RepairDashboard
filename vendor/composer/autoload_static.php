@@ -15,6 +15,8 @@ class ComposerStaticInit62e10e6c8df9afc192311b196c75bb33
         array (
             'Psr\\SimpleCache\\' => 16,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
+            'PhpOffice\\PhpPresentation\\' => 26,
+            'PhpOffice\\Common\\' => 17,
         ),
         'M' => 
         array (
@@ -40,6 +42,14 @@ class ComposerStaticInit62e10e6c8df9afc192311b196c75bb33
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
+        'PhpOffice\\PhpPresentation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phppresentation/src/PhpPresentation',
+        ),
+        'PhpOffice\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
+        ),
         'Matrix\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
@@ -56,6 +66,7 @@ class ComposerStaticInit62e10e6c8df9afc192311b196c75bb33
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'PclZip' => __DIR__ . '/..' . '/pclzip/pclzip/pclzip.lib.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
