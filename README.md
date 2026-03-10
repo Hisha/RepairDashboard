@@ -31,3 +31,7 @@ Install Process (Ubuntu 20.04):
 3. Install Composer:
     - sudo apt install composer php-xml php-gd
     - composer require phpoffice/phpspreadsheet
+    
+4. Install Node:
+
+	- sudo apt install -y nodejs npm
