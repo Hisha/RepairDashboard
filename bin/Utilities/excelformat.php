@@ -537,7 +537,7 @@ class excelformat
                         `qty` INT(11) NOT NULL,
                         `subgrouptype` VARCHAR(50) NOT NULL,
                         `materialcode` VARCHAR(2) NOT NULL,
-                        `issuelocation` VARCHAR(25) NOT NULL,
+                        `issuelocation` VARCHAR(50) NOT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
