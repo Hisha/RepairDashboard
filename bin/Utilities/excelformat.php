@@ -444,7 +444,6 @@ class excelformat
                     'serialno',
                     'subgrouptype',
                     'materialcode',
-                    'hours',
                     'technicalpocname'
                 ],
                 
@@ -474,7 +473,7 @@ class excelformat
                         `serialno` VARCHAR(100) NOT NULL,
                         `subgrouptype` VARCHAR(50) NOT NULL,
                         `materialcode` VARCHAR(2) NOT NULL,
-                        `hours` DECIMAL(12,2) NOT NULL,
+                        `hours` DECIMAL(12,2) NULL,
                         `technicalpocname` VARCHAR(100) NOT NULL,
                         `problem` VARCHAR(255) NULL,
                         `correctiveaction` VARCHAR(255) NULL,
