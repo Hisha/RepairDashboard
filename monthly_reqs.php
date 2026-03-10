@@ -1,13 +1,13 @@
 <?php
 
 require_once __DIR__ . '/bootstrap.php';
-require_once APP_ROOT . '/bin/Model/ProgramMapping.php';
+require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
 require_once APP_ROOT . '/bin/Model/CavRequisitions.php';
-require_once APP_ROOT . '/bin/Model/PowerPointFiller.php';
+require_once APP_ROOT . '/bin/Model/SYS_PowerPointFiller.php';
 
-$programMapping = new ProgramMapping();
+$programMapping = new SYS_ProgramMapping();
 $cavRequisitions = new CavRequisitions();
-$powerPointFiller = new PowerPointFiller();
+$powerPointFiller = new SYS_PowerPointFiller();
 
 $message = '';
 $error = '';
