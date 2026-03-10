@@ -10,7 +10,7 @@ INSERT INTO SystemSettings(Errors_Active) VALUES (1);
 
 -- Excel List definition 
 
-CREATE TABLE `excellist` (
+CREATE TABLE `SYS_excellist` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `excel_name` VARCHAR(255) NOT NULL,
     `table_name` VARCHAR(255) NOT NULL,
@@ -20,39 +20,42 @@ CREATE TABLE `excellist` (
     UNIQUE KEY `uq_excel_name` (`excel_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('CAV REQUISITIONS', 'cav_requisitions', 1, 1);
-INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Inventory', 'inventory', 3, 1);
-INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Batteries', 'batteries', 3, 1);
-INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('DRMO', 'drmo', 4, 1);
-INSERT INTO `excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Installed', 'installed', 3, 1);
+INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Batteries', 'batteries', 3, 1);
+INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('CAV REQUISITIONS', 'cav_requisitions', 1, 1);
+INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('DRMO', 'drmo', 4, 1);
+INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Installed', 'installed', 3, 1);
+INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Inventory', 'inventory', 3, 1);
+INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Receipts', 'receipts', 4, 1);
+INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Repairs', 'repairs', 3, 1);
+INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Shipments', 'shipments', 3, 1);
 
 -- Program Mapping
 
-CREATE TABLE program_mapping (
+CREATE TABLE SYS_program_mapping (
    source_program VARCHAR(50) PRIMARY KEY,
    normalized_program VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('EDL','EL1/CANES');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('EL1','EL1/CANES');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('EL1/CANES','EL1/CANES');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('ATFP','EFJ');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('EFJ','EFJ');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('SIWCS','EFJ');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('SIWCS/EFJ','EFJ');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('SIWCS/ATFP','EFJ');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('ANM','EFJ');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('ANQ','EFJ');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('HYDRA','EFJ');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('EGY','EFJ');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('EGH','EFJ');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('AJ5','AJ5');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('JXA/N94','JXA/N94');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('AAL/Q70','AAL/Q70');
-INSERT INTO `program_mapping` (`source_program`, `normalized_program`) VALUES('BC5','BC5');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EDL','EL1/CANES');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EL1','EL1/CANES');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EL1/CANES','EL1/CANES');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('ATFP','EFJ');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EFJ','EFJ');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('SIWCS','EFJ');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('SIWCS/EFJ','EFJ');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('SIWCS/ATFP','EFJ');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('ANM','EFJ');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('ANQ','EFJ');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('HYDRA','EFJ');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EGY','EFJ');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EGH','EFJ');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('AJ5','AJ5');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('JXA/N94','JXA/N94');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('AAL/Q70','AAL/Q70');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('BC5','BC5');
 
 -- Power Point Filler
-CREATE TABLE `powerpoint_filler` (
+CREATE TABLE `SYS_powerpoint_filler` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`program` VARCHAR(50) NOT NULL,
 	`title` VARCHAR(50) NOT NULL,
@@ -62,10 +65,10 @@ CREATE TABLE `powerpoint_filler` (
 	UNIQUE KEY `uq_program` (`program`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('AAL/Q70','C4I PBL-O METRICS','--','--');
-INSERT INTO `powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('AJ5','C4I PBL-O METRICS','Kyle Youtz','AJ5');
-INSERT INTO `powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('BC5','C4I PBL-O METRICS','Dan Miller','BC5');
-INSERT INTO `powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('EFJ','C4I PBL-O METRICS','Melissa Trusch','EFJ');
-INSERT INTO `powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('EL1/CANES','C4I PBL-O METRICS','Dane Nearhoof','EL1/EDL');
-INSERT INTO `powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('JXA/N94','C4I PBL-O METRICS','Jenna Pickings','N94');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('AAL/Q70','C4I PBL-O METRICS','--','--');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('AJ5','C4I PBL-O METRICS','Kyle Youtz','AJ5');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('BC5','C4I PBL-O METRICS','Dan Miller','BC5');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('EFJ','C4I PBL-O METRICS','Melissa Trusch','EFJ');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('EL1/CANES','C4I PBL-O METRICS','Dane Nearhoof','EL1/EDL');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('JXA/N94','C4I PBL-O METRICS','Jenna Pickings','N94');
 

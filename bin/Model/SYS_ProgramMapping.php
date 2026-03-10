@@ -1,9 +1,9 @@
 <?php
 include_once APP_ROOT . '/bin/Utilities/db.php';
 
-class ProgramMapping
+class SYS_ProgramMapping
 {
-    protected $_tableName = 'program_mapping';
+    protected $_tableName = 'SYS_program_mapping';
     
     public function getDDLDistinctNormalizedProgram($selectedValue = '')
     {

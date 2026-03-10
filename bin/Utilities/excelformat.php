@@ -6,8 +6,8 @@ class excelformat
     {
         $formats = [
             
-            'Inventory' => [
-                'table_name' => 'inventory',
+            'Batteries' => [
+                'table_name' => 'batteries',
                 'sheet_name' => 'Report',
                 
                 'headers' => [
@@ -18,8 +18,7 @@ class excelformat
                     'ONHANDQTY',
                     'SUBGROUPTYPE',
                     'PURPOSECODE',
-                    'STORAGEBIN',
-                    'AVERAGEPRICE'
+                    'STORAGEBIN'
                 ],
                 
                 'db_columns' => [
@@ -30,8 +29,7 @@ class excelformat
                     'onhandqty',
                     'subgrouptype',
                     'purposecode',
-                    'storagebin',
-                    'averageprice'
+                    'storagebin'
                 ],
                 
                 'required_columns' => [
@@ -51,12 +49,11 @@ class excelformat
                     'onhandqty'    => 'int',
                     'subgrouptype'   => 'string',
                     'purposecode'       => 'string',
-                    'storagebin'    => 'string',
-                    'averageprice'  => 'decimal'
+                    'storagebin'    => 'string'
                 ],
                 
                 'create_sql' => "
-                    CREATE TABLE `inventory` (
+                    CREATE TABLE `batteries` (
                         `id` INT NOT NULL AUTO_INCREMENT,
                         `primarypartno` VARCHAR(100) NOT NULL,
                         `description` VARCHAR(255) NULL,
@@ -66,7 +63,6 @@ class excelformat
                         `subgrouptype` VARCHAR(50) NOT NULL,
                         `purposecode` VARCHAR(2) NOT NULL,
                         `storagebin` VARCHAR(50) NOT NULL,
-                        `averageprice` DECIMAL(12,2) NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
@@ -163,68 +159,6 @@ class excelformat
                         `rt` INT(11) NULL,
                         `goal` INT(11) NULL,
                         `on_time` INT(11) NULL,
-                        PRIMARY KEY (`id`)
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-                "
-            ],
-            
-            'Batteries' => [
-                'table_name' => 'batteries',
-                'sheet_name' => 'Report',
-                
-                'headers' => [
-                    'PRIMARYPARTNO',
-                    'DESCRIPTION',
-                    'NIIN',
-                    'MATERIALCODE',
-                    'ONHANDQTY',
-                    'SUBGROUPTYPE',
-                    'PURPOSECODE',
-                    'STORAGEBIN'
-                ],
-                
-                'db_columns' => [
-                    'primarypartno',
-                    'description',
-                    'niin',
-                    'materialcode',
-                    'onhandqty',
-                    'subgrouptype',
-                    'purposecode',
-                    'storagebin'
-                ],
-                
-                'required_columns' => [
-                    'primarypartno',
-                    'materialcode',
-                    'onhandqty',
-                    'subgrouptype',
-                    'purposecode',
-                    'storagebin'
-                ],
-                
-                'column_types' => [
-                    'primarypartno'   => 'string',
-                    'description' => 'string',
-                    'niin'   => 'string',
-                    'materialcode'       => 'string',
-                    'onhandqty'    => 'int',
-                    'subgrouptype'   => 'string',
-                    'purposecode'       => 'string',
-                    'storagebin'    => 'string'
-                ],
-                
-                'create_sql' => "
-                    CREATE TABLE `batteries` (
-                        `id` INT NOT NULL AUTO_INCREMENT,
-                        `primarypartno` VARCHAR(100) NOT NULL,
-                        `description` VARCHAR(255) NULL,
-                        `niin` VARCHAR(12) NULL,
-                        `materialcode` VARCHAR(2) NOT NULL,
-                        `onhandqty` INT(11) NOT NULL,
-                        `subgrouptype` VARCHAR(50) NOT NULL,
-                        `purposecode` VARCHAR(2) NOT NULL,
-                        `storagebin` VARCHAR(50) NOT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
@@ -341,6 +275,273 @@ class excelformat
                         `partnomen` VARCHAR(255) NULL,
                         `qtyinstalled` INT(11) NULL,
                         `partcost` DECIMAL(12,2) NULL,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                "
+            ],
+            
+            'Inventory' => [
+                'table_name' => 'inventory',
+                'sheet_name' => 'Report',
+                
+                'headers' => [
+                    'PRIMARYPARTNO',
+                    'DESCRIPTION',
+                    'NIIN',
+                    'MATERIALCODE',
+                    'ONHANDQTY',
+                    'SUBGROUPTYPE',
+                    'PURPOSECODE',
+                    'STORAGEBIN',
+                    'AVERAGEPRICE'
+                ],
+                
+                'db_columns' => [
+                    'primarypartno',
+                    'description',
+                    'niin',
+                    'materialcode',
+                    'onhandqty',
+                    'subgrouptype',
+                    'purposecode',
+                    'storagebin',
+                    'averageprice'
+                ],
+                
+                'required_columns' => [
+                    'primarypartno',
+                    'materialcode',
+                    'onhandqty',
+                    'subgrouptype',
+                    'purposecode',
+                    'storagebin'
+                ],
+                
+                'column_types' => [
+                    'primarypartno'   => 'string',
+                    'description' => 'string',
+                    'niin'   => 'string',
+                    'materialcode'       => 'string',
+                    'onhandqty'    => 'int',
+                    'subgrouptype'   => 'string',
+                    'purposecode'       => 'string',
+                    'storagebin'    => 'string',
+                    'averageprice'  => 'decimal'
+                ],
+                
+                'create_sql' => "
+                    CREATE TABLE `inventory` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `primarypartno` VARCHAR(100) NOT NULL,
+                        `description` VARCHAR(255) NULL,
+                        `niin` VARCHAR(12) NULL,
+                        `materialcode` VARCHAR(2) NOT NULL,
+                        `onhandqty` INT(11) NOT NULL,
+                        `subgrouptype` VARCHAR(50) NOT NULL,
+                        `purposecode` VARCHAR(2) NOT NULL,
+                        `storagebin` VARCHAR(50) NOT NULL,
+                        `averageprice` DECIMAL(12,2) NULL,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                "
+            ],
+            
+            'Receipts' => [
+                'table_name' => 'receipts',
+                'sheet_name' => 'Report',
+                
+                'headers' => [
+                    'SIMINVADJ_TRANACTIONDATE',
+                    'PRIMARYPARTNO',
+                    'DESCRIPTION',
+                    'NIIN',
+                    'SIMINVADJ_ADDQTY',
+                    'SIMINVADJ_SUBGROUPTYPE',
+                    'SIMINVADJ_MATERIALCODE'
+                ],
+                
+                'db_columns' => [
+                    'transactiondate',
+                    'primarypartno',
+                    'description',
+                    'niin',
+                    'qty',
+                    'subgrouptype',
+                    'materialcode'
+                ],
+                
+                'required_columns' => [
+                    'transactiondate',
+                    'primarypartno',
+                    'qty',
+                    'subgrouptype',
+                    'materialcode'
+                ],
+                
+                'column_types' => [
+                    'transactiondate'   => 'date',
+                    'primarypartno' => 'string',
+                    'description'   => 'string',
+                    'niin'       => 'string',
+                    'qty'    => 'int',
+                    'subgrouptype'   => 'string',
+                    'materialcode'       => 'string'
+                ],
+                
+                'create_sql' => "
+                    CREATE TABLE `receipts` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `transactiondate` DATE NOT NULL,
+                        `primarypartno` VARCHAR(100) NULL,
+                        `description` VARCHAR(255) NULL,
+                        `niin` VARCHAR(12) NULL,
+                        `qty` INT(11) NOT NULL,
+                        `subgrouptype` VARCHAR(50) NOT NULL,
+                        `materialcode` VARCHAR(2) NOT NULL,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                "
+            ],
+            
+            'Repairs' => [
+                'table_name' => 'repairs',
+                'sheet_name' => 'Report',
+                
+                'headers' => [
+                    'TRANACTIONDATE',
+                    'WONO',
+                    'PARTNOTOBUILD',
+                    'NIIN',
+                    'UNITPRICE',
+                    'SERIALNO',
+                    'SUBGROUPTYPE',
+                    'MATERIALCODE',
+                    'HOURS',
+                    'TECHNICALPOCNAME',
+                    'PROBLEM',
+                    'CORRECTIVEACTION'
+                ],
+                
+                'db_columns' => [
+                    'transactiondate',
+                    'wono',
+                    'partnotobuild',
+                    'niin',
+                    'unitprice',
+                    'serialno',
+                    'subgrouptype',
+                    'materialcode',
+                    'hours',
+                    'technicalpocname',
+                    'problem',
+                    'correctiveaction'
+                ],
+                
+                'required_columns' => [
+                    'transactiondate',
+                    'wono',
+                    'partnotobuild',
+                    'serialno',
+                    'subgrouptype',
+                    'materialcode',
+                    'hours',
+                    'technicalpocname',
+                    'problem',
+                    'correctiveaction'
+                ],
+                
+                'column_types' => [
+                    'transactiondate'   => 'date',
+                    'wono'  => 'string',
+                    'partnotobuild'  => 'string',
+                    'niin'  => 'string',
+                    'unitprice'  => 'decimal',
+                    'serialno'  => 'string',
+                    'subgrouptype'  => 'string',
+                    'materialcode'  => 'string',
+                    'hours'  => 'decimal',
+                    'technicalpocname'  => 'string',
+                    'problem'  => 'string',
+                    'correctiveaction'  => 'string'
+                ],
+                
+                'create_sql' => "
+                    CREATE TABLE `repairs` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `transactiondate` DATE NOT NULL,
+                        `wono` VARCHAR(50) NOT NULL,
+                        `partnotobuild` VARCHAR(100) NOT NULL,
+                        `niin` VARCHAR(12) NULL,
+                        `unitprice` DECIMAL(12,2) NULL,
+                        `serialno` VARCHAR(100) NOT NULL,
+                        `subgrouptype` VARCHAR(50) NOT NULL,
+                        `materialcode` VARCHAR(2) NOT NULL,
+                        `hours` DECIMAL(12,2) NOT NULL,
+                        `technicalpocname` VARCHAR(100) NOT NULL,
+                        `problem` VARCHAR(255) NOT NULL,
+                        `correctiveaction` VARCHAR(255) NOT NULL,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                "
+            ],
+            
+            'Shipments' => [
+                'table_name' => 'shipments',
+                'sheet_name' => 'Report',
+                
+                'headers' => [
+                    'SIMINVADJ_TRANACTIONDATE',
+                    'PRIMARYPARTNO',
+                    'DESCRIPTION',
+                    'NIIN',
+                    'SIMINVADJ_SUBQTY',
+                    'SIMINVADJ_SUBGROUPTYPE',
+                    'SIMINVADJ_MATERIALCODE',
+                    'SIMINVADJ_ISSUELOCATION'
+                ],
+                
+                'db_columns' => [
+                    'transactiondate',
+                    'primarypartno',
+                    'description',
+                    'niin',
+                    'qty',
+                    'subgrouptype',
+                    'materialcode',
+                    'issuelocation'
+                ],
+                
+                'required_columns' => [
+                    'transactiondate',
+                    'primarypartno',
+                    'qty',
+                    'subgrouptype',
+                    'materialcode',
+                    'issuelocation'
+                ],
+                
+                'column_types' => [
+                    'transactiondate'   => 'date',
+                    'primarypartno' => 'string',
+                    'description'   => 'string',
+                    'niin'       => 'string',
+                    'qty'    => 'int',
+                    'subgrouptype'   => 'string',
+                    'materialcode'       => 'string',
+                    'issuelocation'      => 'string'
+                ],
+                
+                'create_sql' => "
+                    CREATE TABLE `shipments` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `transactiondate` DATE NOT NULL,
+                        `primarypartno` VARCHAR(100) NULL,
+                        `description` VARCHAR(255) NULL,
+                        `niin` VARCHAR(12) NULL,
+                        `qty` INT(11) NOT NULL,
+                        `subgrouptype` VARCHAR(50) NOT NULL,
+                        `materialcode` VARCHAR(2) NOT NULL,
+                        `issuelocation` VARCHAR(12) NOT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "

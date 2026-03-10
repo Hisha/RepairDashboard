@@ -1,10 +1,10 @@
 <?php
 include_once APP_ROOT . '/bin/Utilities/db.php';
 
-class PowerPointFiller
+class SYS_PowerPointFiller
 {
     protected $_returnFields = 'program,title,pm,programname';
-    protected $_tableName = 'powerpoint_filler';
+    protected $_tableName = 'SYS_powerpoint_filler';
     
     public function getPPFiller(string $selectedProgram)
     {
