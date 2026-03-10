@@ -135,15 +135,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $label1->createTextRun($shippedBOPct . "%")->getFont()->setSize(11);
                         
             $label2 = $slide->createRichTextShape()
-            ->setHeight(40)
-            ->setWidth(300)
+            ->setHeight(60)
+            ->setWidth(95)
             ->setOffsetX(250)
             ->setOffsetY(420);
             
-            $label2->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            // center text
+            $label2->getActiveParagraph()
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
             
-            $label2->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFFFF'))->setEndColor(new Color('FFFFFFFF'));
-            $label2->getBorder()->setColor(new Color('FF2F5597'))->setLineWidth(1.5);
+            // white fill
+            $label2->getFill()
+            ->setFillType(Fill::FILL_SOLID)
+            ->setStartColor(new Color('FFFFFFFF'));
+            
+            // blue border
+            $label2->getBorder()
+            ->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)
+            ->setLineWidth(1.5)
+            ->setColor(new Color('FF2F5597'));
             
             $label2->createTextRun("Shipped ")->getFont()->setSize(11);
             $label2->createBreak();
