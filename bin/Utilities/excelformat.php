@@ -351,7 +351,7 @@ class excelformat
                 'sheet_name' => 'Report',
                 
                 'headers' => [
-                    'SIMINVADJ_TRANACTIONDATE',
+                    'SIMINVADJ_TRANSACTIONDATE',
                     'PRIMARYPARTNO',
                     'DESCRIPTION',
                     'NIIN',
@@ -408,7 +408,7 @@ class excelformat
                 'sheet_name' => 'Report',
                 
                 'headers' => [
-                    'TRANACTIONDATE',
+                    'TRANSACTIONDATE',
                     'WONO',
                     'PARTNOTOBUILD',
                     'NIIN',
@@ -490,7 +490,7 @@ class excelformat
                 'sheet_name' => 'Report',
                 
                 'headers' => [
-                    'SIMINVADJ_TRANACTIONDATE',
+                    'SIMINVADJ_TRANSACTIONDATE',
                     'PRIMARYPARTNO',
                     'DESCRIPTION',
                     'NIIN',
