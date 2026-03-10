@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['excel_file'])) {
     <input 
         type="file" 
         name="excel_file" 
-        accept=".xls,.xlsx"
+        accept=".xls,.xlsm,.xlsx"
         required
     >
 
