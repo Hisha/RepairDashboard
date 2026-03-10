@@ -26,10 +26,10 @@ Install Process (Ubuntu 20.04):
   
     - sudo apt install php libapache2-mod-php php-mysql php-mbstring
     - verify that PHP is working by using the command: php -v
-    - Edit php.ini to set memory_limit = 512M
+    - Edit php.ini to set memory_limit = 1536M, upload_max_filesize = 32M, post_max_size = 32M
 
 3. Install Composer:
-    - sudo apt install composer php-xml php-gd
+    - sudo apt install composer php-xml php-gd php-zip
     - composer require phpoffice/phpspreadsheet
     
 4. Install Node:

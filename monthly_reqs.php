@@ -162,6 +162,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $label2->createBreak();
             $label2->createTextRun($shippedPct . "%")->getFont()->setSize(11);
             
+            $labelPM = $slide->createRichTextShape()
+            ->setHeight(100)
+            ->setWidth(200)
+            ->setOffsetX(485)
+            ->setOffsetY(40);
+            $labelPM->createTextRun($fillerData['pm'])->getFont()->setSize(18);
+            
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
