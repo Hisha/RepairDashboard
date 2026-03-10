@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $label1 = $slide->createRichTextShape()
             ->setHeight(60)
-            ->setWidth(90)
+            ->setWidth(95)
             ->setOffsetX(500)
             ->setOffsetY(150);
             
