@@ -474,8 +474,8 @@ class excelformat
                         `materialcode` VARCHAR(2) NOT NULL,
                         `hours` DECIMAL(12,2) NULL,
                         `technicalpocname` VARCHAR(100) NULL,
-                        `problem` VARCHAR(255) NULL,
-                        `correctiveaction` VARCHAR(255) NULL,
+                        `problem` TEXT NULL,
+                        `correctiveaction` TEXT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
