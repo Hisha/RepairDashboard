@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $chartShape->setPath($shippedPiePath)
             ->setWidth(350)
             ->setOffsetX(300)
-            ->setOffsetY(180);
+            ->setOffsetY(200);
             
             $slide->addShape($chartShape);
             
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(60)
             ->setWidth(95)
             ->setOffsetX(485)
-            ->setOffsetY(125);
+            ->setOffsetY(145);
             
             // center text
             $label1->getActiveParagraph()
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(60)
             ->setWidth(85)
             ->setOffsetX(385)
-            ->setOffsetY(425);
+            ->setOffsetY(445);
             
             // center text
             $label2->getActiveParagraph()
