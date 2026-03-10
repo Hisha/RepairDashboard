@@ -23,7 +23,6 @@ class ShippedPieChart
         
         return [
             'type' => 'pie',
-            'title' => 'Shipped vs Shipped BO',
             'width' => 900,
             'height' => 650,
             'output' => $outputPath,
