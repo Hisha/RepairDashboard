@@ -445,9 +445,7 @@ class excelformat
                     'subgrouptype',
                     'materialcode',
                     'hours',
-                    'technicalpocname',
-                    'problem',
-                    'correctiveaction'
+                    'technicalpocname'
                 ],
                 
                 'column_types' => [
@@ -478,8 +476,8 @@ class excelformat
                         `materialcode` VARCHAR(2) NOT NULL,
                         `hours` DECIMAL(12,2) NOT NULL,
                         `technicalpocname` VARCHAR(100) NOT NULL,
-                        `problem` VARCHAR(255) NOT NULL,
-                        `correctiveaction` VARCHAR(255) NOT NULL,
+                        `problem` VARCHAR(255) NULL,
+                        `correctiveaction` VARCHAR(255) NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
