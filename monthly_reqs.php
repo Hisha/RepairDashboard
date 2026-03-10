@@ -8,6 +8,10 @@ require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
 require_once APP_ROOT . '/bin/Model/CavRequisitions.php';
 require_once APP_ROOT . '/bin/Model/SYS_PowerPointFiller.php';
 
+use PhpOffice\PhpPresentation\IOFactory;
+use PhpOffice\PhpPresentation\Shape\Drawing\File;
+use PhpOffice\PhpPresentation\Style\Alignment;
+
 $programMapping = new SYS_ProgramMapping();
 $cavRequisitions = new CavRequisitions();
 $powerPointFiller = new SYS_PowerPointFiller();
@@ -54,10 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $chartJsonName = 'shipped_pie_' . uniqid() . '.json';
             $shippedPiePath = $renderer->render($chartConfig, $chartJsonName);
-            
-            use PhpOffice\PhpPresentation\IOFactory;
-            use PhpOffice\PhpPresentation\Shape\Drawing\File;
-            use PhpOffice\PhpPresentation\Style\Alignment;
             
             $template = APP_ROOT . '/templates/MonthlyReqsTemplate.pptx';
             
