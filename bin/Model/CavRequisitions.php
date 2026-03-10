@@ -71,5 +71,37 @@ class CavRequisitions
             'ytd_line'    => $ytdStart->format('M d, Y') . ' to ' . $ytdEnd->format('M d, Y')
         ];
     }
+    
+    public function getShippedPieData(string $selectedProgram, string $startDate, string $endDate): array
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            SUM(CASE
+                WHEN cav_requisitions.status IN ('Shipped', 'PICK UP') THEN 1
+                ELSE 0
+            END) AS shipped,
+            SUM(CASE
+                WHEN cav_requisitions.status = 'B/O SHIPPED' THEN 1
+                ELSE 0
+            END) AS shippedBO
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchArray();
+        
+        $db->close();
+        
+        return [
+            'shipped'   => isset($row['shipped']) ? (int)$row['shipped'] : 0,
+            'shippedBO' => isset($row['shippedBO']) ? (int)$row['shippedBO'] : 0,
+        ];
+    }
+    
 }
 ?>

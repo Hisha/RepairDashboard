@@ -1,6 +1,9 @@
 <?php
 
 require_once __DIR__ . '/bootstrap.php';
+require_once APP_ROOT . '/vendor/autoload.php';
+require_once APP_ROOT . '/bin/Charts/shipped_piechart.php';
+require_once APP_ROOT . '/bin/Utilities/ChartRenderer.php';
 require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
 require_once APP_ROOT . '/bin/Model/CavRequisitions.php';
 require_once APP_ROOT . '/bin/Model/SYS_PowerPointFiller.php';
@@ -8,6 +11,7 @@ require_once APP_ROOT . '/bin/Model/SYS_PowerPointFiller.php';
 $programMapping = new SYS_ProgramMapping();
 $cavRequisitions = new CavRequisitions();
 $powerPointFiller = new SYS_PowerPointFiller();
+$renderer = new ChartRenderer();
 
 $message = '';
 $error = '';
@@ -16,7 +20,7 @@ $reportData = [];
 $selectedProgram = $_POST['ddlDistinctNormalizedProgram'] ?? '';
 $selectedMonth = $_POST['ddlRecvMonth'] ?? '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport'])) {
     $selectedProgram = trim($selectedProgram);
     $selectedMonth = trim($selectedMonth);
     
@@ -28,6 +32,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $dateRanges = $cavRequisitions->getReportDateRanges($selectedMonth);
             $fillerData = $powerPointFiller->getPPFiller($selectedProgram);
+            
+            // If getPPFiller() returns fetchAll(), use the first row
+            if (isset($fillerData[0]) && is_array($fillerData[0])) {
+                $fillerData = $fillerData[0];
+            }
+            
+            $pieData = $cavRequisitions->getShippedPieData(
+                $selectedProgram,
+                $dateRanges['month_start'],
+                $dateRanges['month_end']
+                );
+            
+            $chartOutput = APP_ROOT . '/reports/tmp/shipped_pie_' . uniqid() . '.png';
+            
+            $chartConfig = ShippedPieChart::build(
+                $chartOutput,
+                $pieData['shipped'],
+                $pieData['shippedBO']
+                );
+            
+            $chartJsonName = 'shipped_pie_' . uniqid() . '.json';
+            $shippedPiePath = $renderer->render($chartConfig, $chartJsonName);
             
             $reportData = [
                 'program' => $selectedProgram,
@@ -41,10 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'ytd_line' => $dateRanges['ytd_line'],
                 'title' => $fillerData['title'],
                 'pm' => $fillerData['pm'],
-                'programname' => $fillerData['programname']
+                'programname' => $fillerData['programname'],
+                'shipped' => $pieData['shipped'],
+                'shippedBO' => $pieData['shippedBO'],
+                'shipped_pie_path' => $shippedPiePath
             ];
             
-            $message = 'Selections accepted. Report generation logic will be added next.';
+            $message = 'Selections accepted and shipped pie chart generated successfully.';
         } catch (Exception $e) {
             $error = $e->getMessage();
         }
@@ -213,6 +242,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </table>
         </div>
     <?php endif; ?>
+    <?php if (!empty($reportData['shipped_pie_path'])): ?>
+    <?php $chartUrl = str_replace(APP_ROOT, '/dashboard', $reportData['shipped_pie_path']); ?>
+    <div class="report-preview">
+        <h3>Generated Shipped Pie Chart</h3>
+        <table>
+            <tr>
+                <td>Shipped</td>
+                <td><?= htmlspecialchars((string)$reportData['shipped']) ?></td>
+            </tr>
+            <tr>
+                <td>B/O Shipped</td>
+                <td><?= htmlspecialchars((string)$reportData['shippedBO']) ?></td>
+            </tr>
+        </table>
+        <p style="margin-top:15px;">
+            <img src="<?= htmlspecialchars($chartUrl) ?>" alt="Shipped Pie Chart" style="max-width:700px;">
+        </p>
+    </div>
+<?php endif; ?>
 </div>
 
 </body>
