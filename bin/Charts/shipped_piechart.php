@@ -27,8 +27,7 @@ class ShippedPieChart
             'width' => 900,
             'height' => 650,
             'output' => $outputPath,
-            'legendDisplay' => true,
-            'legendPosition' => 'right',
+            'legendDisplay' => false,
             'data' => [
                 'labels' => ['Shipped', 'Shipped BO'],
                 'datasets' => [[
