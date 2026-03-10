@@ -110,10 +110,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(300)
             ->setOffsetX(400)
             ->setOffsetY(150);
-                        
+            
+            $label1->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            
             $label1->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFFFF'))->setEndColor(new Color('FFFFFFFF'));
             $label1->getBorder()->setColor(new Color('FF2F5597'))->setLineWidth(1.5);
-            $label1->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            
             $label1->createTextRun("B/O Shipped")->getFont()->setSize(11);
             $label1->createBreak();
             $label1->createTextRun($pieData['shippedBO'] . " Reqs")->getFont()->setSize(11);
@@ -126,9 +128,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetX(250)
             ->setOffsetY(420);
             
+            $label2->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            
             $label2->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFFFF'))->setEndColor(new Color('FFFFFFFF'));
             $label2->getBorder()->setColor(new Color('FF2F5597'))->setLineWidth(1.5);
-            $label2->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            
             $label2->createTextRun("Shipped ")->getFont()->setSize(11);
             $label2->createBreak();
             $label2->createTextRun($pieData['shipped'] . " Reqs")->getFont()->setSize(11);
