@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $chartShape = new File();
             $chartShape->setPath($shippedPiePath)
             ->setWidth(350)
-            ->setOffsetX(200)
+            ->setOffsetX(350)
             ->setOffsetY(180);
             
             $slide->addShape($chartShape);
@@ -105,26 +105,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $label1 = $slide->createRichTextShape()
             ->setHeight(40)
             ->setWidth(300)
-            ->setOffsetX(200)
-            ->setOffsetY(520);
+            ->setOffsetX(400)
+            ->setOffsetY(150);
                         
             $label1->createTextRun("B/O Shipped")->getFont()->setSize(14);
             $label1->createBreak();
             $label1->createTextRun($pieData['shippedBO'] . " Reqs")->getFont()->setSize(14);
             $label1->createBreak();
             $label1->createTextRun($shippedBOPct . "%")->getFont()->setSize(14);
+            $label1->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             
             $label2 = $slide->createRichTextShape()
             ->setHeight(40)
             ->setWidth(300)
-            ->setOffsetX(200)
-            ->setOffsetY(560);
+            ->setOffsetX(250)
+            ->setOffsetY(420);
             
             $label2->createTextRun("Shipped ")->getFont()->setSize(14);
             $label2->createBreak();
             $label2->createTextRun($pieData['shipped'] . " Reqs")->getFont()->setSize(14);
             $label2->createBreak();
             $label2->createTextRun($shippedPct . "%")->getFont()->setSize(14);
+            $label2->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
