@@ -106,16 +106,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $slide->addShape($chartShape);
             
             $label1 = $slide->createRichTextShape()
-            ->setHeight(40)
-            ->setWidth(300)
+            ->setHeight(70)
+            ->setWidth(130)
             ->setOffsetX(400)
             ->setOffsetY(150);
             
-            $label1->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            // center text
+            $label1->getActiveParagraph()
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
             
-            $label1->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFFFF'))->setEndColor(new Color('FFFFFFFF'));
-            $label1->getBorder()->setColor(new Color('FF2F5597'))->setLineWidth(1.5);
+            // white fill
+            $label1->getFill()
+            ->setFillType(Fill::FILL_SOLID)
+            ->setStartColor(new Color('FFFFFFFF'));
             
+            // blue border
+            $label1->getBorder()
+            ->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)
+            ->setLineWidth(1.5)
+            ->setColor(new Color('FF2F5597'));
+            
+            // text
             $label1->createTextRun("B/O Shipped")->getFont()->setSize(11);
             $label1->createBreak();
             $label1->createTextRun($pieData['shippedBO'] . " Reqs")->getFont()->setSize(11);
