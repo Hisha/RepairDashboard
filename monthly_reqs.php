@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $doughnutData = $cavRequisitions->getShippedDoughnutData(
                 $selectedProgram,
-                $dateRanges['ytd_start'],
-                $dateRanges['ytd_end'],
+                $dateRanges['month_start'],
+                $dateRanges['month_end'],
                 );
             
             $reportData = [
@@ -311,7 +311,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblANORS = $slide->createRichTextShape()
             ->setHeight(60)
             ->setWidth(85)
-            ->setOffsetX(280)
+            ->setOffsetX(290)
             ->setOffsetY(200);
             $lblANORS->getActiveParagraph()
             ->getAlignment()
@@ -325,8 +325,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSpare = $slide->createRichTextShape()
             ->setHeight(60)
             ->setWidth(85)
-            ->setOffsetX(280)
-            ->setOffsetY(275);
+            ->setOffsetX(285)
+            ->setOffsetY(280);
             $lblSpare->getActiveParagraph()
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);

@@ -103,7 +103,7 @@ class CavRequisitions
         ];
     }
     
-    public function getShippedDoughnutData(string $selectedProgram, string $ytdStart, string $ytdEnd): array
+    public function getShippedDoughnutData(string $selectedProgram, string $startDate, string $endDate): array
     {
         $db = new db();
         
@@ -137,7 +137,7 @@ class CavRequisitions
           AND cav_requisitions.status IN ('Shipped', 'PICK UP')
     ";
         
-        $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
+        $row = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchArray();
         
         $db->close();
         
