@@ -128,11 +128,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setColor(new Color('FF2F5597'));
             
             // text
-            $lblBOShip->createTextRun("B/O Shipped")->getFont('Calibri')->setSize(11);
+            $lblBOShip->createTextRun("B/O Shipped")->getFont()->setName('Calibri')->setSize(11);
             $lblBOShip->createBreak();
-            $lblBOShip->createTextRun($pieData['shippedBO'] . " Reqs")->getFont('Calibri')->setSize(11);
+            $lblBOShip->createTextRun($pieData['shippedBO'] . " Reqs")->getFont()->setName('Calibri')->setSize(11);
             $lblBOShip->createBreak();
-            $lblBOShip->createTextRun($shippedBOPct . "%")->getFont('Calibri')->setSize(11);
+            $lblBOShip->createTextRun($shippedBOPct . "%")->getFont()->setName('Calibri')->setSize(11);
                         
             $lblShipped = $slide->createRichTextShape()
             ->setHeight(60)
@@ -156,11 +156,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setLineWidth(1.5)
             ->setColor(new Color('FF2F5597'));
             
-            $lblShipped->createTextRun("Shipped ")->getFont('Calibri')->setSize(11);
+            $lblShipped->createTextRun("Shipped ")->getFont()->setName('Calibri')->setSize(11);
             $lblShipped->createBreak();
-            $lblShipped->createTextRun($pieData['shipped'] . " Reqs")->getFont('Calibri')->setSize(11);
+            $lblShipped->createTextRun($pieData['shipped'] . " Reqs")->getFont()->setName('Calibri')->setSize(11);
             $lblShipped->createBreak();
-            $lblShipped->createTextRun($shippedPct . "%")->getFont('Calibri')->setSize(11);
+            $lblShipped->createTextRun($shippedPct . "%")->getFont()->setName('Calibri')->setSize(11);
             
             $lblTitle = $slide->createRichTextShape()
             ->setHeight(50)
@@ -179,39 +179,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblPM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
             $lblReportPeriod = $slide->createRichTextShape()
-            ->setHeight(200)
+            ->setHeight(120)
             ->setWidth(400)
-            ->setOffsetX(500)
+            ->setOffsetX(600)
             ->setOffsetY(140);
-            
-            $lblReportPeriod->getActiveParagraph()
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            
-            $lblReportPeriod->createTextRun("Report Period")
-            ->getFont()
-            ->setName('Calibri')
-            ->setBold(true)
-            ->setColor(new Color('FF000000'))
-            ->setSize(16);
-            
+            $lblReportPeriod->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblReportPeriod->createTextRun("Report Period")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF000000'))->setSize(16);
             $lblReportPeriod->createBreak();
-            
-            $lblReportPeriod->createTextRun("Month: " . $dateRanges['month_start'] . " to " . $dateRanges['month_end'])
-            ->getFont()
-            ->setName('Calibri')
-            ->setBold(true)
-            ->setColor(new Color('FFFF991C'))
-            ->setSize(16);
-            
+            $lblReportPeriod->createTextRun("Month: " . $dateRanges['month_start'] . " to " . $dateRanges['month_end'])->getFont()->setName('Calibri')->setBold(true)->setUnderline(true)->setColor(new Color('FFFF991C'))->setSize(16);
             $lblReportPeriod->createBreak();
-            
-            $lblReportPeriod->createTextRun("YTD: " . $dateRanges['ytd_start'] . " to " . $dateRanges['ytd_end'])
-            ->getFont()
-            ->setName('Calibri')
-            ->setBold(true)
-            ->setColor(new Color('FF00008B'))
-            ->setSize(16);
+            $lblReportPeriod->createTextRun("YTD: " . $dateRanges['ytd_start'] . " to " . $dateRanges['ytd_end'])->getFont()->setName('Calibri')->setBold(true)->setUnderline(true)->setColor(new Color('FF00008B'))->setSize(16);
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
