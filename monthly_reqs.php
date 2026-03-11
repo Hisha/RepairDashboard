@@ -165,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblTitle = $slide->createRichTextShape()
             ->setHeight(50)
             ->setWidth(500)
-            ->setOffsetX(450)
+            ->setOffsetX(455)
             ->setOffsetY(30);
             $lblTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblTitle->createTextRun($fillerData['title'])->getFont('Helvetica')->setBold(true)->setColor(new Color('FFFFFF'))->setSize(32);
