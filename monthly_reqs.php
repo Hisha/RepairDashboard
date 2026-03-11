@@ -280,6 +280,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblMOARequirements->createBreak();
             $lblMOARequirements->createTextRun("90 - Day RT Backorders")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(12);
             
+            $lblFleetFailure = $slide->createRichTextShape()
+            ->setHeight(60)
+            ->setWidth(85)
+            ->setOffsetX(575)
+            ->setOffsetY(400);
+            $lblFleetFailure->getActiveParagraph()
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblFleetFailure->createTextRun("Fleet Failure ")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF014D4E'))->setSize(11);
+            $lblFleetFailure->createBreak();
+            $lblFleetFailure->createTextRun($doughnutData['fleetFailure'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF014D4E'))->setSize(11);
+            $lblFleetFailure->createBreak();
+            $lblFleetFailure->createTextRun($shippedFleeteFailurePct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF014D4E'))->setSize(11);
+            
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
             $writer = IOFactory::createWriter($ppt, 'PowerPoint2007');
