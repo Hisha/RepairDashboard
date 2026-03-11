@@ -149,7 +149,6 @@ class CavRequisitions
             'casrep' => isset($row['casrep']) ? (int)$row['casrep'] : 0,
         ];
     }
-    }
-    
 }
+  
 ?>
