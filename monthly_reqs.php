@@ -172,8 +172,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblPM = $slide->createRichTextShape()
             ->setHeight(50)
-            ->setWidth(500)
-            ->setOffsetX(500)
+            ->setWidth(600)
+            ->setOffsetX(460)
             ->setOffsetY(80);
             $lblPM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblPM->createTextRun("{$fillerData['pm']} {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
