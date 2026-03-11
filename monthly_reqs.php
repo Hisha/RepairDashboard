@@ -181,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblBOShip->getBorder()
             ->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)
             ->setLineWidth(1.5)
-            ->setColor(new Color('FFCC5500'));
+            ->setColor(new Color('FF2F5597'));
             
             // text
             $lblBOShip->createTextRun("B/O Shipped")->getFont()->setName('Calibri')->setSize(11);
