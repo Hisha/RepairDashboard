@@ -34,7 +34,7 @@ class ShippedDoughnutChart
                     'labels' => ['Fleet Failure', '999', 'Spare', 'ANORS', 'CASREP'],
                     'datasets' => [[
                         'data' => [$fleetFailure, $nineNineNine, $spare, $anors, $casrep],
-                        'backgroundColor' => ['#40E0D0', '#FF4D00', '#008000', '#FFEE8C', '#FF0000'],
+                        'backgroundColor' => ['#0B6E6E', '#3B6FB6', '#4CAF50', '#F2A541', '#C0392B'],
                         'borderColor' => '#ffffff',
                         'borderWidth' => 0
                     ]]

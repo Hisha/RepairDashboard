@@ -288,11 +288,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblFleetFailure->getActiveParagraph()
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $lblFleetFailure->createTextRun("Fleet Failure ")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF40E0D0'))->setSize(11);
+            $lblFleetFailure->createTextRun("Fleet Failure ")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF0B6E6E'))->setSize(11);
             $lblFleetFailure->createBreak();
-            $lblFleetFailure->createTextRun($doughnutData['fleetFailure'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF40E0D0'))->setSize(11);
+            $lblFleetFailure->createTextRun($doughnutData['fleetFailure'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF0B6E6E'))->setSize(11);
             $lblFleetFailure->createBreak();
-            $lblFleetFailure->createTextRun($shippedFleeteFailurePct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF40E0D0'))->setSize(11);
+            $lblFleetFailure->createTextRun($shippedFleeteFailurePct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF0B6E6E'))->setSize(11);
             
             $lblCASREP = $slide->createRichTextShape()
             ->setHeight(60)
@@ -302,11 +302,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblCASREP->getActiveParagraph()
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $lblCASREP->createTextRun("CASREP")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFF0000'))->setSize(11);
+            $lblCASREP->createTextRun("CASREP")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFC0392B'))->setSize(11);
             $lblCASREP->createBreak();
-            $lblCASREP->createTextRun($doughnutData['casrep'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFF0000'))->setSize(11);
+            $lblCASREP->createTextRun($doughnutData['casrep'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFC0392B'))->setSize(11);
             $lblCASREP->createBreak();
-            $lblCASREP->createTextRun($shippedCASREPPct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFF0000'))->setSize(11);
+            $lblCASREP->createTextRun($shippedCASREPPct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFC0392B'))->setSize(11);
             
             $lblANORS = $slide->createRichTextShape()
             ->setHeight(60)
@@ -316,25 +316,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblANORS->getActiveParagraph()
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $lblANORS->createTextRun("ANORS")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFEE8C'))->setSize(11);
+            $lblANORS->createTextRun("ANORS")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFF2A541'))->setSize(11);
             $lblANORS->createBreak();
-            $lblANORS->createTextRun($doughnutData['anors'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFEE8C'))->setSize(11);
+            $lblANORS->createTextRun($doughnutData['anors'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFF2A541'))->setSize(11);
             $lblANORS->createBreak();
-            $lblANORS->createTextRun($shippedANORSPct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFEE8C'))->setSize(11);
+            $lblANORS->createTextRun($shippedANORSPct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFF2A541'))->setSize(11);
             
             $lblSpare = $slide->createRichTextShape()
             ->setHeight(60)
             ->setWidth(85)
             ->setOffsetX(280)
-            ->setOffsetY(260);
+            ->setOffsetY(275);
             $lblSpare->getActiveParagraph()
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $lblSpare->createTextRun("Spare")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF008000'))->setSize(11);
+            $lblSpare->createTextRun("Spare")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF4CAF50'))->setSize(11);
             $lblSpare->createBreak();
-            $lblSpare->createTextRun($doughnutData['spare'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF008000'))->setSize(11);
+            $lblSpare->createTextRun($doughnutData['spare'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF4CAF50'))->setSize(11);
             $lblSpare->createBreak();
-            $lblSpare->createTextRun($shippedSparePct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF008000'))->setSize(11);
+            $lblSpare->createTextRun($shippedSparePct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF4CAF50'))->setSize(11);
             
             $lblNineNineNine = $slide->createRichTextShape()
             ->setHeight(60)
@@ -344,11 +344,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblNineNineNine->getActiveParagraph()
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $lblNineNineNine->createTextRun("999")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFF4D00'))->setSize(11);
+            $lblNineNineNine->createTextRun("999")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF3B6FB6'))->setSize(11);
             $lblNineNineNine->createBreak();
-            $lblNineNineNine->createTextRun($doughnutData['nineNineNine'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFF4D00'))->setSize(11);
+            $lblNineNineNine->createTextRun($doughnutData['nineNineNine'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF3B6FB6'))->setSize(11);
             $lblNineNineNine->createBreak();
-            $lblNineNineNine->createTextRun($shippedNineNineNinePct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFF4D00'))->setSize(11);
+            $lblNineNineNine->createTextRun($shippedNineNineNinePct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF3B6FB6'))->setSize(11);
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
