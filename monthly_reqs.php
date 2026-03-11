@@ -186,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblReportPeriod = $slide->createRichTextShape()
             ->setHeight(120)
             ->setWidth(375)
-            ->setOffsetX(560)
+            ->setOffsetX(575)
             ->setOffsetY(140);
             $lblReportPeriod->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblReportPeriod->createTextRun("Report Period")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF000000'))->setSize(16);
