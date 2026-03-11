@@ -172,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblPM = $slide->createRichTextShape()
             ->setHeight(50)
-            ->setWidth(325)
+            ->setWidth(500)
             ->setOffsetX(500)
             ->setOffsetY(80);
             $lblPM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
