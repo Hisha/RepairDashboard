@@ -312,7 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(60)
             ->setWidth(85)
             ->setOffsetX(280)
-            ->setOffsetY(230);
+            ->setOffsetY(200);
             $lblANORS->getActiveParagraph()
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
@@ -340,7 +340,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(60)
             ->setWidth(85)
             ->setOffsetX(280)
-            ->setOffsetY(325);
+            ->setOffsetY(350);
             $lblNineNineNine->getActiveParagraph()
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
