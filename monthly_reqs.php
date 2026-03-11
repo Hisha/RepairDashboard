@@ -166,9 +166,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblReqsShipped = $slide->createRichTextShape()
             ->setHeight(50)
-            ->setWidth(120)
-            ->setOffsetX(300)
-            ->setOffsetY(275);
+            ->setWidth(150)
+            ->setOffsetX(350)
+            ->setOffsetY(290);
             $lblReqsShipped->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblReqsShipped->createTextRun($totalReqsShipped)->getFont()->setName('Aptos Narrow')->setColor(new Color('FF00008B'))->setSize(16);
             $lblReqsShipped->createBreak();
