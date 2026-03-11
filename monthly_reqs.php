@@ -195,8 +195,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 ob_end_clean();
             }
             
+            $reportName = str_replace('/', '-', $selectedProgram) . " - " . $selectedMonth . " - Monthly Report";
+            
             header('Content-Type: application/vnd.openxmlformats-officedocument.presentationml.presentation');
-            header('Content-Disposition: attachment; filename="Monthly_Report.pptx"');
+            header('Content-Disposition: attachment; filename="' . $reportName . '.pptx"');
             header('Content-Length: ' . filesize($output));
             
             readfile($output);
