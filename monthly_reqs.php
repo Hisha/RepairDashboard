@@ -14,7 +14,6 @@ use PhpOffice\PhpPresentation\Shape\Drawing\File;
 use PhpOffice\PhpPresentation\Style\Alignment;
 use PhpOffice\PhpPresentation\Style\Fill;
 use PhpOffice\PhpPresentation\Style\Color;
-use PhpOffice\PhpPresentation\Style\Border;
 
 $programMapping = new SYS_ProgramMapping();
 $cavRequisitions = new CavRequisitions();
@@ -97,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $chartJsonName = 'shipped_pie_' . uniqid() . '.json';
             $shippedPiePath = $renderer->render($chartConfig, $chartJsonName);
             
-            $doughnutOutput = APP_ROOT . '/reports/tmp/shipped_doughnut_' . uniqid() . '.pmg';
+            $doughnutOutput = APP_ROOT . '/reports/tmp/shipped_doughnut_' . uniqid() . '.png';
             
             $doughnutConfig = ShippedDoughnutChart::build(
                 $doughnutOutput,
@@ -147,12 +146,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetY(200);
             
             $slide->addShape($chartShape);
-            
+                        
             $doughnutShape = new File();
             $doughnutShape->setPath($shippedDoughnutPath)
             ->setWidth(350)
             ->setOffsetX(300)
             ->setOffsetY(200);
+            
+            $slide->addShape($doughnutShape);
             
             $lblBOShip = $slide->createRichTextShape()
             ->setHeight(60)
