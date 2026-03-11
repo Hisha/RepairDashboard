@@ -186,9 +186,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblReportPeriod->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblReportPeriod->createTextRun("Report Period")->getFont()->setName('Calibri')->setBold(true)->setUnderline(true)->setColor(new Color('FF000000'))->setSize(16);
             $lblReportPeriod->createBreak();
-            $lblReportPeriod->createTextRun("Month: " . $dateRanges['month_start'] . " to " . $dateRanges['month_end'])->getFont()->setName('Calibri')->setBold(true)->setUnderline(true)->setColor(new Color('#FF991C'))->setSize(16);
+            $lblReportPeriod->createTextRun("Month: " . $dateRanges['month_start'] . " to " . $dateRanges['month_end'])->getFont()->setName('Calibri')->setBold(true)->setUnderline(true)->setColor(new Color('FFFF991C'))->setSize(16);
             $lblReportPeriod->createBreak();
-            $lblReportPeriod->createTextRun("YTD: " . $dateRanges['ytd_start'] . " to " . $dateRanges['ytd_end'])->getFont()->setName('Calibri')->setBold(true)->setUnderline(true)->setColor(new Color('#00008B'))->setSize(16);
+            $lblReportPeriod->createTextRun("YTD: " . $dateRanges['ytd_start'] . " to " . $dateRanges['ytd_end'])->getFont()->setName('Calibri')->setBold(true)->setUnderline(true)->setColor(new Color('FF00008B'))->setSize(16);
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
