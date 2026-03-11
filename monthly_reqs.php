@@ -282,7 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblFleetFailure = $slide->createRichTextShape()
             ->setHeight(60)
-            ->setWidth(85)
+            ->setWidth(100)
             ->setOffsetX(575)
             ->setOffsetY(400);
             $lblFleetFailure->getActiveParagraph()
