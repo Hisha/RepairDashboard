@@ -192,7 +192,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->getFont()
             ->setName('Calibri')
             ->setBold(true)
-            ->setUnderline(true)
             ->setColor(new Color('FF000000'))
             ->setSize(16);
             
@@ -202,7 +201,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->getFont()
             ->setName('Calibri')
             ->setBold(true)
-            ->setUnderline(true)
             ->setColor(new Color('FFFF991C'))
             ->setSize(16);
             
@@ -212,7 +210,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->getFont()
             ->setName('Calibri')
             ->setBold(true)
-            ->setUnderline(true)
             ->setColor(new Color('FF00008B'))
             ->setSize(16);
             
