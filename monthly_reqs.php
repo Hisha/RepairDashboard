@@ -162,6 +162,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblShipped->createBreak();
             $lblShipped->createTextRun($shippedPct . "%")->getFont()->setName('Calibri')->setSize(11);
             
+            $totalReqsShipped = $pieData['shipped'] + $pieData['shippedBO'];
+            
+            $lblReqsShipped = $slide->createRichTextShape()
+            ->setHeight(50)
+            ->setWidth(80)
+            ->setOffsetX(250)
+            ->setOffsetY(250);
+            $lblReqsShipped->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblReqsShipped->createTextRun($totalReqsShipped)->getFont()->setName('Aptos Narrow')->setColor(new Color('FF00008B'))->setSize(16);
+            $lblReqsShipped->createBreak();
+            $lblReqsShipped->createTextRun("Reqs Shipped")->getFont()->setName('Aptos Narrow')->setColor(new Color('FF00008B'))->setSize(16);
+            
             $lblTitle = $slide->createRichTextShape()
             ->setHeight(50)
             ->setWidth(500)
