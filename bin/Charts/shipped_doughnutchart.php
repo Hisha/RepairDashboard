@@ -36,6 +36,7 @@ class ShippedDoughnutChart
             'height' => 650,
             'output' => $outputPath,
             'legendDisplay' => false,
+            'cutout' => '80%',
             'data' => [
                 'labels' => ['Fleet Failure', '999', 'Spare', 'ANORS', 'CASREP'],
                 'datasets' => [[

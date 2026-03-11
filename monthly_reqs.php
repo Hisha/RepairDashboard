@@ -152,7 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $doughnutShape->setName('Shipped Doughnut')
             ->setDescription('Shipped doughnut chart')
             ->setPath($shippedDoughnutPath)
-            ->setHoleSize(80)
             ->setWidth(300)
             ->setOffsetX(325)
             ->setOffsetY(225);
