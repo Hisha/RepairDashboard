@@ -105,62 +105,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $slide->addShape($chartShape);
             
-            $label1 = $slide->createRichTextShape()
+            $lblBOShip = $slide->createRichTextShape()
             ->setHeight(60)
             ->setWidth(95)
             ->setOffsetX(485)
             ->setOffsetY(145);
             
             // center text
-            $label1->getActiveParagraph()
+            $lblBOShip->getActiveParagraph()
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
             
             // white fill
-            $label1->getFill()
+            $lblBOShip->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->setStartColor(new Color('FFFFFFFF'));
             
             // blue border
-            $label1->getBorder()
+            $lblBOShip->getBorder()
             ->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)
             ->setLineWidth(1.5)
             ->setColor(new Color('FF2F5597'));
             
             // text
-            $label1->createTextRun("B/O Shipped")->getFont()->setSize(11);
-            $label1->createBreak();
-            $label1->createTextRun($pieData['shippedBO'] . " Reqs")->getFont()->setSize(11);
-            $label1->createBreak();
-            $label1->createTextRun($shippedBOPct . "%")->getFont()->setSize(11);
+            $lblBOShip->createTextRun("B/O Shipped")->getFont()->setSize(11);
+            $lblBOShip->createBreak();
+            $lblBOShip->createTextRun($pieData['shippedBO'] . " Reqs")->getFont()->setSize(11);
+            $lblBOShip->createBreak();
+            $lblBOShip->createTextRun($shippedBOPct . "%")->getFont()->setSize(11);
                         
-            $label2 = $slide->createRichTextShape()
+            $lblShipped = $slide->createRichTextShape()
             ->setHeight(60)
             ->setWidth(85)
             ->setOffsetX(385)
             ->setOffsetY(445);
             
             // center text
-            $label2->getActiveParagraph()
+            $lblShipped->getActiveParagraph()
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
             
             // white fill
-            $label2->getFill()
+            $lblShipped->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->setStartColor(new Color('FFFFFFFF'));
             
             // blue border
-            $label2->getBorder()
+            $lblShipped->getBorder()
             ->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)
             ->setLineWidth(1.5)
             ->setColor(new Color('FF2F5597'));
             
-            $label2->createTextRun("Shipped ")->getFont()->setSize(11);
-            $label2->createBreak();
-            $label2->createTextRun($pieData['shipped'] . " Reqs")->getFont()->setSize(11);
-            $label2->createBreak();
-            $label2->createTextRun($shippedPct . "%")->getFont()->setSize(11);
+            $lblShipped->createTextRun("Shipped ")->getFont()->setSize(11);
+            $lblShipped->createBreak();
+            $lblShipped->createTextRun($pieData['shipped'] . " Reqs")->getFont()->setSize(11);
+            $lblShipped->createBreak();
+            $lblShipped->createTextRun($shippedPct . "%")->getFont()->setSize(11);
             
             $labelPM = $slide->createRichTextShape()
             ->setHeight(100)
@@ -168,7 +168,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetX(485)
             ->setOffsetY(40);
             $labelPM->createTextRun($fillerData['pm'])->getFont()->setSize(18);
-            
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
