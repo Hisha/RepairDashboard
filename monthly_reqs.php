@@ -325,7 +325,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSpare = $slide->createRichTextShape()
             ->setHeight(60)
             ->setWidth(85)
-            ->setOffsetX(285)
+            ->setOffsetX(275)
             ->setOffsetY(280);
             $lblSpare->getActiveParagraph()
             ->getAlignment()
