@@ -10,6 +10,7 @@ require_once APP_ROOT . '/bin/Model/CavRequisitions.php';
 require_once APP_ROOT . '/bin/Model/SYS_PowerPointFiller.php';
 
 use PhpOffice\PhpPresentation\IOFactory;
+use PhpOffice\PhpPresentation\Shape\Drawing\Base64;
 use PhpOffice\PhpPresentation\Shape\Drawing\File;
 use PhpOffice\PhpPresentation\Style\Alignment;
 use PhpOffice\PhpPresentation\Style\Fill;
@@ -147,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $slide->addShape($chartShape);
                         
-            $doughnutShape = new File();
+            $doughnutShape = new Base64();
             $doughnutShape->setPath($shippedDoughnutPath)
             ->setWidth(350)
             ->setOffsetX(300)
