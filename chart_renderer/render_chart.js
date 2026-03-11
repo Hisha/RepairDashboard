@@ -49,7 +49,7 @@ async function main() {
     const chartJSNodeCanvas = new ChartJSNodeCanvas({
       width,
       height,
-      backgroundColour: 'white',
+      backgroundColour: 'transparent',
     });
 
     const configuration = {
