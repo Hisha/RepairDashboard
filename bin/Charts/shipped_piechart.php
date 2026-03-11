@@ -31,7 +31,7 @@ class ShippedPieChart
                 'labels' => ['Shipped', 'Shipped BO'],
                 'datasets' => [[
                     'data' => [$shipped, $shippedBO],
-                    'backgroundColor' => ['#F4B084', '#FFFFFF'],
+                    'backgroundColor' => ['#F4B084', '#CC5500'],
                     'borderColor' => '#ffffff',
                     'borderWidth' => 2
                 ]]
