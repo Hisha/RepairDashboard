@@ -148,8 +148,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $slide->addShape($chartShape);
                         
-            $doughnutShape = new Base64();
-            $doughnutShape->setPath($shippedDoughnutPath)
+            if (!file_exists($shippedDoughnutPath)) {
+                throw new RuntimeException('Doughnut file not found: ' . $shippedDoughnutPath);
+            }
+            
+            if (filesize($shippedDoughnutPath) === 0) {
+                throw new RuntimeException('Doughnut file is empty.');
+            }
+            
+            $imgInfo = getimagesize($shippedDoughnutPath);
+            if ($imgInfo === false) {
+                throw new RuntimeException('Doughnut file is not a valid image.');
+            }
+            
+            $doughnutShape = new File();
+            $doughnutShape->setName('Shipped Doughnut')
+            ->setDescription('Shipped doughnut chart')
+            ->setPath($shippedDoughnutPath)
             ->setWidth(350)
             ->setOffsetX(300)
             ->setOffsetY(200);
