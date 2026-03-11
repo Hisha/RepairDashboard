@@ -206,11 +206,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setFillType(Fill::FILL_SOLID)
             ->setStartColor(new Color('FFFFFFFF'));
             
-            // blue border
+            // border
             $lblShipped->getBorder()
             ->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)
             ->setLineWidth(1.5)
-            ->setColor(new Color('FF2F5597'));
+            ->setColor(new Color('FFF4B084'));
             
             $lblShipped->createTextRun("Shipped ")->getFont()->setName('Calibri')->setSize(11);
             $lblShipped->createBreak();
