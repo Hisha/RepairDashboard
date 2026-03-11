@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetX(455)
             ->setOffsetY(30);
             $lblTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-            $lblTitle->createTextRun($fillerData['title'])->getFont('Helvetica')->setBold(true)->setColor(new Color('FFFFFF'))->setSize(32);
+            $lblTitle->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
             $lblPM = $slide->createRichTextShape()
             ->setHeight(50)
@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetX(500)
             ->setOffsetY(80);
             $lblPM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-            $lblPM->createTextRun($fillerData['pm'] . " " . $fillerData['programname'])->getFont('Helvetica')->setBold(true)->setColor(new Color('FFFFFF'))->setSize(32);
+            $lblPM->createTextRun("{$fillerData['pm']} {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
