@@ -128,11 +128,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setColor(new Color('FF2F5597'));
             
             // text
-            $lblBOShip->createTextRun("B/O Shipped")->getFont()->setSize(11);
+            $lblBOShip->createTextRun("B/O Shipped")->getFont('Calibri')->setSize(11);
             $lblBOShip->createBreak();
-            $lblBOShip->createTextRun($pieData['shippedBO'] . " Reqs")->getFont()->setSize(11);
+            $lblBOShip->createTextRun($pieData['shippedBO'] . " Reqs")->getFont('Calibri')->setSize(11);
             $lblBOShip->createBreak();
-            $lblBOShip->createTextRun($shippedBOPct . "%")->getFont()->setSize(11);
+            $lblBOShip->createTextRun($shippedBOPct . "%")->getFont('Calibri')->setSize(11);
                         
             $lblShipped = $slide->createRichTextShape()
             ->setHeight(60)
@@ -156,18 +156,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setLineWidth(1.5)
             ->setColor(new Color('FF2F5597'));
             
-            $lblShipped->createTextRun("Shipped ")->getFont()->setSize(11);
+            $lblShipped->createTextRun("Shipped ")->getFont('Calibri')->setSize(11);
             $lblShipped->createBreak();
-            $lblShipped->createTextRun($pieData['shipped'] . " Reqs")->getFont()->setSize(11);
+            $lblShipped->createTextRun($pieData['shipped'] . " Reqs")->getFont('Calibri')->setSize(11);
             $lblShipped->createBreak();
-            $lblShipped->createTextRun($shippedPct . "%")->getFont()->setSize(11);
+            $lblShipped->createTextRun($shippedPct . "%")->getFont('Calibri')->setSize(11);
             
-            $labelPM = $slide->createRichTextShape()
-            ->setHeight(100)
+            $lblTitle = $slide->createRichTextShape()
+            ->setHeight(50)
             ->setWidth(200)
             ->setOffsetX(485)
             ->setOffsetY(40);
-            $labelPM->createTextRun($fillerData['pm'])->getFont()->setSize(18);
+            $lblTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblTitle->createTextRun($fillerData['title'])->getFont('Helvetica')->setSize(32);
+            
+            $lblPM = $slide->createRichTextShape()
+            ->setHeight(50)
+            ->setWidth(200)
+            ->setOffsetX(485)
+            ->setOffsetY(80);
+            $lblPM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblPM->createTextRun($fillerData['pm'])->getFont('Helvetica')->setSize(32);
+            
+            $lblProgramName = $slide->createRichTextShape()
+            ->setHeight(50)
+            ->setWidth(200)
+            ->setOffsetX(550)
+            ->setOffsetY(80);
+            $lblProgramName->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblProgramName->createTextRun($fillerData['programname'])->getFont('Helvetica')->setSize(32);
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
