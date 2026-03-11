@@ -115,6 +115,7 @@ class CavRequisitions
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
           AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.priority IN ('CASREP', 'ANORS', 'SPARE', '999', 'FLEET FAILURE')
           AND cav_requisitions.status IN ('Shipped', 'PICK UP')
     ";
         
@@ -137,6 +138,7 @@ class CavRequisitions
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
           AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.priority IN ('CASREP', 'ANORS', 'SPARE', '999', 'FLEET FAILURE')
           AND cav_requisitions.status = 'B/O SHIPPED'
     ";
         
