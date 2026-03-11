@@ -195,6 +195,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblReportPeriod->createBreak();
             $lblReportPeriod->createTextRun("YTD: " . $ytdStart . " to " . $ytdEnd)->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF00008B'))->setSize(16);
             
+            $lblMOARequirements = $slide->createRichTextShape()
+            ->setHeight(200)
+            ->setWidth(200)
+            ->setOffsetX(600)
+            ->setOffsetY(300);
+            $lblMOARequirements->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblMOARequirements->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFE4E8D3'));
+            $lblMOARequirements->getBorder()->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)->setLineWidth(1.5)->setColor(new Color('FF9BBB59'));
+            $lblReportPeriod->createTextRun("MOA Requirements")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF000000'))->setSize(12);
+            $lblReportPeriod->createBreak();
+            $lblReportPeriod->createTextRun("0 >= 270 Days")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(12);
+            $lblReportPeriod->createBreak();
+            $lblReportPeriod->createTextRun("85% - % Fill Rate")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(12);
+            $lblReportPeriod->createBreak();
+            $lblReportPeriod->createTextRun("1 - Day RT CAREPs")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(12);
+            $lblReportPeriod->createBreak();
+            $lblReportPeriod->createTextRun("3 - Day RT (Non-CASREP)")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(12);
+            $lblReportPeriod->createBreak();
+            $lblReportPeriod->createTextRun("90 - Day RT Backorders")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(12);
+            
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
             $writer = IOFactory::createWriter($ppt, 'PowerPoint2007');
