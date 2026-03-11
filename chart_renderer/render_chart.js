@@ -73,17 +73,19 @@ async function main() {
           },
           tooltip: {
             enabled: false
-          }
+          },
+          ...((payload.options && payload.options.plugins) || {})
         },
         scales: payload.scales || {},
-        indexAxis: payload.indexAxis || 'x'
+        indexAxis: payload.indexAxis || 'x',
+        ...payload.options
       }
     };
 
     const image = await chartJSNodeCanvas.renderToBuffer(configuration);
     fs.mkdirSync(path.dirname(output), { recursive: true });
     fs.writeFileSync(output, image);
-    process.stdout.write(output);
+    process.stdout.write(output + '\n');
   } catch (err) {
     console.error(err.message);
     process.exit(1);

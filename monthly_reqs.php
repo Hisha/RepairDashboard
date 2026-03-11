@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setPath($shippedDoughnutPath)
             ->setWidth(300)
             ->setOffsetX(325)
-            ->setOffsetY(225);
+            ->setOffsetY(220);
             
             $slide->addShape($doughnutShape);
             
