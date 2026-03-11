@@ -284,7 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(60)
             ->setWidth(100)
             ->setOffsetX(575)
-            ->setOffsetY(400);
+            ->setOffsetY(395);
             $lblFleetFailure->getActiveParagraph()
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_CENTER);
