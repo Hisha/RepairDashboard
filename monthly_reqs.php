@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(150)
             ->setOffsetX(350)
             ->setOffsetY(290);
-            $lblReqsShipped->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblReqsShipped->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblReqsShipped->createTextRun($totalReqsShipped)->getFont()->setName('Aptos Narrow')->setColor(new Color('FF00008B'))->setSize(16);
             $lblReqsShipped->createBreak();
             $lblReqsShipped->createTextRun("Reqs Shipped")->getFont()->setName('Aptos Narrow')->setColor(new Color('FF00008B'))->setSize(16);
