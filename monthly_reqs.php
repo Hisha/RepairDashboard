@@ -196,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblReportPeriod->createTextRun("YTD: " . $ytdStart . " to " . $ytdEnd)->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF00008B'))->setSize(16);
             
             $lblMOARequirements = $slide->createRichTextShape()
-            ->setHeight(120)
+            ->setHeight(130)
             ->setWidth(190)
             ->setOffsetX(700)
             ->setOffsetY(270);
