@@ -51,6 +51,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $dateRanges['month_end']
                 );
             
+            $doughnutData = $cavRequisitions->getShippedDoughnutData(
+                $selectedProgram,
+                $dateRanges['ytd_start'],
+                $dateRanges['ytd_end'],
+                );
+            
             $reportData = [
                 'program' => $selectedProgram,
                 'selected_month' => $selectedMonth,
@@ -90,6 +96,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $chartJsonName = 'shipped_pie_' . uniqid() . '.json';
             $shippedPiePath = $renderer->render($chartConfig, $chartJsonName);
             
+            $doughnutOutput = APP_ROOT . '/reports/tmp/shipped_doughnut_' . uniqid() . '.pmg';
+            
+            $doughnutConfig = ShippedDoughnutChart::build(
+                $doughnutOutput,
+                $doughnutData['fleetFailure'],
+                $doughnutData['nineNineNine'],
+                $doughnutData['spare'],
+                $doughnutData['anors'],
+                $doughnutData['casrep']
+                );
+            
+            $shippedFleeteFailure = (int)$doughnutData['fleetFailure'];
+            $shippedNineNineNine = (int)$doughnutData['nineNineNine'];
+            $shippedSpare = (int)$doughnutData['spare'];
+            $shippedANORS = (int)$doughnutData['anors'];
+            $shippedCASREP = (int)$doughnutData['casrep'];
+            
+            $totalShipped = $shippedFleeteFailure + $shippedNineNineNine + $shippedSpare + $shippedANORS + $shippedCASREP;
+            
+            if ($totalShipped > 0){
+                $shippedFleeteFailurePct = round(($shippedFleeteFailure / $totalShipped) * 100, 1);
+                $shippedNineNineNinePct = round(($shippedNineNineNine / $totalShipped) * 100, 1);
+                $shippedSparePct = round(($shippedSpare / $totalShipped) * 100, 1);
+                $shippedANORSPct = round(($shippedANORS / $totalShipped) * 100, 1);
+                $shippedCASREPPct = round(($shippedCASREP / $totalShipped) * 100, 1);
+            }else{
+                $shippedFleeteFailurePct = 0;
+                $shippedNineNineNinePct = 0;
+                $shippedSparePct = 0;
+                $shippedANORSPct = 0;
+                $shippedCASREPPct = 0;
+            }
+            
+            $doughnutJsonName = 'shipped_doughnut_' . uniqid() . '.json';
+            $shippedDoughnutPath = $renderer->render($doughnutConfig, $doughnutJsonName);
+            
             $template = APP_ROOT . '/templates/MonthlyReqsTemplate.pptx';
             
             $reader = IOFactory::createReader('PowerPoint2007');
@@ -104,6 +146,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetY(200);
             
             $slide->addShape($chartShape);
+            
+            $doughnutShape = new File();
+            $doughnutShape->setPath($shippedDoughnutPath)
+            ->setWidth(350)
+            ->setOffsetX(300)
+            ->setOffsetY(200);
             
             $lblBOShip = $slide->createRichTextShape()
             ->setHeight(60)

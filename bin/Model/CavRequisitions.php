@@ -103,5 +103,53 @@ class CavRequisitions
         ];
     }
     
+    public function getShippedDoughnutData(string $selectedProgram, string $ytdStart, string $ytdEnd): array
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            SUM(CASE
+                WHEN cav_requisitions.priority = 'FLEET FAILURE' THEN 1
+                ELSE 0
+            END) AS fleetFailure,
+            SUM(CASE
+                WHEN cav_requisitions.priority = '999' THEN 1
+                ELSE 0
+            END) AS nineNineNine,
+            SUM(CASE
+                WHEN cav_requisitions.priority = 'SPARE' THEN 1
+                ELSE 0
+            END) AS spare,
+            SUM(CASE
+                WHEN cav_requisitions.priority = 'ANORS' THEN 1
+                ELSE 0
+            END) AS anors,
+            SUM(CASE
+                WHEN cav_requisitions.priority = 'CASREP' THEN 1
+                ELSE 0
+            END) AS casrep
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.status IN ('Shipped', 'PICK UP')
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
+        
+        $db->close();
+        
+        return [
+            'fleetFailure'   => isset($row['fleetFailure']) ? (int)$row['fleetFailure'] : 0,
+            'nineNineNine' => isset($row['nineNineNine']) ? (int)$row['nineNineNine'] : 0,
+            'spare' => isset($row['spare']) ? (int)$row['spare'] : 0,
+            'anors' => isset($row['anors']) ? (int)$row['anors'] : 0,
+            'casrep' => isset($row['casrep']) ? (int)$row['casrep'] : 0,
+        ];
+    }
+    }
+    
 }
 ?>
