@@ -103,6 +103,50 @@ class CavRequisitions
         ];
     }
     
+    public function getPieData_Shipped(string $selectedProgram, string $startDate, string $endDate): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            COUNT(*) AS shipped
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.status IN ('Shipped', 'PICK UP')
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['shipped']) ? (int)$row['shipped'] : 0;
+    }
+    
+    public function getPieData_BOShipped(string $selectedProgram, string $startDate, string $endDate): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            COUNT(*) AS boShipped
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.status = 'B/O SHIPPED'
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['boShipped']) ? (int)$row['boShipped'] : 0;
+    }
+    
     public function getShippedDoughnutData(string $selectedProgram, string $startDate, string $endDate): array
     {
         $db = new db();

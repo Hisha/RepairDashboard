@@ -46,11 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $fillerData = $fillerData[0];
             }
             
-            $pieData = $cavRequisitions->getShippedPieData(
-                $selectedProgram,
-                $dateRanges['month_start'],
-                $dateRanges['month_end']
-                );
+            $pieData_Shipped = $cavRequisitions->getPieData_Shipped($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
+            $pieData_BOShipped = $cavRequisitions->getPieData_BOShipped($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
+            
+            //$pieData = $cavRequisitions->getShippedPieData(
+            //    $selectedProgram,
+            //    $dateRanges['month_start'],
+            //    $dateRanges['month_end']
+            //    );
             
             $doughnutData = $cavRequisitions->getShippedDoughnutData(
                 $selectedProgram,
@@ -77,12 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $chartConfig = ShippedPieChart::build(
                 $chartOutput,
-                $pieData['shipped'],
-                $pieData['shippedBO']
+                $pieData_Shipped,
+                $pieData_BOShipped
                 );
             
-            $shipped = (int)$pieData['shipped'];
-            $shippedBO = (int)$pieData['shippedBO'];
+            $shipped = (int)$pieData_Shipped;
+            $shippedBO = (int)$pieData_BOShipped;
             
             $total = $shipped + $shippedBO;
             
@@ -183,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             // text
             $lblBOShip->createTextRun("B/O Shipped")->getFont()->setName('Calibri')->setSize(11);
             $lblBOShip->createBreak();
-            $lblBOShip->createTextRun($pieData['shippedBO'] . " Reqs")->getFont()->setName('Calibri')->setSize(11);
+            $lblBOShip->createTextRun($pieData_BOShipped . " Reqs")->getFont()->setName('Calibri')->setSize(11);
             $lblBOShip->createBreak();
             $lblBOShip->createTextRun($shippedBOPct . "%")->getFont()->setName('Calibri')->setSize(11);
                         
@@ -211,11 +214,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblShipped->createTextRun("Shipped ")->getFont()->setName('Calibri')->setSize(11);
             $lblShipped->createBreak();
-            $lblShipped->createTextRun($pieData['shipped'] . " Reqs")->getFont()->setName('Calibri')->setSize(11);
+            $lblShipped->createTextRun($pieData_Shipped . " Reqs")->getFont()->setName('Calibri')->setSize(11);
             $lblShipped->createBreak();
             $lblShipped->createTextRun($shippedPct . "%")->getFont()->setName('Calibri')->setSize(11);
             
-            $totalReqsShipped = $pieData['shipped'] + $pieData['shippedBO'];
+            $totalReqsShipped = $pieData_Shipped + $pieData_BOShipped;
             
             $lblReqsShipped = $slide->createRichTextShape()
             ->setHeight(50)
