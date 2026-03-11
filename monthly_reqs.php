@@ -3,6 +3,7 @@
 require_once __DIR__ . '/bootstrap.php';
 require_once APP_ROOT . '/vendor/autoload.php';
 require_once APP_ROOT . '/bin/Charts/shipped_piechart.php';
+require_once APP_ROOT . '/bin/Charts/shipped_doughnutchart.php';
 require_once APP_ROOT . '/bin/Utilities/ChartRenderer.php';
 require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
 require_once APP_ROOT . '/bin/Model/CavRequisitions.php';
