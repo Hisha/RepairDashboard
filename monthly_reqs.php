@@ -606,7 +606,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setPath($ytdChartPath)
             ->setWidth(800)
             ->setOffsetX(80)
-            ->setOffsetY(140);
+            ->setOffsetY(150);
             
             $slide2->addShape($ytdShape);
             
