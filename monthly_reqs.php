@@ -644,7 +644,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblFillRateAvg = $slide2->createRichTextShape()
             ->setHeight(70)
-            ->setWidth(170)
+            ->setWidth(160)
             ->setOffsetX(100)
             ->setOffsetY(140);
             $lblFillRateAvg->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
