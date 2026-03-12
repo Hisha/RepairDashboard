@@ -344,13 +344,13 @@ class CavRequisitions
         
         $sql = "
         SELECT
-            SUM(qty) AS ytdTwoSeventyReqs
+            COUNT(*) AS ytdTwoSeventyReqs
         FROM cav_requisitions
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
           AND cav_requisitions.date_shipped BETWEEN ? AND ?
-          AND cav_requisitions.rt >= '270
+          AND cav_requisitions.rt >= '270'
     ";
         
         $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
