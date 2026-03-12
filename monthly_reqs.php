@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 'programname' => $fillerData['programname']
             ];
             
-            
+            $ytdTotalReqsRecvd = $cavRequisitions->getYTDReqsRecvd($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             
             $chartOutput = APP_ROOT . '/reports/tmp/shipped_pie_' . uniqid() . '.png';
             
