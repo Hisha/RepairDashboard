@@ -49,13 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $pieData_Shipped = $cavRequisitions->getPieData_Shipped($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
             $pieData_BOShipped = $cavRequisitions->getPieData_BOShipped($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
             
-            //$pieData = $cavRequisitions->getShippedPieData(
-            //    $selectedProgram,
-            //    $dateRanges['month_start'],
-            //    $dateRanges['month_end']
-            //    );
-            
-            $doughnutData = $cavRequisitions->getShippedDoughnutData(
+           $doughnutData = $cavRequisitions->getShippedDoughnutData(
                 $selectedProgram,
                 $dateRanges['month_start'],
                 $dateRanges['month_end'],
@@ -75,6 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 'pm' => $fillerData['pm'],
                 'programname' => $fillerData['programname']
             ];
+            
+            $ytdTotalReqsRecvd = $cavRequisitions->getYTDReqsRecvd($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
+            $ytdUniqueNiins = $cavRequisitions->getYTDUniqueNiins($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
+            $ytdTotalNiins = $cavRequisitions->getYTDTotalNiins($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             
             $chartOutput = APP_ROOT . '/reports/tmp/shipped_pie_' . uniqid() . '.png';
             
@@ -166,24 +164,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(95)
             ->setOffsetX(485)
             ->setOffsetY(145);
-            
-            // center text
-            $lblBOShip->getActiveParagraph()
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            
-            // white fill
-            $lblBOShip->getFill()
-            ->setFillType(Fill::FILL_SOLID)
-            ->setStartColor(new Color('FFFFFFFF'));
-            
-            // blue border
-            $lblBOShip->getBorder()
-            ->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)
-            ->setLineWidth(1.5)
-            ->setColor(new Color('FF2F5597'));
-            
-            // text
+            $lblBOShip->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblBOShip->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFFFF'));
+            $lblBOShip->getBorder()->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)->setLineWidth(1.5)->setColor(new Color('FF2F5597'));
             $lblBOShip->createTextRun("B/O Shipped")->getFont()->setName('Calibri')->setSize(11);
             $lblBOShip->createBreak();
             $lblBOShip->createTextRun($pieData_BOShipped . " Reqs")->getFont()->setName('Calibri')->setSize(11);
@@ -195,23 +178,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(85)
             ->setOffsetX(385)
             ->setOffsetY(445);
-            
-            // center text
-            $lblShipped->getActiveParagraph()
-            ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            
-            // white fill
-            $lblShipped->getFill()
-            ->setFillType(Fill::FILL_SOLID)
-            ->setStartColor(new Color('FFFFFFFF'));
-            
-            // blue border
-            $lblShipped->getBorder()
-            ->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)
-            ->setLineWidth(1.5)
-            ->setColor(new Color('FF2F5597'));
-            
+            $lblShipped->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblShipped->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFFFF'));
+            $lblShipped->getBorder()->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)->setLineWidth(1.5)->setColor(new Color('FF2F5597'));
             $lblShipped->createTextRun("Shipped ")->getFont()->setName('Calibri')->setSize(11);
             $lblShipped->createBreak();
             $lblShipped->createTextRun($pieData_Shipped . " Reqs")->getFont()->setName('Calibri')->setSize(11);
@@ -352,6 +321,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblNineNineNine->createTextRun($doughnutData['nineNineNine'] . " Reqs")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF3B6FB6'))->setSize(11);
             $lblNineNineNine->createBreak();
             $lblNineNineNine->createTextRun($shippedNineNineNinePct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF3B6FB6'))->setSize(11);
+            
+            $lblTotalReqsRecvd = $slide->createRichTextShape()
+            ->setHeight(60)
+            ->setWidth(85)
+            ->setOffsetX(50)
+            ->setOffsetY(180);
+            $lblTotalReqsRecvd->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblTotalReqsRecvd->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF4472C4'));
+            $lblTotalReqsRecvd->getBorder()->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)->setLineWidth(1.5)->setColor(new Color('FF385D8A'));
+            $lblTotalReqsRecvd->createTextRun("Total Reqs Received YTD")->getFont()->setName('Calibri')->setSize(16);
+            $lblTotalReqsRecvd->createBreak();
+            $lblTotalReqsRecvd->createTextRun($ytdTotalReqsRecvd)->getFont()->setName('Calibri')->setSize(24);
+            
+            $lblUniqueNiins = $slide->createRichTextShape()
+            ->setHeight(60)
+            ->setWidth(85)
+            ->setOffsetX(50)
+            ->setOffsetY(250);
+            $lblUniqueNiins->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblUniqueNiins->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF4472C4'));
+            $lblUniqueNiins->getBorder()->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)->setLineWidth(1.5)->setColor(new Color('FF385D8A'));
+            $lblUniqueNiins->createTextRun("Unique NIINs YTD")->getFont()->setName('Calibri')->setSize(16);
+            $lblUniqueNiins->createBreak();
+            $lblUniqueNiins->createTextRun($ytdUniqueNiins)->getFont()->setName('Calibri')->setSize(24);
+            
+            $lblTotalNiins = $slide->createRichTextShape()
+            ->setHeight(60)
+            ->setWidth(85)
+            ->setOffsetX(50)
+            ->setOffsetY(325);
+            $lblTotalNiins->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblTotalNiins->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF4472C4'));
+            $lblTotalNiins->getBorder()->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)->setLineWidth(1.5)->setColor(new Color('FF385D8A'));
+            $lblTotalNiins->createTextRun("Total NIINs YTD")->getFont()->setName('Calibri')->setSize(16);
+            $lblTotalNiins->createBreak();
+            $lblTotalNiins->createTextRun($ytdTotalNiins)->getFont()->setName('Calibri')->setSize(24);
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             

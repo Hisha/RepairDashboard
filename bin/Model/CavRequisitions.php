@@ -164,6 +164,71 @@ class CavRequisitions
             'casrep' => isset($row['casrep']) ? (int)$row['casrep'] : 0,
         ];
     }
+    
+    public function getYTDReqsRecvd(string $selectedProgram, string $ytdStart, string $ytdEnd): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            COUNT(*) AS ytdReqsRecvd
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['ytdReqsRecvd']) ? (int)$row['ytdReqsRecvd'] : 0;
+    }
+    
+    public function getYTDUniqueNiins(string $selectedProgram, string $ytdStart, string $ytdEnd): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            COUNT(DISTINCT niin) AS ytdUniqueNiins
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['ytdUniqueNiins']) ? (int)$row['ytdUniqueNiins'] : 0;
+    }
+    
+    public function getYTDTotalNiins(string $selectedProgram, string $ytdStart, string $ytdEnd): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            COUNT(SUM(qty)) AS ytdTotalNiins
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['ytdTotalNiins']) ? (int)$row['ytdTotalNiins'] : 0;
+    }
+    
+    
 }
   
 ?>
