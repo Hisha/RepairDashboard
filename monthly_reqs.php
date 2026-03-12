@@ -405,7 +405,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblMonthlyMetrics = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(400)
+            ->setWidth(300)
             ->setOffsetX(540)
             ->setOffsetY(460);
             $lblMonthlyMetrics->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -413,7 +413,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblNiinChange = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(400)
+            ->setWidth(300)
             ->setOffsetX(500)
             ->setOffsetY(490);
             $lblNiinChange->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -422,7 +422,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblCanceledReqs = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(400)
+            ->setWidth(300)
             ->setOffsetX(500)
             ->setOffsetY(520);
             $lblCanceledReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -431,7 +431,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblPendingReqs = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(400)
+            ->setWidth(300)
             ->setOffsetX(500)
             ->setOffsetY(550);
             $lblPendingReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -440,7 +440,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblDISReqs = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(400)
+            ->setWidth(300)
             ->setOffsetX(500)
             ->setOffsetY(580);
             $lblDISReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -449,7 +449,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblBackOrderReqs = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(400)
+            ->setWidth(300)
             ->setOffsetX(500)
             ->setOffsetY(610);
             $lblBackOrderReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
