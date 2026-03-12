@@ -68,10 +68,10 @@ class YTDDemandMissesChart
                         'max' => 500,
                         'ticks' => [
                             'font' => [
-                                 'size' => '14',
-                                 'family' => 'Helvetica',
-                                 'weight' => 'bold'
-                            ],  
+                                'size' => '14',
+                                'family' => 'Helvetica',
+                                'weight' => 'bold'
+                            ],
                         ],
                         'title' => [
                             'display' => true,
