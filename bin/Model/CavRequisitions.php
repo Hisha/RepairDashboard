@@ -404,13 +404,13 @@ class CavRequisitions
         return isset($row['ytdFillRateMissed']) ? (int)$row['ytdFillRateMissed'] : 0;
     }
     
-    public function getYTDCasrepRT(string $selectedProgram, string $ytdStart, string $ytdEnd): int
+    public function getYTDCasrepRT(string $selectedProgram, string $ytdStart, string $ytdEnd): float
     {
         $db = new db();
         
         $sql = "
         SELECT
-            AVG(rt) as ytdCasrepRT
+            AVG(rt) AS ytdCasrepRT
         FROM cav_requisitions
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
@@ -423,7 +423,7 @@ class CavRequisitions
         
         $db->close();
         
-        return isset($row['ytdCasrepRT']) ? (int)$row['ytdCasrepRT'] : 0;
+        return isset($row['ytdCasrepRT']) ? (float)$row['ytdCasrepRT'] : 0.0;
     }
         
 }
