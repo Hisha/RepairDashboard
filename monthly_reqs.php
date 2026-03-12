@@ -420,7 +420,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblNiinChange = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
-            ->setOffsetX(550)
+            ->setOffsetX(560)
             ->setOffsetY(490);
             $lblNiinChange->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblNiinChange->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
@@ -429,7 +429,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblNiinChangeData = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(70)
-            ->setOffsetX(850)
+            ->setOffsetX(860)
             ->setOffsetY(490);
             $lblNiinChangeData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblNiinChangeData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
@@ -438,7 +438,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblCanceledReqs = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
-            ->setOffsetX(550)
+            ->setOffsetX(560)
             ->setOffsetY(520);
             $lblCanceledReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblCanceledReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
@@ -447,7 +447,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblCanceledReqsData = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(70)
-            ->setOffsetX(850)
+            ->setOffsetX(860)
             ->setOffsetY(520);
             $lblCanceledReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblCanceledReqsData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
@@ -456,7 +456,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblPendingReqs = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
-            ->setOffsetX(550)
+            ->setOffsetX(560)
             ->setOffsetY(550);
             $lblPendingReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblPendingReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
@@ -465,7 +465,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblPendingReqsData = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(70)
-            ->setOffsetX(850)
+            ->setOffsetX(860)
             ->setOffsetY(550);
             $lblPendingReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblPendingReqsData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
@@ -474,7 +474,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblDISReqs = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
-            ->setOffsetX(550)
+            ->setOffsetX(560)
             ->setOffsetY(580);
             $lblDISReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblDISReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
@@ -483,7 +483,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblDISReqsData = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(70)
-            ->setOffsetX(850)
+            ->setOffsetX(860)
             ->setOffsetY(580);
             $lblDISReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblDISReqsData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
@@ -492,7 +492,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblBackOrderReqs = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
-            ->setOffsetX(550)
+            ->setOffsetX(560)
             ->setOffsetY(610);
             $lblBackOrderReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblBackOrderReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
@@ -501,7 +501,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblBackOrderReqsData = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(70)
-            ->setOffsetX(850)
+            ->setOffsetX(860)
             ->setOffsetY(610);
             $lblBackOrderReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblBackOrderReqsData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
