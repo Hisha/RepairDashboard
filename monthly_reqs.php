@@ -227,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetX(575)
             ->setOffsetY(140);
             $lblReportPeriod->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $lblReportPeriod->createTextRun("Report Period")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF000000'))->setSize(16);
+            $lblReportPeriod->createTextRun("Report Period")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FF000000'))->setSize(16);
             $lblReportPeriod->createBreak();
             $lblReportPeriod->createTextRun("Month: " . $monthStart . " to " . $monthEnd)->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFF991C'))->setSize(16);
             $lblReportPeriod->createBreak();
@@ -361,7 +361,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblYTDMetrics = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(200)
+            ->setWidth(400)
             ->setOffsetX(30)
             ->setOffsetY(500);
             $lblYTDMetrics->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
