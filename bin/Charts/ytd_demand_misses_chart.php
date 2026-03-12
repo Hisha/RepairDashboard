@@ -61,6 +61,16 @@ class YTDDemandMissesChart
                     ]
                 ],
                 'scales' => [
+                    'x' => [
+                        'ticks' => [
+                            'font' => [
+                                'size' => 14,
+                                'family' => 'Helvetica',
+                                'weight' => 'bold'
+                            ],
+                            'color' => '#000000'
+                        ]
+                    ],
                     'y' => [
                         'beginAtZero' => true,
                         'position' => 'left',
@@ -68,14 +78,21 @@ class YTDDemandMissesChart
                         'max' => 500,
                         'ticks' => [
                             'font' => [
-                                'size' => '14',
+                                'size' => 14,
                                 'family' => 'Helvetica',
                                 'weight' => 'bold'
                             ],
+                            'color' => '#000000'
                         ],
                         'title' => [
                             'display' => true,
-                            'text' => 'Demand and Misses'
+                            'text' => 'Demand and Misses',
+                            'font' => [
+                                'size' => 15,
+                                'family' => 'Helvetica',
+                                'weight' => 'bold'
+                            ],
+                            'color' => '#000000'
                         ]
                     ],
                     'y1' => [
@@ -85,17 +102,24 @@ class YTDDemandMissesChart
                         'max' => 100,
                         'ticks' => [
                             'font' => [
-                                'size' => '14',
+                                'size' => 14,
                                 'family' => 'Helvetica',
                                 'weight' => 'bold'
                             ],
+                            'color' => '#000000'
                         ],
                         'grid' => [
                             'drawOnChartArea' => false
                         ],
                         'title' => [
                             'display' => true,
-                            'text' => 'Fill Rate and Fill Rate Goal Percentage'
+                            'text' => 'Fill Rate and Fill Rate Goal Percentage',
+                            'font' => [
+                                'size' => 15,
+                                'family' => 'Helvetica',
+                                'weight' => 'bold'
+                            ],
+                            'color' => '#000000'
                         ]
                     ]
                 ],
