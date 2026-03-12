@@ -621,8 +621,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $tableData,
                 120,  // xStart
                 600,  // yStart
-                65,   // colWidth
-                18,   // rowHeight
+                60,   // colWidth
+                20,   // rowHeight
                 120   // labelWidth
                 );
             
