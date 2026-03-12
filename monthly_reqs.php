@@ -4,6 +4,7 @@ require_once __DIR__ . '/bootstrap.php';
 require_once APP_ROOT . '/vendor/autoload.php';
 require_once APP_ROOT . '/bin/Charts/shipped_piechart.php';
 require_once APP_ROOT . '/bin/Charts/shipped_doughnutchart.php';
+require_once APP_ROOT . '/bin/Charts/ytd_demand_misses_chart.php';
 require_once APP_ROOT . '/bin/Utilities/ChartRenderer.php';
 require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
 require_once APP_ROOT . '/bin/Model/CavRequisitions.php';
@@ -578,6 +579,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             /*********************************************************************************************
              * Slide 2 Filler                                                                            *
              *********************************************************************************************/
+            
+            $ytdData = $cavRequisitions->getYTDDemandMisses(
+                $selectedProgram,
+                $dateRanges['ytd_start'],
+                $dateRanges['ytd_end']
+                );
+            
+            $ytdChartOutput = APP_ROOT . '/reports/tmp/ytd_demand_misses_' . uniqid() . '.png';
+            
+            $ytdChartConfig = YTDDemandMissesChart::build(
+                $ytdChartOutput,
+                $ytdData['labels'],
+                $ytdData['demand'],
+                $ytdData['misses'],
+                $ytdData['fillRate'],
+                $ytdData['goal']
+                );
+            
+            $ytdChartJsonName = 'ytd_demand_misses_' . uniqid() . '.json';
+            $ytdChartPath = $renderer->render($ytdChartConfig, $ytdChartJsonName);
+            
+            $ytdShape = new File();
+            $ytdShape->setName('YTD Demand Misses Fill Rate')
+            ->setDescription('YTD demand, misses, fill rate combo chart')
+            ->setPath($ytdChartPath)
+            ->setWidth(800)
+            ->setOffsetX(80)
+            ->setOffsetY(140);
+            
+            $slide2->addShape($ytdShape);
             
             $lblSlide2Title = $slide2->createRichTextShape()
             ->setHeight(50)

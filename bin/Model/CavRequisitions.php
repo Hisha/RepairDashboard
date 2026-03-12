@@ -447,6 +447,46 @@ class CavRequisitions
         
         return isset($row['ytdAllRT']) ? round((float)$row['ytdAllRT'], 2) : 0.0;
     }
+    
+    public function getYTDDemandMisses(string $selectedProgram, string $ytdStart, string $ytdEnd): array
+    {
+        $labels = [];
+        $demand = [];
+        $misses = [];
+        $fillRate = [];
+        $goal = [];
+        
+        $current = strtotime($ytdStart);
+        $end = strtotime($ytdEnd);
+        
+        while ($current <= $end) {
+            $monthStart = date('Y-m-01', $current);
+            $monthEnd = date('Y-m-t', $current);
+            $monthLabel = date('M', $current);
+            
+            $labels[] = $monthLabel;
+            
+            $good = $this->getYTDFillRateGood($selectedProgram, $monthStart, $monthEnd);
+            $missed = $this->getYTDFillRateMissed($selectedProgram, $monthStart, $monthEnd);
+            
+            $demand[] = $good;
+            $misses[] = $missed;
+            
+            $total = $good + $missed;
+            $fillRate[] = $total > 0 ? round(($good / $total) * 100, 1) : 0;
+            $goal[] = 85;
+            
+            $current = strtotime('+1 month', $current);
+        }
+        
+        return [
+            'labels' => $labels,
+            'demand' => $demand,
+            'misses' => $misses,
+            'fillRate' => $fillRate,
+            'goal' => $goal
+        ];
+    }
         
 }
   
