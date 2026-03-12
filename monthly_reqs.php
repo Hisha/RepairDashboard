@@ -154,7 +154,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $reader = IOFactory::createReader('PowerPoint2007');
             $ppt = $reader->load($template);
             
-            $slide = $ppt->getSlide(0);
+            $slide = $ppt->getSlide(0); 
+            $slide2 = $ppt->createSlide();
+            $slide3 = $ppt->createSlide();
+            $slide4 = $ppt->createSlide();
+            $slide5 = $ppt->createSlide();
+            
+            /*********************************************************************************************
+             * Slide 1 Filler                                                                            *
+             *********************************************************************************************/
             
             $chartShape = new File();
             $chartShape->setPath($shippedPiePath)
@@ -214,21 +222,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblReqsShipped->createBreak();
             $lblReqsShipped->createTextRun("Reqs Shipped")->getFont()->setName('Aptos Narrow')->setColor(new Color('FF00008B'))->setSize(16);
             
-            $lblTitle = $slide->createRichTextShape()
+            $lblSlide1Title = $slide->createRichTextShape()
             ->setHeight(50)
             ->setWidth(500)
             ->setOffsetX(455)
             ->setOffsetY(30);
-            $lblTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-            $lblTitle->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            $lblSlide1Title->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblSlide1Title->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
-            $lblPM = $slide->createRichTextShape()
+            $lblSlide1PM = $slide->createRichTextShape()
             ->setHeight(50)
             ->setWidth(575)
             ->setOffsetX(390)
             ->setOffsetY(80);
-            $lblPM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-            $lblPM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            $lblSlide1PM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblSlide1PM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
             $monthStart = date('M d, Y', strtotime($dateRanges['month_start']));
             $monthEnd   = date('M d, Y', strtotime($dateRanges['month_end']));
@@ -562,6 +570,144 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSlide1Disclaimer->createTextRun("*Does not ")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
             $lblSlide1Disclaimer->createTextRun("include: ")->getFont()->setName('Helvetica')->setBold(true)->setUnderline(Font::UNDERLINE_DOUBLE)->setColor(new Color('FF385D8A'))->setSize(10);
             $lblSlide1Disclaimer->createTextRun("Status of Back Order Shipped")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
+            
+            /*********************************************************************************************
+             * Slide 1 Filler                                                                            *
+             *********************************************************************************************/
+            
+            /*********************************************************************************************
+             * Slide 2 Filler                                                                            *
+             *********************************************************************************************/
+            
+            $lblSlide2Title = $slide2->createRichTextShape()
+            ->setHeight(50)
+            ->setWidth(500)
+            ->setOffsetX(455)
+            ->setOffsetY(30);
+            $lblSlide2Title->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblSlide2Title->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            
+            $lblSlide2PM = $slide2->createRichTextShape()
+            ->setHeight(50)
+            ->setWidth(575)
+            ->setOffsetX(390)
+            ->setOffsetY(80);
+            $lblSlide2PM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblSlide2PM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            
+            $lblSlide2Disclaimer = $slide2->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(800)
+            ->setOffsetX(80)
+            ->setOffsetY(640);
+            $lblSlide2Disclaimer->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblSlide2Disclaimer->createTextRun("Metrics do not include Requisitions with: Status of Back Ordered, Canceled, Pending; Priorities of DRMO, I.O, Surge Buy.")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
+            
+            /*********************************************************************************************
+             * Slide 2 Filler                                                                            *
+             *********************************************************************************************/
+            
+            /*********************************************************************************************
+             * Slide 3 Filler                                                                            *
+             *********************************************************************************************/
+            
+            $lblSlide3Title = $slide3->createRichTextShape()
+            ->setHeight(50)
+            ->setWidth(500)
+            ->setOffsetX(455)
+            ->setOffsetY(30);
+            $lblSlide3Title->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblSlide3Title->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            
+            $lblSlide3PM = $slide3->createRichTextShape()
+            ->setHeight(50)
+            ->setWidth(575)
+            ->setOffsetX(390)
+            ->setOffsetY(80);
+            $lblSlide3PM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblSlide3PM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            
+            $lblSlide3Disclaimer = $slide3->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(800)
+            ->setOffsetX(80)
+            ->setOffsetY(640);
+            $lblSlide3Disclaimer->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblSlide3Disclaimer->createTextRun("Metrics do not include Requisitions with: Status of Back Ordered, Canceled, Pending; Priorities of DRMO, I.O, Surge Buy.")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
+            $lblSlide3Disclaimer->createBreak();
+            $lblSlide3Disclaimer->createTextRun("^Includes Status of Back Order, Pending; *Does not ")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
+            $lblSlide3Disclaimer->createTextRun("include: ")->getFont()->setName('Helvetica')->setBold(true)->setUnderline(Font::UNDERLINE_DOUBLE)->setColor(new Color('FF385D8A'))->setSize(10);
+            $lblSlide3Disclaimer->createTextRun("Status of Back Order Shipped")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
+            
+            /*********************************************************************************************
+             * Slide 3 Filler                                                                            *
+             *********************************************************************************************/
+            
+            /*********************************************************************************************
+             * Slide 4 Filler                                                                            *
+             *********************************************************************************************/
+            
+            $lblSlide4Title = $slide4->createRichTextShape()
+            ->setHeight(50)
+            ->setWidth(500)
+            ->setOffsetX(455)
+            ->setOffsetY(30);
+            $lblSlide4Title->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblSlide4Title->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            
+            $lblSlide4PM = $slide4->createRichTextShape()
+            ->setHeight(50)
+            ->setWidth(575)
+            ->setOffsetX(390)
+            ->setOffsetY(80);
+            $lblSlide4PM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblSlide4PM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            
+            $lblSlide4Disclaimer = $slide4->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(800)
+            ->setOffsetX(80)
+            ->setOffsetY(640);
+            $lblSlide4Disclaimer->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblSlide4Disclaimer->createTextRun("Metrics do not include Requisitions with: Status of Back Ordered, Canceled, Pending; Priorities of DRMO, I.O, Surge Buy.")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
+            $lblSlide4Disclaimer->createBreak();
+            $lblSlide4Disclaimer->createTextRun("^Includes Status of Back Order, Pending ")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
+            
+            /*********************************************************************************************
+             * Slide 4 Filler                                                                            *
+             *********************************************************************************************/
+            
+            /*********************************************************************************************
+             * Slide 5 Filler                                                                            *
+             *********************************************************************************************/
+            
+            $lblSlide5Title = $slide5->createRichTextShape()
+            ->setHeight(50)
+            ->setWidth(500)
+            ->setOffsetX(455)
+            ->setOffsetY(30);
+            $lblSlide5Title->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblSlide5Title->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            
+            $lblSlide5PM = $slide5->createRichTextShape()
+            ->setHeight(50)
+            ->setWidth(575)
+            ->setOffsetX(390)
+            ->setOffsetY(80);
+            $lblSlide5PM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblSlide5PM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            
+            $lblSlide5Disclaimer = $slide5->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(800)
+            ->setOffsetX(80)
+            ->setOffsetY(640);
+            $lblSlide5Disclaimer->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblSlide5Disclaimer->createTextRun("Metrics include Requisitions only with Status of Back Ordered.")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
+            
+            /*********************************************************************************************
+             * Slide 5 Filler                                                                            *
+             *********************************************************************************************/
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
