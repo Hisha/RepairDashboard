@@ -367,7 +367,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblYTDMetrics->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
             $lblYTDMetrics->createTextRun("YTD Metrics (Last 12 Month Avg)")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FF000000'))->setSize(14);
             
+            $lblTwoSeventy = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(400)
+            ->setOffsetX(30)
+            ->setOffsetY(520);
+            $lblTwoSeventy->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $lblTwoSeventy->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF385D8A'));
+            $lblTwoSeventy->createTextRun("Number of Requisitions Exceeding 270 Days")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
             
+            $lblFillRate = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(400)
+            ->setOffsetX(30)
+            ->setOffsetY(550);
+            $lblFillRate->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $lblFillRate->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF4472C4'));
+            $lblFillRate->createTextRun("Fill Rate")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            
+            $lblCasrepRT = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(400)
+            ->setOffsetX(30)
+            ->setOffsetY(550);
+            $lblCasrepRT->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $lblCasrepRT->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF385D8A'));
+            $lblCasrepRT->createTextRun("CASREP RT Avg (ACasRT)*")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            
+            $lblAllRT = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(400)
+            ->setOffsetX(30)
+            ->setOffsetY(580);
+            $lblAllRT->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $lblAllRT->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF4472C4'));
+            $lblAllRT->createTextRun("All RT Avg (AlRT)*")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
             
             $lblMonthlyMetrics = $slide->createRichTextShape()
             ->setHeight(30)
