@@ -372,7 +372,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblMonthlyMetrics = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(400)
-            ->setOffsetX(550)
+            ->setOffsetX(540)
             ->setOffsetY(490);
             $lblMonthlyMetrics->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblMonthlyMetrics->createTextRun("Monthly Metrics Exception Snapshot")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FF000000'))->setSize(14);
