@@ -363,7 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(30)
             ->setWidth(400)
             ->setOffsetX(30)
-            ->setOffsetY(500);
+            ->setOffsetY(480);
             $lblYTDMetrics->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
             $lblYTDMetrics->createTextRun("YTD Metrics (Last 12 Month Avg)")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FF000000'))->setSize(14);
             
