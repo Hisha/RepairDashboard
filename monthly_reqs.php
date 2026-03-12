@@ -658,13 +658,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblAFRGoal = $slide2->createRichTextShape()
             ->setHeight(60)
             ->setWidth(130)
-            ->setOffsetX(750)
+            ->setOffsetX(800)
             ->setOffsetY(190);
             $lblAFRGoal->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblAFRGoal->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFD62728'));
-            $lblAFRGoal->createTextRun("Goal")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FF000000'))->setSize(11);
+            $lblAFRGoal->createTextRun("Goal")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FFFFFFFF'))->setSize(11);
             $lblAFRGoal->createBreak();
-            $lblAFRGoal->createTextRun("85% (AFR)")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF000000'))->setSize(18);
+            $lblAFRGoal->createTextRun("85% (AFR)")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(18);
             
             $lblSlide2Disclaimer = $slide2->createRichTextShape()
             ->setHeight(30)
