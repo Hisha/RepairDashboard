@@ -656,9 +656,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblFillRateAvg->createTextRun($ytdFillRate . "% (AFR)")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF000000'))->setSize(18);
             
             $lblAFRGoal = $slide2->createRichTextShape()
-            ->setHeight(70)
-            ->setWidth(160)
-            ->setOffsetX(500)
+            ->setHeight(65)
+            ->setWidth(150)
+            ->setOffsetX(650)
             ->setOffsetY(190);
             $lblAFRGoal->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblAFRGoal->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFD62728'));
