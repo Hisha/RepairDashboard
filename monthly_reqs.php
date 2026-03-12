@@ -619,7 +619,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             TableBuilder::renderMonthlyDataTable(
                 $slide2,
                 $tableData,
-                122,  // xStart
+                123,  // xStart
                 600,  // yStart
                 59,   // colWidth
                 20,   // rowHeight
@@ -641,6 +641,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetY(80);
             $lblSlide2PM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblSlide2PM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            
+            $lblFillRateAvg = $slide2->createRichTextShape()
+            ->setHeight(80)
+            ->setWidth(200)
+            ->setOffsetX(80)
+            ->setOffsetY(120);
+            $lblFillRateAvg->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblFillRateAvg->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF2E8B57'));
+            $lblFillRateAvg->createTextRun("12 Mnth Avg")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FFFFFFFF'))->setSize(11);
+            $lblFillRateAvg->createBreak();
+            $lblFillRateAvg->createTextRun("Fill Rate")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FFFFFFFF'))->setSize(11);
+            $lblFillRateAvg->createBreak();
+            $lblFillRateAvg->createTextRun($ytdFillRate . "% (AFR)")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(18);
             
             $lblSlide2Disclaimer = $slide2->createRichTextShape()
             ->setHeight(30)
