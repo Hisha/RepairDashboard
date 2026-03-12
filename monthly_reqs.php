@@ -75,6 +75,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $ytdUniqueNiins = $cavRequisitions->getYTDUniqueNiins($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             $ytdTotalNiins = $cavRequisitions->getYTDTotalNiins($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             
+            $mthlyNiinChanges = $cavRequisitions->getNiinChangeReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
+            $mthlyCanceledReqs = $cavRequisitions->getCanceledReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
+            $mthlyPendingReqs = $cavRequisitions->getPendingReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
+            $mthlyDISReqs = $cavRequisitions->getDISReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
+            $mthlyBackOrderReqs = $cavRequisitions->getBackorderReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
+            
             $chartOutput = APP_ROOT . '/reports/tmp/shipped_pie_' . uniqid() . '.png';
             
             $chartConfig = ShippedPieChart::build(
@@ -414,16 +420,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblNiinChange = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
-            ->setOffsetX(600)
+            ->setOffsetX(550)
             ->setOffsetY(490);
             $lblNiinChange->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblNiinChange->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
             $lblNiinChange->createTextRun("NIIN Changes")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
             
+            $lblNiinChangeData = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(50)
+            ->setOffsetX(860)
+            ->setOffsetY(490);
+            $lblNiinChangeData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblNiinChangeData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
+            $lblNiinChangeData->createTextRun($mthlyNiinChanges)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            
             $lblCanceledReqs = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
-            ->setOffsetX(600)
+            ->setOffsetX(550)
             ->setOffsetY(520);
             $lblCanceledReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblCanceledReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
@@ -432,7 +447,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblPendingReqs = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
-            ->setOffsetX(600)
+            ->setOffsetX(550)
             ->setOffsetY(550);
             $lblPendingReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblPendingReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
@@ -441,7 +456,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblDISReqs = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
-            ->setOffsetX(600)
+            ->setOffsetX(550)
             ->setOffsetY(580);
             $lblDISReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblDISReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
@@ -450,7 +465,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblBackOrderReqs = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
-            ->setOffsetX(600)
+            ->setOffsetX(550)
             ->setOffsetY(610);
             $lblBackOrderReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblBackOrderReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
