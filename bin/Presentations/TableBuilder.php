@@ -1,5 +1,8 @@
 <?php
 
+require_once __DIR__ . '/bootstrap.php';
+require_once APP_ROOT . '/vendor/autoload.php';
+
 use PhpOffice\PhpPresentation\Slide\Slide;
 use PhpOffice\PhpPresentation\Style\Alignment;
 use PhpOffice\PhpPresentation\Style\Color;
