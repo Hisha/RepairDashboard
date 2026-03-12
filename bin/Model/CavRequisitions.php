@@ -227,8 +227,7 @@ class CavRequisitions
         
         return isset($row['ytdTotalNiins']) ? (int)$row['ytdTotalNiins'] : 0;
     }
-    
-    
+        
 }
   
 ?>
