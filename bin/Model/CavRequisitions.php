@@ -227,6 +227,116 @@ class CavRequisitions
         
         return isset($row['ytdTotalNiins']) ? (int)$row['ytdTotalNiins'] : 0;
     }
+    
+    public function getNiinChangeReqs(string $selectedProgram, string $startDate, string $endDate): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            COUNT(*) AS niinChangeReqs
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
+          AND cav_requisitions.status = 'NIIN CHANGE'
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['niinChange']) ? (int)$row['niinChange'] : 0;
+    }
+    
+    public function getCanceledReqs(string $selectedProgram, string $startDate, string $endDate): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            COUNT(*) AS canceledReqs
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
+          AND cav_requisitions.status = 'CANCELED'
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['canceledReqs']) ? (int)$row['canceledReqs'] : 0;
+    }
+    
+    public function getPendingReqs(string $selectedProgram, string $startDate, string $endDate): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            COUNT(*) AS pendingReqs
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
+          AND cav_requisitions.status = 'PENDING'
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['pendingReqs']) ? (int)$row['pendingReqs'] : 0;
+    }
+    
+    public function getDISReqs(string $selectedProgram, string $startDate, string $endDate): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            COUNT(*) AS disReqs
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
+          AND cav_requisitions.priority IN ('DRMO', 'I.O.', 'SURGE BUY')
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['disReqs']) ? (int)$row['disReqs'] : 0;
+    }
+    
+    public function getBackorderReqs(string $selectedProgram, string $startDate, string $endDate): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            COUNT(*) AS backorderReqs
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
+          AND cav_requisitions.status = 'BACKORDERED'
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['backorderReqs']) ? (int)$row['backorderReqs'] : 0;
+    }
         
 }
   
