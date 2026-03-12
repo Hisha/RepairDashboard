@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $ytdFillRateMissed = (int)$cavRequisitions->getYTDFillRateMissed($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             $ytdFillRateTotal = $ytdFillRateGood + $ytdFillRateMissed;
             $ytdFillRate = round(($ytdFillRateGood/ $ytdFillRateTotal) *100,2);
-            $ytdCasrepRT = round((int)$cavRequisitions->getYTDCasrepRT($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']),2);
+            $ytdCasrepRT = $cavRequisitions->getYTDCasrepRT($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             
             $mthlyNiinChanges = $cavRequisitions->getNiinChangeReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
             $mthlyCanceledReqs = $cavRequisitions->getCanceledReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
