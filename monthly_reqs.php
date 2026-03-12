@@ -155,10 +155,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $ppt = $reader->load($template);
             
             $slide = $ppt->getSlide(0); 
-            $slide2 = $ppt->createSlide();
-            $slide3 = $ppt->createSlide();
-            $slide4 = $ppt->createSlide();
-            $slide5 = $ppt->createSlide();
+            $slideTemplate = $ppt->getSlide(0);
+            $slide2 = clone $slideTemplate;
+            $ppt->addSlide($slide2);
+            $slide3 = clone $slideTemplate;
+            $ppt->addSlide($slide3);
+            $slide4 = clone $slideTemplate;
+            $ppt->addSlide($slide4);
+            $slide5 = clone $slideTemplate;
+            $ppt->addSlide($slide5);
             
             /*********************************************************************************************
              * Slide 1 Filler                                                                            *
