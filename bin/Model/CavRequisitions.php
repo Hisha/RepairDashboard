@@ -403,6 +403,28 @@ class CavRequisitions
         
         return isset($row['ytdFillRateMissed']) ? (int)$row['ytdFillRateMissed'] : 0;
     }
+    
+    public function getYTDCasrepRT(string $selectedProgram, string $ytdStart, string $ytdEnd): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            AVG(rt) as ytdCasrepRT
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.priority = 'CASREP'
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['ytdCasrepRT']) ? (int)$row['ytdCasrepRT'] : 0;
+    }
         
 }
   

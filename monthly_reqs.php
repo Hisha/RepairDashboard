@@ -76,11 +76,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $ytdTotalNiins = $cavRequisitions->getYTDTotalNiins($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             
             $ytdTwoSeventyReqs = $cavRequisitions->getYTDTwoSeventyReqs($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
-            
             $ytdFillRateGood = (int)$cavRequisitions->getYTDFillRateGood($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             $ytdFillRateMissed = (int)$cavRequisitions->getYTDFillRateMissed($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             $ytdFillRateTotal = $ytdFillRateGood + $ytdFillRateMissed;
             $ytdFillRate = round(($ytdFillRateGood/ $ytdFillRateTotal) *100,2);
+            $ytdCasrepRT = round((int)$cavRequisitions->getYTDCasrepRT($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']),2);
             
             $mthlyNiinChanges = $cavRequisitions->getNiinChangeReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
             $mthlyCanceledReqs = $cavRequisitions->getCanceledReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
@@ -424,6 +424,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblCasrepRT->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
             $lblCasrepRT->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF385D8A'));
             $lblCasrepRT->createTextRun("CASREP RT Avg (ACasRT)*")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            
+            $lblCasrepRTData = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(80)
+            ->setOffsetX(430)
+            ->setOffsetY(580);
+            $lblCasrepRTData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $lblCasrepRTData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF385D8A'));
+            $lblCasrepRTData->createTextRun($ytdCasrepRT)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(14);
             
             $lblAllRT = $slide->createRichTextShape()
             ->setHeight(30)
