@@ -409,7 +409,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblFillRateData = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(70)
+            ->setWidth(80)
             ->setOffsetX(430)
             ->setOffsetY(550);
             $lblFillRateData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
