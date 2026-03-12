@@ -15,8 +15,7 @@ class YTDDemandMissesChart
                 'width' => 1200,
                 'height' => 700,
                 'output' => $outputPath,
-                'legendDisplay' => true,
-                'legendPosition' => 'bottom',
+                'legendDisplay' => false,
                 'data' => [
                     'labels' => $labels,
                     'datasets' => [
@@ -65,9 +64,11 @@ class YTDDemandMissesChart
                     'y' => [
                         'beginAtZero' => true,
                         'position' => 'left',
+                        'min' => 0,
+                        'max' => 500,
                         'title' => [
                             'display' => true,
-                            'text' => 'Demand / Misses'
+                            'text' => 'Demand and Misses'
                         ]
                     ],
                     'y1' => [
@@ -80,7 +81,7 @@ class YTDDemandMissesChart
                         ],
                         'title' => [
                             'display' => true,
-                            'text' => 'Fill Rate %'
+                            'text' => 'Fill Rate and Fill Rate Goal Percentage'
                         ]
                     ]
                 ],
