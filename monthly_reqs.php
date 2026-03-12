@@ -643,8 +643,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSlide2PM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
             $lblFillRateAvg = $slide2->createRichTextShape()
-            ->setHeight(65)
-            ->setWidth(180)
+            ->setHeight(70)
+            ->setWidth(170)
             ->setOffsetX(100)
             ->setOffsetY(140);
             $lblFillRateAvg->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
