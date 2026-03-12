@@ -213,7 +213,7 @@ class CavRequisitions
         
         $sql = "
         SELECT
-            COUNT(SUM(qty)) AS ytdTotalNiins
+            SUM(qty) AS ytdTotalNiins
         FROM cav_requisitions
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
