@@ -382,8 +382,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSlide1Disclaimer = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(800)
-            ->setOffsetX(50)
-            ->setOffsetY(650);
+            ->setOffsetX(70)
+            ->setOffsetY(640);
             $lblSlide1Disclaimer->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblSlide1Disclaimer->createTextRun("Metrics do not include Requisitions with: Status of Back Ordered, Canceled, Pending; Priorities of DRMO, I.O, Surge Buy.")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
             $lblSlide1Disclaimer->createBreak();
