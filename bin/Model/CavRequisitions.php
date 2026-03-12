@@ -425,6 +425,28 @@ class CavRequisitions
         
         return isset($row['ytdCasrepRT']) ? round((float)$row['ytdCasrepRT'], 2) : 0.0;
     }
+    
+    public function getYTDAllRT(string $selectedProgram, string $ytdStart, string $ytdEnd): float
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            AVG(rt) AS ytdAllRT
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.priority IN ('CASREP', 'ANORS', 'SPARE', '999', 'FLEET FAILURE')
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['ytdAllRT']) ? round((float)$row['ytdAllRT'], 2) : 0.0;
+    }
         
 }
   
