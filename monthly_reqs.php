@@ -15,6 +15,7 @@ use PhpOffice\PhpPresentation\Shape\Drawing\File;
 use PhpOffice\PhpPresentation\Style\Alignment;
 use PhpOffice\PhpPresentation\Style\Fill;
 use PhpOffice\PhpPresentation\Style\Color;
+use PhpOffice\PhpPresentation\Style\Font;
 
 $programMapping = new SYS_ProgramMapping();
 $cavRequisitions = new CavRequisitions();
@@ -357,6 +358,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblTotalNiins->createTextRun("Total NIINs YTD")->getFont()->setName('Calibri')->setColor(new Color('FFFFFFFF'))->setSize(16);
             $lblTotalNiins->createBreak();
             $lblTotalNiins->createTextRun($ytdTotalNiins)->getFont()->setName('Calibri')->setColor(new Color('FFFFFFFF'))->setSize(24);
+            
+            $lblYTDMetrics = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(200)
+            ->setOffsetX(30)
+            ->setOffsetY(500);
+            $lblYTDMetrics->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $lblYTDMetrics->createTextRun("YTD Metrics (Last 12 Month Avg)")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FF000000'))->setSize(14);
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
