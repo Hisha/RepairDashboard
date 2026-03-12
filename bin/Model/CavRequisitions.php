@@ -423,7 +423,7 @@ class CavRequisitions
         
         $db->close();
         
-        return isset($row['ytdCasrepRT']) ? (float)$row['ytdCasrepRT'] : 0.0;
+        return isset($row['ytdCasrepRT']) ? (float)$row['ytdCasrepRT'],2 : 0.0;
     }
         
 }
