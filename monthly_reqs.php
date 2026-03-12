@@ -323,40 +323,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblNineNineNine->createTextRun($shippedNineNineNinePct . "%")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF3B6FB6'))->setSize(11);
             
             $lblTotalReqsRecvd = $slide->createRichTextShape()
-            ->setHeight(60)
+            ->setHeight(80)
             ->setWidth(250)
-            ->setOffsetX(50)
-            ->setOffsetY(180);
+            ->setOffsetX(30)
+            ->setOffsetY(160);
             $lblTotalReqsRecvd->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblTotalReqsRecvd->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF4472C4'));
             $lblTotalReqsRecvd->getBorder()->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)->setLineWidth(1.5)->setColor(new Color('FF385D8A'));
-            $lblTotalReqsRecvd->createTextRun("Total Reqs Received YTD")->getFont()->setName('Calibri')->setSize(16);
+            $lblTotalReqsRecvd->createTextRun("Total Reqs Received YTD")->getFont()->setName('Calibri')->setColor(new Color('FFFFFFFF'))->setSize(16);
             $lblTotalReqsRecvd->createBreak();
-            $lblTotalReqsRecvd->createTextRun($ytdTotalReqsRecvd)->getFont()->setName('Calibri')->setSize(24);
+            $lblTotalReqsRecvd->createTextRun($ytdTotalReqsRecvd)->getFont()->setName('Calibri')->setColor(new Color('FFFFFFFF'))->setSize(24);
             
             $lblUniqueNiins = $slide->createRichTextShape()
-            ->setHeight(60)
+            ->setHeight(80)
             ->setWidth(200)
-            ->setOffsetX(50)
-            ->setOffsetY(250);
+            ->setOffsetX(30)
+            ->setOffsetY(260);
             $lblUniqueNiins->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblUniqueNiins->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF4472C4'));
             $lblUniqueNiins->getBorder()->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)->setLineWidth(1.5)->setColor(new Color('FF385D8A'));
-            $lblUniqueNiins->createTextRun("Unique NIINs YTD")->getFont()->setName('Calibri')->setSize(16);
+            $lblUniqueNiins->createTextRun("Unique NIINs YTD")->getFont()->setName('Calibri')->setColor(new Color('FFFFFFFF'))->setSize(16);
             $lblUniqueNiins->createBreak();
-            $lblUniqueNiins->createTextRun($ytdUniqueNiins)->getFont()->setName('Calibri')->setSize(24);
+            $lblUniqueNiins->createTextRun($ytdUniqueNiins)->getFont()->setName('Calibri')->setColor(new Color('FFFFFFFF'))->setSize(24);
             
             $lblTotalNiins = $slide->createRichTextShape()
-            ->setHeight(60)
+            ->setHeight(80)
             ->setWidth(200)
-            ->setOffsetX(50)
-            ->setOffsetY(325);
+            ->setOffsetX(30)
+            ->setOffsetY(360);
             $lblTotalNiins->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblTotalNiins->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF4472C4'));
             $lblTotalNiins->getBorder()->setLineStyle(\PhpOffice\PhpPresentation\Style\Border::LINE_SINGLE)->setLineWidth(1.5)->setColor(new Color('FF385D8A'));
-            $lblTotalNiins->createTextRun("Total NIINs YTD")->getFont()->setName('Calibri')->setSize(16);
+            $lblTotalNiins->createTextRun("Total NIINs YTD")->getFont()->setName('Calibri')->setColor(new Color('FFFFFFFF'))->setSize(16);
             $lblTotalNiins->createBreak();
-            $lblTotalNiins->createTextRun($ytdTotalNiins)->getFont()->setName('Calibri')->setSize(24);
+            $lblTotalNiins->createTextRun($ytdTotalNiins)->getFont()->setName('Calibri')->setColor(new Color('FFFFFFFF'))->setSize(24);
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
