@@ -448,7 +448,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(30)
             ->setWidth(80)
             ->setOffsetX(850)
-            ->setOffsetY(490);
+            ->setOffsetY(520);
             $lblCanceledReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblCanceledReqsData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
             $lblCanceledReqsData->createTextRun($mthlyCanceledReqs)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
@@ -466,7 +466,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(30)
             ->setWidth(80)
             ->setOffsetX(850)
-            ->setOffsetY(490);
+            ->setOffsetY(550);
             $lblPendingReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblPendingReqsData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
             $lblPendingReqsData->createTextRun($mthlyPendingReqs)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
@@ -484,7 +484,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(30)
             ->setWidth(80)
             ->setOffsetX(850)
-            ->setOffsetY(490);
+            ->setOffsetY(580);
             $lblDISReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblDISReqsData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
             $lblDISReqsData->createTextRun($mthlyDISReqs)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
