@@ -247,7 +247,7 @@ class CavRequisitions
         
         $db->close();
         
-        return isset($row['niinChange']) ? (int)$row['niinChange'] : 0;
+        return isset($row['niinChangeReqs']) ? (int)$row['niinChangeReqs'] : 0;
     }
     
     public function getCanceledReqs(string $selectedProgram, string $startDate, string $endDate): int
