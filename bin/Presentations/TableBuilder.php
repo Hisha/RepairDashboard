@@ -1,6 +1,6 @@
 <?php
 
-use PhpOffice\PhpPresentation\Slide\Slide;
+use PhpOffice\PhpPresentation\Slide;
 use PhpOffice\PhpPresentation\Style\Alignment;
 use PhpOffice\PhpPresentation\Style\Color;
 use PhpOffice\PhpPresentation\Style\Fill;
