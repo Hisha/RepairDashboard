@@ -428,8 +428,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblNiinChangeData = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(50)
-            ->setOffsetX(860)
+            ->setWidth(80)
+            ->setOffsetX(850)
             ->setOffsetY(490);
             $lblNiinChangeData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblNiinChangeData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
@@ -444,6 +444,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblCanceledReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
             $lblCanceledReqs->createTextRun("Canceled Reqs")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
             
+            $lblCanceledReqsData = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(80)
+            ->setOffsetX(850)
+            ->setOffsetY(490);
+            $lblCanceledReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblCanceledReqsData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
+            $lblCanceledReqsData->createTextRun($mthlyCanceledReqs)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            
             $lblPendingReqs = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
@@ -452,6 +461,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblPendingReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblPendingReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
             $lblPendingReqs->createTextRun("Pending Reqs")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            
+            $lblPendingReqsData = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(80)
+            ->setOffsetX(850)
+            ->setOffsetY(490);
+            $lblPendingReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblPendingReqsData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
+            $lblPendingReqsData->createTextRun($mthlyPendingReqs)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
             
             $lblDISReqs = $slide->createRichTextShape()
             ->setHeight(30)
@@ -462,6 +480,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblDISReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
             $lblDISReqs->createTextRun("DRMO, I.O, Surge Buy Reqs")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
             
+            $lblDISReqsData = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(80)
+            ->setOffsetX(850)
+            ->setOffsetY(490);
+            $lblDISReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblDISReqsData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFFF00'));
+            $lblDISReqsData->createTextRun($mthlyDISReqs)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            
             $lblBackOrderReqs = $slide->createRichTextShape()
             ->setHeight(30)
             ->setWidth(300)
@@ -470,6 +497,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblBackOrderReqs->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblBackOrderReqs->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
             $lblBackOrderReqs->createTextRun("New reqs on Back Order")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            
+            $lblBackOrderReqsData = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(80)
+            ->setOffsetX(850)
+            ->setOffsetY(610);
+            $lblBackOrderReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lblBackOrderReqsData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFFC000'));
+            $lblBackOrderReqsData->createTextRun($mthlyBackOrderReqs)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
             
             $lblSlide1Disclaimer = $slide->createRichTextShape()
             ->setHeight(30)
