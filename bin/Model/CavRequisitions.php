@@ -337,6 +337,28 @@ class CavRequisitions
         
         return isset($row['backorderReqs']) ? (int)$row['backorderReqs'] : 0;
     }
+    
+    public function getYTDTwoSeventyReqs(string $selectedProgram, string $ytdStart, string $ytdEnd): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            SUM(qty) AS ytdTwoSeventyReqs
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.rt >= '270
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['ytdTwoSeventyReqs']) ? (int)$row['ytdTwoSeventyReqs'] : 0;
+    }
         
 }
   

@@ -75,6 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $ytdUniqueNiins = $cavRequisitions->getYTDUniqueNiins($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             $ytdTotalNiins = $cavRequisitions->getYTDTotalNiins($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             
+            $ytdTwoSeventyReqs = $cavRequisitions->getYTDTwoSeventyReqs($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
+            
             $mthlyNiinChanges = $cavRequisitions->getNiinChangeReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
             $mthlyCanceledReqs = $cavRequisitions->getCanceledReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
             $mthlyPendingReqs = $cavRequisitions->getPendingReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
@@ -381,6 +383,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblTwoSeventy->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
             $lblTwoSeventy->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF385D8A'));
             $lblTwoSeventy->createTextRun("Number of Requisitions Exceeding 270 Days")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            
+            $lblTwoSeventyData = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(70)
+            ->setOffsetX(430)
+            ->setOffsetY(520);
+            $lblTwoSeventyData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $lblTwoSeventyData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF385D8A'));
+            $lblTwoSeventyData->createTextRun($ytdTwoSeventyReqs)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
             
             $lblFillRate = $slide->createRichTextShape()
             ->setHeight(30)
