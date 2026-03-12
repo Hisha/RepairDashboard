@@ -643,17 +643,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSlide2PM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
             $lblFillRateAvg = $slide2->createRichTextShape()
-            ->setHeight(75)
+            ->setHeight(65)
             ->setWidth(180)
             ->setOffsetX(100)
             ->setOffsetY(140);
             $lblFillRateAvg->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $lblFillRateAvg->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFA8D5C2'));
-            $lblFillRateAvg->createTextRun("12 Mnth Avg")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FFFFFFFF'))->setSize(11);
+            $lblFillRateAvg->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF2E8B57'));
+            $lblFillRateAvg->createTextRun("12 Mnth Avg")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FF000000'))->setSize(11);
             $lblFillRateAvg->createBreak();
-            $lblFillRateAvg->createTextRun("Fill Rate")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FFFFFFFF'))->setSize(11);
+            $lblFillRateAvg->createTextRun("Fill Rate")->getFont()->setName('Calibri')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FF000000'))->setSize(11);
             $lblFillRateAvg->createBreak();
-            $lblFillRateAvg->createTextRun($ytdFillRate . "% (AFR)")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(18);
+            $lblFillRateAvg->createTextRun($ytdFillRate . "% (AFR)")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FF000000'))->setSize(18);
             
             $lblSlide2Disclaimer = $slide2->createRichTextShape()
             ->setHeight(30)
