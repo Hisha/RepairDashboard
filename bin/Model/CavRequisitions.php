@@ -462,7 +462,7 @@ class CavRequisitions
         while ($current <= $end) {
             $monthStart = date('Y-m-01', $current);
             $monthEnd = date('Y-m-t', $current);
-            $monthLabel = date('M', $current);
+            $monthLabel = date('M Y', $current);
             
             $labels[] = $monthLabel;
             
