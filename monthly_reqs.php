@@ -324,7 +324,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblTotalReqsRecvd = $slide->createRichTextShape()
             ->setHeight(60)
-            ->setWidth(85)
+            ->setWidth(125)
             ->setOffsetX(50)
             ->setOffsetY(180);
             $lblTotalReqsRecvd->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
@@ -336,7 +336,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblUniqueNiins = $slide->createRichTextShape()
             ->setHeight(60)
-            ->setWidth(85)
+            ->setWidth(125)
             ->setOffsetX(50)
             ->setOffsetY(250);
             $lblUniqueNiins->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
@@ -348,7 +348,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblTotalNiins = $slide->createRichTextShape()
             ->setHeight(60)
-            ->setWidth(85)
+            ->setWidth(125)
             ->setOffsetX(50)
             ->setOffsetY(325);
             $lblTotalNiins->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
