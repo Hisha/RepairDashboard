@@ -385,11 +385,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetX(50)
             ->setOffsetY(700);
             $lblSlide1Disclaimer->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-            $lblSlide1Disclaimer->createTextRun("Metrics do not include Requisitions with: Status of Back Ordered, Canceled, Pending; Priorities of DRMO, I.O, Surge Buy.")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFF385D8A'))->setSize(10);
+            $lblSlide1Disclaimer->createTextRun("Metrics do not include Requisitions with: Status of Back Ordered, Canceled, Pending; Priorities of DRMO, I.O, Surge Buy.")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
             $lblSlide1Disclaimer->createBreak();
-            $lblSlide1Disclaimer->createTextRun("*Does not ")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFF385D8A'))->setSize(10);
-            $lblSlide1Disclaimer->createTextRun("include: ")->getFont()->setName('Helvetica')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FFFF385D8A'))->setSize(10);
-            $lblSlide1Disclaimer->createTextRun("Status of Back Order Shipped")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFF385D8A'))->setSize(10);
+            $lblSlide1Disclaimer->createTextRun("*Does not ")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
+            $lblSlide1Disclaimer->createTextRun("include: ")->getFont()->setName('Helvetica')->setBold(true)->setUnderline(Font::UNDERLINE_SINGLE)->setColor(new Color('FF385D8A'))->setSize(10);
+            $lblSlide1Disclaimer->createTextRun("Status of Back Order Shipped")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FF385D8A'))->setSize(10);
             
             $output = APP_ROOT . '/reports/tmp/monthly_report_' . uniqid() . '.pptx';
             
