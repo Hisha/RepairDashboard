@@ -428,7 +428,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblNiinChangeData = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(80)
+            ->setWidth(70)
             ->setOffsetX(850)
             ->setOffsetY(490);
             $lblNiinChangeData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -446,7 +446,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblCanceledReqsData = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(80)
+            ->setWidth(70)
             ->setOffsetX(850)
             ->setOffsetY(520);
             $lblCanceledReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -464,7 +464,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblPendingReqsData = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(80)
+            ->setWidth(70)
             ->setOffsetX(850)
             ->setOffsetY(550);
             $lblPendingReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -482,7 +482,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblDISReqsData = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(80)
+            ->setWidth(70)
             ->setOffsetX(850)
             ->setOffsetY(580);
             $lblDISReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
@@ -500,7 +500,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lblBackOrderReqsData = $slide->createRichTextShape()
             ->setHeight(30)
-            ->setWidth(80)
+            ->setWidth(70)
             ->setOffsetX(850)
             ->setOffsetY(610);
             $lblBackOrderReqsData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
