@@ -622,7 +622,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 120,  // xStart
                 600,  // yStart
                 65,   // colWidth
-                22,   // rowHeight
+                18,   // rowHeight
                 120   // labelWidth
                 );
             
