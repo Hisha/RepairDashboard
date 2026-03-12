@@ -396,7 +396,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetY(520);
             $lblTwoSeventyData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblTwoSeventyData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF385D8A'));
-            $lblTwoSeventyData->createTextRun($ytdTwoSeventyReqs)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            $lblTwoSeventyData->createTextRun($ytdTwoSeventyReqs)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(14);
             
             $lblFillRate = $slide->createRichTextShape()
             ->setHeight(30)
@@ -414,7 +414,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetY(550);
             $lblFillRateData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
             $lblFillRateData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF4472C4'));
-            $lblFillRateData->createTextRun($ytdFillRate . "%")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            $lblFillRateData->createTextRun($ytdFillRate . "%")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(14);
             
             $lblCasrepRT = $slide->createRichTextShape()
             ->setHeight(30)
