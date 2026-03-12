@@ -77,6 +77,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $ytdTwoSeventyReqs = $cavRequisitions->getYTDTwoSeventyReqs($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             
+            $ytdFillRateGood = (int)$cavRequisitions->getYTDFillRateGood($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
+            $ytdFillRateMissed = (int)$cavRequisitions->getYTDFillRateMissed($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
+            $ytdFillRateTotal = $ytdFillRateGood + $ytdFillRateMissed;
+            $ytdFillRate = round(($ytdFillRateGood/ $ytdFillRateTotal) *100,2);
+            
             $mthlyNiinChanges = $cavRequisitions->getNiinChangeReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
             $mthlyCanceledReqs = $cavRequisitions->getCanceledReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
             $mthlyPendingReqs = $cavRequisitions->getPendingReqs($selectedProgram, $dateRanges['month_start'], $dateRanges['month_end']);
@@ -401,6 +406,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblFillRate->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
             $lblFillRate->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF4472C4'));
             $lblFillRate->createTextRun("Fill Rate")->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
+            
+            $lblFillRateData = $slide->createRichTextShape()
+            ->setHeight(30)
+            ->setWidth(400)
+            ->setOffsetX(430)
+            ->setOffsetY(550);
+            $lblFillRateData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $lblFillRateData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF4472C4'));
+            $lblFillRateData->createTextRun($ytdFillRate)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
             
             $lblCasrepRT = $slide->createRichTextShape()
             ->setHeight(30)
