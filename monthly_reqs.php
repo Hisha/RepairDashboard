@@ -11,7 +11,6 @@ require_once APP_ROOT . '/bin/Model/CavRequisitions.php';
 require_once APP_ROOT . '/bin/Model/SYS_PowerPointFiller.php';
 
 use PhpOffice\PhpPresentation\IOFactory;
-use PhpOffice\PhpPresentation\Shape\Drawing\Base64;
 use PhpOffice\PhpPresentation\Shape\Drawing\File;
 use PhpOffice\PhpPresentation\Style\Alignment;
 use PhpOffice\PhpPresentation\Style\Fill;
@@ -609,6 +608,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetY(150);
             
             $slide2->addShape($ytdShape);
+            
+            $tableData = [
+                'Demand' => $ytdData['demand'],
+                'Misses' => $ytdData['misses'],
+                'Fill Rate %' => $ytdData['fillRate']
+            ];
+            
+            $xStart = 220;
+            $yStart = 560;
+            $colWidth = 65;
+            $rowHeight = 22;
+            $labelWidth = 120;
+            
+            $rowIndex = 0;
+            
+            foreach ($tableData as $rowLabel => $rowValues) {
+                
+                $labelCell = $slide2->createRichTextShape()
+                ->setWidth($labelWidth)
+                ->setHeight($rowHeight)
+                ->setOffsetX($xStart - $labelWidth - 10)
+                ->setOffsetY($yStart + ($rowIndex * $rowHeight));
+                
+                $labelCell->getActiveParagraph()->getAlignment()
+                ->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+                
+                $labelCell->createTextRun($rowLabel)
+                ->getFont()
+                ->setBold(true)
+                ->setSize(10);
+                
+                foreach ($rowValues as $i => $value) {
+                    
+                    $cell = $slide2->createRichTextShape()
+                    ->setWidth($colWidth)
+                    ->setHeight($rowHeight)
+                    ->setOffsetX($xStart + ($i * $colWidth))
+                    ->setOffsetY($yStart + ($rowIndex * $rowHeight));
+                    
+                    $cell->getActiveParagraph()->getAlignment()
+                    ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                    
+                    $textColor = 'FF000000';
+                    
+                    if ($rowLabel === 'Fill Rate %') {
+                        
+                        if ($value >= 93) {
+                            $bgColor = 'FF00B050';
+                            $textColor = 'FFFFFFFF';
+                        } elseif ($value >= 86) {
+                            $bgColor = 'FFFFFF00';
+                        } else {
+                            $bgColor = 'FFFF0000';
+                            $textColor = 'FFFFFFFF';
+                        }
+                        
+                        $cell->getFill()
+                        ->setFillType(Fill::FILL_SOLID)
+                        ->setStartColor(new Color($bgColor));
+                    }
+                    
+                    $cell->createTextRun(
+                        $rowLabel === 'Fill Rate %' ? $value . '%' : $value
+                        )->getFont()
+                        ->setSize(10)
+                        ->setBold(true)
+                        ->setColor(new Color($textColor));
+                        
+                        $cell->getBorder()
+                        ->setLineWidth(0.5)
+                        ->setColor(new Color('FF808080'));
+                }
+                
+                $rowIndex++;
+            }
             
             $lblSlide2Title = $slide2->createRichTextShape()
             ->setHeight(50)
