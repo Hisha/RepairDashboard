@@ -389,7 +389,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(70)
             ->setOffsetX(430)
             ->setOffsetY(520);
-            $lblTwoSeventyData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $lblTwoSeventyData->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblTwoSeventyData->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF385D8A'));
             $lblTwoSeventyData->createTextRun($ytdTwoSeventyReqs)->getFont()->setName('Calibri')->setColor(new Color('FF000000'))->setSize(16);
             
