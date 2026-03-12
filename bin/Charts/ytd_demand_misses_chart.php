@@ -66,6 +66,13 @@ class YTDDemandMissesChart
                         'position' => 'left',
                         'min' => 0,
                         'max' => 500,
+                        'ticks' => [
+                            'font' => [
+                                 'size' => '14',
+                                 'family' => 'Helvetica',
+                                 'weight' => 'bold'
+                            ],  
+                        ],
                         'title' => [
                             'display' => true,
                             'text' => 'Demand and Misses'
@@ -76,6 +83,13 @@ class YTDDemandMissesChart
                         'position' => 'right',
                         'min' => 0,
                         'max' => 100,
+                        'ticks' => [
+                            'font' => [
+                                'size' => '14',
+                                'family' => 'Helvetica',
+                                'weight' => 'bold'
+                            ],
+                        ],
                         'grid' => [
                             'drawOnChartArea' => false
                         ],
