@@ -739,8 +739,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             TableBuilder::renderMonthlyDataTable(
                 $slide3,
                 $tableAverageData,
-                128,  // xStart
-                550,  // yStart
+                123,  // xStart
+                560,  // yStart
                 59,   // colWidth
                 20,   // rowHeight
                 195,   // labelWidth
