@@ -872,7 +872,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
-            ->setOffsetY(300);
+            ->setOffsetY(320);
             $lbltop5Anors999Title->createTextRun('ANORS/999')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5Anors999 = $cavRequisitions->getTop5ByPriority(
@@ -886,7 +886,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $slide4,
                 $top5Anors999,
                 80,   // x
-                320,  // y
+                340,  // y
+                500,  // width
+                180,  // height
+                'Helvetica',
+                12,
+                'FF000000',
+                false
+                );
+            
+            $lbltop5FleetFailureTitle = $slide4->createRichTextShape()
+            ->setWidth(420)
+            ->setHeight(30)
+            ->setOffsetX(80)
+            ->setOffsetY(450);
+            $lbltop5FleetFailureTitle->createTextRun('Fleet Failure')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            
+            $top5FleetFailure = $cavRequisitions->getTop5ByPriority(
+                $selectedProgram,
+                $dateRanges['month_start'],
+                $dateRanges['month_end'],
+                'Fleet Failure'
+                );
+            
+            ListBuilder::renderNiinNomenList(
+                $slide4,
+                $top5FleetFailure,
+                80,   // x
+                470,  // y
                 500,  // width
                 180,  // height
                 'Helvetica',
