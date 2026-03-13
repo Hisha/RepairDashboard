@@ -552,10 +552,10 @@ class CavRequisitions
             
             $labels[] = $monthLabel;
             
-            $boshipped = $this->getYTDBOShippedRT($selectedProgram, $monthStart, $monthEnd);
-            $casreprt = $this->getYTDCasrepRT($selectedProgram, $monthStart, $monthEnd);
-            $noncasreprt = $this->getYTDNonCasrepRT($selectedProgram, $monthStart, $monthEnd);
-            $allrt = $this->getYTDAllRT($selectedProgram, $monthStart, $monthEnd);
+            $boshipped[] = $this->getYTDBOShippedRT($selectedProgram, $monthStart, $monthEnd);
+            $casreprt[] = $this->getYTDCasrepRT($selectedProgram, $monthStart, $monthEnd);
+            $noncasreprt[] = $this->getYTDNonCasrepRT($selectedProgram, $monthStart, $monthEnd);
+            $allrt[] = $this->getYTDAllRT($selectedProgram, $monthStart, $monthEnd);
             $noncasrepgoal[] = 3;
             $casrepgoal[] = 1;
             
