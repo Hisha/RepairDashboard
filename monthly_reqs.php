@@ -959,7 +959,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ListBuilder::renderNiinNomenList(
                 $slide4,
                 $top5Backorders,
-                400,   // x
+                425,   // x
                 210,  // y
                 500,  // width
                 180,  // height
