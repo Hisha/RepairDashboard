@@ -616,6 +616,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 'Fill Rate %' => $ytdData['fillRate']
             ];
             
+            $labelColors = [
+                'Demand' => 'FF3B6FB6',
+                'Misses' => 'FFC0392B',
+                'Fill Rate %' => 'FF2E8B57'
+            ];
+            
             TableBuilder::renderMonthlyDataTable(
                 $slide2,
                 $tableData,
@@ -623,7 +629,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 600,  // yStart
                 59,   // colWidth
                 20,   // rowHeight
-                120   // labelWidth
+                120,   // labelWidth
+                $labelColors
                 );
             
             $lblSlide2Title = $slide2->createRichTextShape()

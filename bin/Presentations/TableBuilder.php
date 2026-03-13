@@ -14,7 +14,8 @@ class TableBuilder
         int $yStart,
         int $colWidth = 65,
         int $rowHeight = 22,
-        int $labelWidth = 120
+        int $labelWidth = 120,
+        array $labelColors = []
         ): void {
             $rowIndex = 0;
             
@@ -29,12 +30,14 @@ class TableBuilder
                 ->getAlignment()
                 ->setHorizontal(Alignment::HORIZONTAL_RIGHT);
                 
+                $labelColor = $labelColors[$rowLabel] ?? 'FF000000';
+                
                 $labelCell->createTextRun($rowLabel)
                 ->getFont()
                 ->setName('Helvetica')
                 ->setBold(true)
                 ->setSize(10)
-                ->setColor(new Color('FF000000'));
+                ->setColor(new Color($labelColor));
                 
                 foreach ($rowValues as $i => $value) {
                     $cell = $slide->createRichTextShape()
