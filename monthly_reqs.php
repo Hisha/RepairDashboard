@@ -829,12 +829,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
-            ->setOffsetY(150);
+            ->setOffsetY(160);
             
             $top5CasrepTitle->createTextRun('CASREPS')
             ->getFont()
             ->setName('Helvetica')
-            ->setSize(14)
+            ->setSize(12)
             ->setBold(true)
             ->setColor(new Color('FF000000'));
             
@@ -867,7 +867,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $top5Anors999Title->createTextRun('ANORS/999')
             ->getFont()
             ->setName('Helvetica')
-            ->setSize(14)
+            ->setSize(12)
             ->setBold(true)
             ->setColor(new Color('FF000000'));
             
