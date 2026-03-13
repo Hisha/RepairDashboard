@@ -862,7 +862,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
-            ->setOffsetY(190);
+            ->setOffsetY(370);
             
             $top5Anors999Title->createTextRun('ANORS/999')
             ->getFont()
@@ -882,7 +882,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $slide4,
                 $top5Anors999,
                 80,   // x
-                220,  // y
+                400,  // y
                 420,  // width
                 180,  // height
                 'Helvetica',
