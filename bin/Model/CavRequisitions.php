@@ -470,6 +470,28 @@ class CavRequisitions
         return isset($row['ytdNonCasrepRT']) ? round((float)$row['ytdNonCasrepRT'], 2) : 0.0;
     }
     
+    public function getYTDBOShippedRT(string $selectedProgram, string $ytdStart, string $ytdEnd): float
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            AVG(rt) AS ytdBOShippedRT
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.priority IN ('B/O SHIPPED')
+    ";
+        
+        $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
+        
+        $db->close();
+        
+        return isset($row['ytdBOShippedRT']) ? round((float)$row['ytdBOShippedRT'], 2) : 0.0;
+    }
+    
     public function getYTDDemandMisses(string $selectedProgram, string $ytdStart, string $ytdEnd): array
     {
         $labels = [];
@@ -507,6 +529,47 @@ class CavRequisitions
             'misses' => $misses,
             'fillRate' => $fillRate,
             'goal' => $goal
+        ];
+    }
+    
+    public function getYTDYearlyAverages(string $selectedProgram, string $ytdStart, string $ytdEnd): array
+    {
+        $labels = [];
+        $boshipped = [];
+        $casreprt = [];
+        $noncasreprt = [];
+        $allrt = [];
+        $noncasrepgoal = [];
+        $casrepgoal = [];
+        
+        $current = strtotime($ytdStart);
+        $end = strtotime($ytdEnd);
+        
+        while ($current <= $end) {
+            $monthStart = date('Y-m-01', $current);
+            $monthEnd = date('Y-m-t', $current);
+            $monthLabel = date('M Y', $current);
+            
+            $labels[] = $monthLabel;
+            
+            $boshipped = $this->getYTDBOShippedRT($selectedProgram, $monthStart, $monthEnd);
+            $casreprt = $this->getYTDCasrepRT($selectedProgram, $monthStart, $monthEnd);
+            $noncasreprt = $this->getYTDNonCasrepRT($selectedProgram, $monthStart, $monthEnd);
+            $allrt = $this->getYTDAllRT($selectedProgram, $monthStart, $monthEnd);
+            $noncasrepgoal[] = 3;
+            $casrepgoal[] = 1;
+            
+            $current = strtotime('+1 month', $current);
+        }
+        
+        return [
+            'labels' => $labels,
+            'boshipped' => $boshipped,
+            'casreprt' => $casreprt,
+            'noncasreprt' => $noncasreprt,
+            'allrt' => $allrt,
+            'noncasrepgoal' => $noncasrepgoal,
+            'casrepgoal' => $casrepgoal
         ];
     }
         

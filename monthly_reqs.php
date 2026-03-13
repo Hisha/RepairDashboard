@@ -689,6 +689,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
              * Slide 3 Filler                                                                            *
              *********************************************************************************************/
             
+            $ytdAverageData = $cavRequisitions->getYTDYearlyAverages(
+                $selectedProgram,
+                $dateRanges['ytd_start'],
+                $dateRanges['ytd_end']
+                );
+            
+            $ytdAverageChartOutput = APP_ROOT . '/reports/tmp/ytd_yearly_averages_by_month_' . uniqid() . '.png';
+            
+            $ytdAverageChartConfig = YTDYearlyAveragesChart::build(
+                $ytdAverageChartOutput,
+                $ytdAverageData['labels'],
+                $ytdAverageData['boshipped'],
+                $ytdAverageData['casreprt'],
+                $ytdAverageData['noncasreprt'],
+                $ytdAverageData['allrt'],
+                $ytdAverageData['noncasrepgoal'],
+                $ytdAverageData['casepgoal']
+                );
+            
+            $ytdAverageChartJsonName = 'ytd_yearly_averages_by_month_' . uniqid() . '.json';
+            $ytdAverageChartPath = $renderer->render($ytdAverageChartConfig, $ytdAverageChartJsonName);
+            
+            $ytdAverageShape = new File();
+            $ytdAverageShape->setName('YTD Yearly Averages By Month')
+            ->setDescription('YTD yearly averages by month')
+            ->setPath($ytdAverageChartPath)
+            ->setWidth(800)
+            ->setOffsetX(80)
+            ->setOffsetY(150);
+            
+            $slide3->addShape($ytdAverageShape);
+            
+            $tableAverageData = [
+                'UCORT Avg (AUCORT)^' => $ytdAverageData['boshipped'],
+                'CASREP RT Avg (ACasRT)*' => $ytdAverageData['casreprt'],
+                'RT Avg NON CASREP*' => $ytdAverageData['noncasreprt'],
+                'RT Avg All (AlRT)*' => $ytdAverageData['allrt']
+            ];
+            
+            $labelAverageColors = [
+                'UCORT Avg (AUCORT)^' => 'FF3B6FB6',
+                'CASREP RT Avg (ACasRT)*' => 'FF6F42C1',
+                'RT Avg NON CASREP*' => 'FFF2A541',
+                'RT Avg All (AlRT)*' => 'FFFFFF00'
+            ];
+            
+            TableBuilder::renderMonthlyDataTable(
+                $slide3,
+                $tableAverageData,
+                123,  // xStart
+                600,  // yStart
+                59,   // colWidth
+                20,   // rowHeight
+                120,   // labelWidth
+                $labelAverageColors
+                );
+            
             $lblSlide3Title = $slide3->createRichTextShape()
             ->setHeight(50)
             ->setWidth(500)
