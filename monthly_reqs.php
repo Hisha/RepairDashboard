@@ -829,7 +829,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
-            ->setOffsetY(160);
+            ->setOffsetY(170);
             
             $top5CasrepTitle->createTextRun('CASREPS')
             ->getFont()
@@ -849,7 +849,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $slide4,
                 $top5Casrep,
                 80,   // x
-                180,  // y
+                190,  // y
                 420,  // width
                 180,  // height
                 'Helvetica',
@@ -862,7 +862,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
-            ->setOffsetY(280);
+            ->setOffsetY(290);
             
             $top5Anors999Title->createTextRun('ANORS/999')
             ->getFont()
