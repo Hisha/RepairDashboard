@@ -850,7 +850,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $top5Casrep,
                 80,   // x
                 190,  // y
-                420,  // width
+                500,  // width
                 180,  // height
                 'Helvetica',
                 12,
@@ -883,7 +883,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $top5Anors999,
                 80,   // x
                 310,  // y
-                320,  // width
+                500,  // width
                 180,  // height
                 'Helvetica',
                 12,
