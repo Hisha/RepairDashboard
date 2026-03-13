@@ -482,7 +482,7 @@ class CavRequisitions
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
           AND cav_requisitions.date_shipped BETWEEN ? AND ?
-          AND cav_requisitions.priority IN ('B/O SHIPPED')
+          AND cav_requisitions.status = 'B/O SHIPPED'
     ";
         
         $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
