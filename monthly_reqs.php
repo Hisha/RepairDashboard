@@ -733,7 +733,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 'UCORT Avg (AUCORT)^' => 'FF3B6FB6',
                 'CASREP RT Avg (ACasRT)*' => 'FF6F42C1',
                 'RT Avg NON CASREP*' => 'FFF2A541',
-                'RT Avg All (AlRT)*' => 'FFFFFF00'
+                'RT Avg All (AlRT)*' => 'FF2E8B57'
             ];
             
             TableBuilder::renderMonthlyDataTable(
@@ -762,6 +762,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetY(80);
             $lblSlide3PM->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblSlide3PM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            
+            $lblCasrepGoal = $slide3->createRichTextShape()
+            ->setHeight(70)
+            ->setWidth(160)
+            ->setOffsetX(30)
+            ->setOffsetY(250);
+            $lblCasrepGoal->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblCasrepGoal->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF6F42C1'));
+            $lblCasrepGoal->createTextRun("CASREP RT")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(11);
+            $lblCasrepGoal->createBreak();
+            $lblCasrepGoal->createTextRun("Goal < 1 Day")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(11);
+            
+            $lblNonCasrepGoal = $slide3->createRichTextShape()
+            ->setHeight(70)
+            ->setWidth(160)
+            ->setOffsetX(30)
+            ->setOffsetY(150);
+            $lblNonCasrepGoal->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblNonCasrepGoal->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFF2A541'));
+            $lblNonCasrepGoal->createTextRun("NON CASREP RT")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(11);
+            $lblNonCasrepGoal->createBreak();
+            $lblNonCasrepGoal->createTextRun("Goal < 3 Day")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(11);
+            
+            $lblUCOGoal = $slide3->createRichTextShape()
+            ->setHeight(70)
+            ->setWidth(160)
+            ->setOffsetX(60)
+            ->setOffsetY(120);
+            $lblUCOGoal->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $lblUCOGoal->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF3B6FB6'));
+            $lblUCOGoal->createTextRun("AUCORT")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(11);
+            $lblUCOGoal->createBreak();
+            $lblUCOGoal->createTextRun("Goal < 90 Day")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(11);            
             
             $lblSlide3Disclaimer = $slide3->createRichTextShape()
             ->setHeight(30)
