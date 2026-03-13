@@ -825,18 +825,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSlide4Title->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblSlide4Title->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
-            $top5CasrepTitle = $slide4->createRichTextShape()
+            $boxPriority = $slide4->createRichTextShape()
+            ->setHeight(700)
+            ->setWidth(520)
+            ->setOffsetX(70)
+            ->setOffsetY(110);
+            $boxPriority->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFB7DEEB'));
+            
+            $lbltop5PriorityTitle = $slide4->createRichTextShape()
+            ->setWidth(420)
+            ->setHeight(50)
+            ->setOffsetX(80)
+            ->setOffsetY(120);
+            $lbltop5PriorityTitle->createTextRun('Most Requested Parts by')->getFont()->setName('Helvetica')->setSize(12)->setColor(new Color('FF000000'));
+            $lbltop5PriorityTitle->createBreak();
+            $lbltop5PriorityTitle->createTextRun('Priority')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            
+            $lbltop5CasrepTitle = $slide4->createRichTextShape()
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
             ->setOffsetY(170);
-            
-            $top5CasrepTitle->createTextRun('CASREPS')
-            ->getFont()
-            ->setName('Helvetica')
-            ->setSize(12)
-            ->setBold(true)
-            ->setColor(new Color('FF000000'));
+            $lbltop5CasrepTitle->createTextRun('CASREPS')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5Casrep = $cavRequisitions->getTop5ByPriority(
                 $selectedProgram,
@@ -858,18 +868,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 false
                 );
             
-            $top5Anors999Title = $slide4->createRichTextShape()
+            $lbltop5Anors999Title = $slide4->createRichTextShape()
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
             ->setOffsetY(290);
-            
-            $top5Anors999Title->createTextRun('ANORS/999')
-            ->getFont()
-            ->setName('Helvetica')
-            ->setSize(12)
-            ->setBold(true)
-            ->setColor(new Color('FF000000'));
+            $lbltop5Anors999Title->createTextRun('ANORS/999')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5Anors999 = $cavRequisitions->getTop5ByPriority(
                 $selectedProgram,
