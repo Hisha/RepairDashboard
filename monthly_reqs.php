@@ -825,13 +825,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSlide4Title->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblSlide4Title->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
-            $top5Title = $slide4->createRichTextShape()
+            $top5CasrepTitle = $slide4->createRichTextShape()
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
             ->setOffsetY(150);
             
-            $top5Title->createTextRun('CASREPS')
+            $top5CasrepTitle->createTextRun('CASREPS')
             ->getFont()
             ->setName('Helvetica')
             ->setSize(14)
@@ -849,6 +849,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $slide4,
                 $top5Casrep,
                 80,   // x
+                180,  // y
+                420,  // width
+                180,  // height
+                'Helvetica',
+                12,
+                'FF000000',
+                false
+                );
+            
+            $top5Anors999Title = $slide4->createRichTextShape()
+            ->setWidth(420)
+            ->setHeight(30)
+            ->setOffsetX(80)
+            ->setOffsetY(190);
+            
+            $top5Anors999Title->createTextRun('CASREPS')
+            ->getFont()
+            ->setName('Helvetica')
+            ->setSize(14)
+            ->setBold(true)
+            ->setColor(new Color('FF000000'));
+            
+            $top5Anors999 = $cavRequisitions->getTop5ByPriority(
+                $selectedProgram,
+                $dateRanges['month_start'],
+                $dateRanges['month_end'],
+                ['999', 'ANORS']
+                );
+            
+            ListBuilder::renderNiinNomenList(
+                $slide4,
+                $top5Anors999,
+                220,   // x
                 180,  // y
                 420,  // width
                 180,  // height
