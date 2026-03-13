@@ -5,6 +5,7 @@ require_once APP_ROOT . '/vendor/autoload.php';
 require_once APP_ROOT . '/bin/Charts/shipped_piechart.php';
 require_once APP_ROOT . '/bin/Charts/shipped_doughnutchart.php';
 require_once APP_ROOT . '/bin/Charts/ytd_demand_misses_chart.php';
+require_once APP_ROOT . '/bin/Charts/ytd_yearly_averages_by_month_chart.php';
 require_once APP_ROOT . '/bin/Presentations/TableBuilder.php';
 require_once APP_ROOT . '/bin/Utilities/ChartRenderer.php';
 require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
