@@ -828,14 +828,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $boxPriority = $slide4->createRichTextShape()
             ->setHeight(500)
             ->setWidth(420)
-            ->setOffsetX(70)
+            ->setOffsetX(50)
             ->setOffsetY(145);
             $boxPriority->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFB7DEEB'));
             
             $boxStatus = $slide4->createRichTextShape()
             ->setHeight(500)
             ->setWidth(420)
-            ->setOffsetX(535)
+            ->setOffsetX(515)
             ->setOffsetY(145);
             $boxStatus->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFECB00'));
             
