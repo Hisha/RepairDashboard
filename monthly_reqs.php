@@ -970,6 +970,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 Alignment::HORIZONTAL_RIGHT
                 );
             
+            $lbltop5ShipPickTitle = $slide4->createRichTextShape()
+            ->setWidth(420)
+            ->setHeight(30)
+            ->setOffsetX(490)
+            ->setOffsetY(450);
+            $lbltop5ShipPickTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lbltop5ShipPickTitle->createTextRun('Shipped/Pick Up')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            
+            $top5ShipPick = $cavRequisitions->getTop5ByStatus(
+                $selectedProgram,
+                $dateRanges['month_start'],
+                $dateRanges['month_end'],
+                ['SHIPPED','PICK UP']
+                );
+            
+            ListBuilder::renderNiinNomenList(
+                $slide4,
+                $top5ShipPick,
+                410,   // x
+                470,  // y
+                500,  // width
+                180,  // height
+                'Helvetica',
+                12,
+                'FF000000',
+                false,
+                Alignment::HORIZONTAL_RIGHT
+                );
+            
             $lblSlide4PM = $slide4->createRichTextShape()
             ->setHeight(50)
             ->setWidth(575)
