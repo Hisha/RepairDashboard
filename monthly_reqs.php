@@ -826,7 +826,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSlide4Title->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
             $boxPriority = $slide4->createRichTextShape()
-            ->setHeight(550)
+            ->setHeight(535)
             ->setWidth(420)
             ->setOffsetX(70)
             ->setOffsetY(145);
@@ -859,7 +859,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $slide4,
                 $top5Casrep,
                 80,   // x
-                245,  // y
+                230,  // y
                 500,  // width
                 180,  // height
                 'Helvetica',
