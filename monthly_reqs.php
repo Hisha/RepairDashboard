@@ -764,10 +764,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSlide3PM->createTextRun("{$fillerData['pm']}  {$fillerData['programname']}")->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
             $lblCasrepGoal = $slide3->createRichTextShape()
-            ->setHeight(40)
-            ->setWidth(120)
-            ->setOffsetX(30)
-            ->setOffsetY(450);
+            ->setHeight(50)
+            ->setWidth(110)
+            ->setOffsetX(50)
+            ->setOffsetY(475);
             $lblCasrepGoal->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblCasrepGoal->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF6F42C1'));
             $lblCasrepGoal->createTextRun("CASREP RT")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(11);
@@ -775,10 +775,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblCasrepGoal->createTextRun("Goal < 1 Day")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(11);
             
             $lblNonCasrepGoal = $slide3->createRichTextShape()
-            ->setHeight(40)
-            ->setWidth(140)
-            ->setOffsetX(30)
-            ->setOffsetY(350);
+            ->setHeight(50)
+            ->setWidth(120)
+            ->setOffsetX(50)
+            ->setOffsetY(360);
             $lblNonCasrepGoal->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblNonCasrepGoal->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFF2A541'));
             $lblNonCasrepGoal->createTextRun("NON CASREP RT")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(11);
@@ -786,9 +786,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblNonCasrepGoal->createTextRun("Goal < 3 Day")->getFont()->setName('Calibri')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(11);
             
             $lblUCOGoal = $slide3->createRichTextShape()
-            ->setHeight(40)
-            ->setWidth(120)
-            ->setOffsetX(600)
+            ->setHeight(50)
+            ->setWidth(110)
+            ->setOffsetX(700)
             ->setOffsetY(150);
             $lblUCOGoal->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblUCOGoal->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF3B6FB6'));
