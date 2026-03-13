@@ -27,7 +27,7 @@ class YTDYearlyAveragesChart
                             'data' => $boshipped,
                             'backgroundColor' => '#3B6FB6',
                             'yAxisID' => 'y',
-                            'order' => 1
+                            'order' => 2
                         ],
                         [
                             'type' => 'line',
@@ -40,7 +40,7 @@ class YTDYearlyAveragesChart
                             'pointHoverRadius' => 4,
                             'tension' => 0.2,
                             'yAxisID' => 'y1',
-                            'order' => 2
+                            'order' => 1
                         ],
                         [
                             'type' => 'line',
@@ -53,7 +53,7 @@ class YTDYearlyAveragesChart
                             'pointHoverRadius' => 4,
                             'tension' => 0.2,
                             'yAxisID' => 'y1',
-                            'order' => 3
+                            'order' => 1
                         ],
                         [
                             'type' => 'line',
@@ -66,7 +66,7 @@ class YTDYearlyAveragesChart
                             'pointHoverRadius' => 4,
                             'tension' => 0.2,
                             'yAxisID' => 'y1',
-                            'order' => 4
+                            'order' => 1
                         ],
                         [
                             'type' => 'line',
@@ -80,7 +80,7 @@ class YTDYearlyAveragesChart
                             'pointHoverRadius' => 0,
                             'tension' => 0,
                             'yAxisID' => 'y1',
-                            'order' => 5
+                            'order' => 1
                         ],
                         [
                             'type' => 'line',
@@ -94,7 +94,7 @@ class YTDYearlyAveragesChart
                             'pointHoverRadius' => 0,
                             'tension' => 0,
                             'yAxisID' => 'y1',
-                            'order' => 6
+                            'order' => 1
                         ]
                     ]
                 ],
