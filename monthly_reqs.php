@@ -835,8 +835,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $boxStatus = $slide4->createRichTextShape()
             ->setHeight(500)
             ->setWidth(420)
-            ->setOffsetX(70)
-            ->setOffsetY(655);
+            ->setOffsetX(585)
+            ->setOffsetY(145);
             $boxStatus->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFECB00'));
             
             $lbltop5PriorityTitle = $slide4->createRichTextShape()
