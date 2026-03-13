@@ -741,7 +741,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $tableAverageData,
                 220,  // xStart
                 560,  // yStart
-                55,   // colWidth
+                57,   // colWidth
                 20,   // rowHeight
                 195,   // labelWidth
                 $labelAverageColors
