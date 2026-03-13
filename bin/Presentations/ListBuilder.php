@@ -16,7 +16,8 @@ class ListBuilder
         string $fontName = 'Helvetica',
         int $fontSize = 12,
         string $fontColor = 'FF000000',
-        bool $bold = false
+        bool $bold = false,
+        string $align = 'Alignment::HORIZONTAL_LEFT'
         ): void {
             $shape = $slide->createRichTextShape()
             ->setWidth($width)
@@ -26,7 +27,7 @@ class ListBuilder
             
             $shape->getActiveParagraph()
             ->getAlignment()
-            ->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            ->setHorizontal($align);
             
             foreach ($rows as $row) {
                 $niin = isset($row['niin']) ? trim((string)$row['niin']) : '';

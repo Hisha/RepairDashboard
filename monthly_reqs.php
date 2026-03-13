@@ -899,7 +899,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 'Helvetica',
                 12,
                 'FF000000',
-                false
+                false,
+                'Alignment::HORIZONTAL_LEFT'
                 );
             
             $lbltop5FleetFailureTitle = $slide4->createRichTextShape()
@@ -921,6 +922,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $top5FleetFailure,
                 80,   // x
                 470,  // y
+                500,  // width
+                180,  // height
+                'Helvetica',
+                12,
+                'FF000000',
+                false,
+                'Alignment::HORIZONTAL_LEFT'
+                );
+            
+            $lbltop5StatusTitle = $slide4->createRichTextShape()
+            ->setWidth(420)
+            ->setHeight(30)
+            ->setOffsetX(525)
+            ->setOffsetY(150);
+            $lbltop5StatusTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $lbltop5StatusTitle->createTextRun('Most Requested Parts by')->getFont()->setName('Helvetica')->setSize(12)->setColor(new Color('FF000000'));
+            $lbltop5StatusTitle->createBreak();
+            $lbltop5StatusTitle->createTextRun('Disposition')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            
+            $lbltop5BackordersTitle = $slide4->createRichTextShape()
+            ->setWidth(420)
+            ->setHeight(30)
+            ->setOffsetX(525)
+            ->setOffsetY(190);
+            $lbltop5BackordersTitle->createTextRun('Backorders')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            
+            $top5Backorders = $cavRequisitions->getTop5ByPriority(
+                $selectedProgram,
+                $dateRanges['month_start'],
+                $dateRanges['month_end'],
+                'BACKORDERED'
+                );
+            
+            ListBuilder::renderNiinNomenList(
+                $slide4,
+                $top5Backorders,
+                525,   // x
+                210,  // y
                 500,  // width
                 180,  // height
                 'Helvetica',
