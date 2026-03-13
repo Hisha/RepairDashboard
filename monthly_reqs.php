@@ -934,7 +934,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lbltop5StatusTitle = $slide4->createRichTextShape()
             ->setWidth(420)
             ->setHeight(30)
-            ->setOffsetX(500)
+            ->setOffsetX(490)
             ->setOffsetY(150);
             $lbltop5StatusTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lbltop5StatusTitle->createTextRun('Most Requested Parts by')->getFont()->setName('Helvetica')->setSize(12)->setColor(new Color('FF000000'));
@@ -944,7 +944,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lbltop5BackordersTitle = $slide4->createRichTextShape()
             ->setWidth(420)
             ->setHeight(30)
-            ->setOffsetX(500)
+            ->setOffsetX(490)
             ->setOffsetY(190);
             $lbltop5BackordersTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lbltop5BackordersTitle->createTextRun('Backorders')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
@@ -959,7 +959,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ListBuilder::renderNiinNomenList(
                 $slide4,
                 $top5Backorders,
-                425,   // x
+                410,   // x
                 210,  // y
                 500,  // width
                 180,  // height
