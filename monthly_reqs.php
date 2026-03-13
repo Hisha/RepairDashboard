@@ -834,7 +834,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $lbltop5PriorityTitle = $slide4->createRichTextShape()
             ->setWidth(420)
-            ->setHeight(50)
+            ->setHeight(30)
             ->setOffsetX(80)
             ->setOffsetY(150);
             $lbltop5PriorityTitle->createTextRun('Most Requested Parts by')->getFont()->setName('Helvetica')->setSize(12)->setColor(new Color('FF000000'));
@@ -845,7 +845,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
-            ->setOffsetY(210);
+            ->setOffsetY(190);
             $lbltop5CasrepTitle->createTextRun('CASREPS')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5Casrep = $cavRequisitions->getTop5ByPriority(
@@ -859,7 +859,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $slide4,
                 $top5Casrep,
                 80,   // x
-                230,  // y
+                210,  // y
                 500,  // width
                 180,  // height
                 'Helvetica',
