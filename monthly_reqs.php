@@ -743,7 +743,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 550,  // yStart
                 59,   // colWidth
                 20,   // rowHeight
-                150,   // labelWidth
+                200,   // labelWidth
                 $labelAverageColors
                 );
             
