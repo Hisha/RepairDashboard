@@ -826,11 +826,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSlide4Title->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
             $boxPriority = $slide4->createRichTextShape()
-            ->setHeight(535)
+            ->setHeight(500)
             ->setWidth(420)
             ->setOffsetX(70)
             ->setOffsetY(145);
             $boxPriority->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFB7DEEB'));
+            
+            $boxStatus = $slide4->createRichTextShape()
+            ->setHeight(500)
+            ->setWidth(420)
+            ->setOffsetX(70)
+            ->setOffsetY(655);
+            $boxPriority->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFFECB00'));
             
             $lbltop5PriorityTitle = $slide4->createRichTextShape()
             ->setWidth(420)
