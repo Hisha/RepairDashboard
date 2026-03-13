@@ -17,7 +17,7 @@ class ListBuilder
         int $fontSize = 12,
         string $fontColor = 'FF000000',
         bool $bold = false,
-        string $align = 'Alignment::HORIZONTAL_LEFT'
+        string $align = Alignment::HORIZONTAL_LEFT
         ): void {
             $shape = $slide->createRichTextShape()
             ->setWidth($width)
