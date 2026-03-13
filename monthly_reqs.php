@@ -843,7 +843,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
-            ->setOffsetY(150);
+            ->setOffsetY(145);
             $lbltop5PriorityTitle->createTextRun('Most Requested Parts by')->getFont()->setName('Helvetica')->setSize(12)->setColor(new Color('FF000000'));
             $lbltop5PriorityTitle->createBreak();
             $lbltop5PriorityTitle->createTextRun('Priority')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
@@ -935,7 +935,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(490)
-            ->setOffsetY(150);
+            ->setOffsetY(145);
             $lbltop5StatusTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lbltop5StatusTitle->createTextRun('Most Requested Parts by')->getFont()->setName('Helvetica')->setSize(12)->setColor(new Color('FF000000'));
             $lbltop5StatusTitle->createBreak();
