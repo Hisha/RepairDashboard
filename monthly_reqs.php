@@ -717,7 +717,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setDescription('YTD yearly averages by month')
             ->setPath($ytdAverageChartPath)
             ->setWidth(725)
-            ->setOffsetX(167)
+            ->setOffsetX(180)
             ->setOffsetY(150);
             
             $slide3->addShape($ytdAverageShape);
