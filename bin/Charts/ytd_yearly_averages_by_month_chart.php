@@ -107,7 +107,7 @@ class YTDYearlyAveragesChart
                         'beginAtZero' => true,
                         'position' => 'left',
                         'min' => 0,
-                        'max' => 500,
+                        'max' => 7,
                         'ticks' => [
                             'font' => [
                                 'size' => 14,
@@ -131,7 +131,7 @@ class YTDYearlyAveragesChart
                         'beginAtZero' => true,
                         'position' => 'right',
                         'min' => 0,
-                        'max' => 100,
+                        'max' => 80,
                         'ticks' => [
                             'font' => [
                                 'size' => 14,
