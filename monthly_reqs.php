@@ -6,6 +6,7 @@ require_once APP_ROOT . '/bin/Charts/shipped_piechart.php';
 require_once APP_ROOT . '/bin/Charts/shipped_doughnutchart.php';
 require_once APP_ROOT . '/bin/Charts/ytd_demand_misses_chart.php';
 require_once APP_ROOT . '/bin/Charts/ytd_yearly_averages_by_month_chart.php';
+require_once APP_ROOT . '/bin/Presentations/ListBuilder.php';
 require_once APP_ROOT . '/bin/Presentations/TableBuilder.php';
 require_once APP_ROOT . '/bin/Utilities/ChartRenderer.php';
 require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
@@ -823,6 +824,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetY(30);
             $lblSlide4Title->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblSlide4Title->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
+            
+            $top5Title = $slide4->createRichTextShape()
+            ->setWidth(420)
+            ->setHeight(30)
+            ->setOffsetX(80)
+            ->setOffsetY(150);
+            
+            $top5Title->createTextRun('CASREPS')
+            ->getFont()
+            ->setName('Helvetica')
+            ->setSize(14)
+            ->setBold(true)
+            ->setColor(new Color('FF000000'));
+            
+            $top5Casrep = $cavRequisitions->getTop5ByPriority(
+                $selectedProgram,
+                $dateRanges['month_start'],
+                $dateRanges['month_end'],
+                'CASREP'
+                );
+            
+            ListBuilder::renderNiinNomenList(
+                $slide4,
+                $top5Casrep,
+                80,   // x
+                180,  // y
+                420,  // width
+                180,  // height
+                'Helvetica',
+                12,
+                'FF000000',
+                false
+                );
             
             $lblSlide4PM = $slide4->createRichTextShape()
             ->setHeight(50)
