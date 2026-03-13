@@ -740,7 +740,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $slide3,
                 $tableAverageData,
                 123,  // xStart
-                500,  // yStart
+                550,  // yStart
                 59,   // colWidth
                 20,   // rowHeight
                 120,   // labelWidth
