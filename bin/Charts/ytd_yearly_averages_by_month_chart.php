@@ -14,7 +14,7 @@ class YTDYearlyAveragesChart
         ): array {
             return [
                 'type' => 'bar',
-                'width' => 1200,
+                'width' => 1100,
                 'height' => 600,
                 'output' => $outputPath,
                 'legendDisplay' => false,
