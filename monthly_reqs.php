@@ -872,7 +872,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
-            ->setOffsetY(390);
+            ->setOffsetY(300);
             $lbltop5Anors999Title->createTextRun('ANORS/999')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5Anors999 = $cavRequisitions->getTop5ByPriority(
@@ -886,7 +886,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $slide4,
                 $top5Anors999,
                 80,   // x
-                410,  // y
+                320,  // y
                 500,  // width
                 180,  // height
                 'Helvetica',
