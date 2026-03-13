@@ -949,7 +949,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lbltop5BackordersTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lbltop5BackordersTitle->createTextRun('Backorders')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
-            $top5Backorders = $cavRequisitions->getTop5ByPriority(
+            $top5Backorders = $cavRequisitions->getTop5ByStatus(
                 $selectedProgram,
                 $dateRanges['month_start'],
                 $dateRanges['month_end'],

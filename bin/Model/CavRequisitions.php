@@ -597,7 +597,7 @@ class CavRequisitions
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
-          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
           AND cav_requisitions.status IN ('SHIPPED', 'PICK UP')
           AND cav_requisitions.priority IN ($placeholders)
         GROUP BY cav_requisitions.niin, cav_requisitions.nomen
@@ -613,6 +613,36 @@ class CavRequisitions
         
         return $results;
     }
+    
+    public function getTop5ByStatus(string $selectedProgram, string $startDate, string $endDate, string $status): array
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            niin,
+            nomen,
+            SUM(qty) AS total
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
+          AND cav_requisitions.status = ?
+        GROUP BY cav_requisitions.niin, cav_requisitions.nomen
+        ORDER BY total DESC
+        LIMIT 5
+    ";
+        
+        $params = array_merge($selectedProgram, $startDate, $endDate, $status);
+        
+        $results = call_user_func_array([$db, 'query'], array_merge([$sql], $params))->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
 }
   
 ?>
