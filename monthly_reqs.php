@@ -766,7 +766,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblCasrepGoal = $slide3->createRichTextShape()
             ->setHeight(50)
             ->setWidth(110)
-            ->setOffsetX(50)
+            ->setOffsetX(55)
             ->setOffsetY(475);
             $lblCasrepGoal->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $lblCasrepGoal->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FF6F42C1'));
