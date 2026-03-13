@@ -706,7 +706,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $ytdAverageData['noncasreprt'],
                 $ytdAverageData['allrt'],
                 $ytdAverageData['noncasrepgoal'],
-                $ytdAverageData['casepgoal']
+                $ytdAverageData['casrepgoal']
                 );
             
             $ytdAverageChartJsonName = 'ytd_yearly_averages_by_month_' . uniqid() . '.json';
