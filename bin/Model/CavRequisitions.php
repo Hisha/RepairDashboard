@@ -634,9 +634,7 @@ class CavRequisitions
         LIMIT 5
     ";
         
-        $params = array_merge($selectedProgram, $startDate, $endDate, $status);
-        
-        $results = call_user_func_array([$db, 'query'], array_merge([$sql], $params))->fetchAll();
+        $results = $db->query($sql, $selectedProgram, $startDate, $endDate, $status)->fetchAll();
         
         $db->close();
         
