@@ -836,7 +836,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(50)
             ->setOffsetX(80)
-            ->setOffsetY(135);
+            ->setOffsetY(150);
             $lbltop5PriorityTitle->createTextRun('Most Requested Parts by')->getFont()->setName('Helvetica')->setSize(12)->setColor(new Color('FF000000'));
             $lbltop5PriorityTitle->createBreak();
             $lbltop5PriorityTitle->createTextRun('Priority')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
@@ -845,7 +845,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
-            ->setOffsetY(170);
+            ->setOffsetY(270);
             $lbltop5CasrepTitle->createTextRun('CASREPS')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5Casrep = $cavRequisitions->getTop5ByPriority(
@@ -859,7 +859,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $slide4,
                 $top5Casrep,
                 80,   // x
-                190,  // y
+                290,  // y
                 500,  // width
                 180,  // height
                 'Helvetica',
@@ -872,7 +872,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
-            ->setOffsetY(290);
+            ->setOffsetY(390);
             $lbltop5Anors999Title->createTextRun('ANORS/999')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5Anors999 = $cavRequisitions->getTop5ByPriority(
@@ -886,7 +886,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $slide4,
                 $top5Anors999,
                 80,   // x
-                310,  // y
+                410,  // y
                 500,  // width
                 180,  // height
                 'Helvetica',
