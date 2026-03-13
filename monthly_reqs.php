@@ -829,7 +829,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(600)
             ->setWidth(420)
             ->setOffsetX(70)
-            ->setOffsetY(130);
+            ->setOffsetY(140);
             $boxPriority->getFill()->setFillType(Fill::FILL_SOLID)->setStartColor(new Color('FFB7DEEB'));
             
             $lbltop5PriorityTitle = $slide4->createRichTextShape()
