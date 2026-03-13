@@ -26,7 +26,8 @@ class YTDYearlyAveragesChart
                             'label' => 'BO Shipped',
                             'data' => $boshipped,
                             'backgroundColor' => '#3B6FB6',
-                            'yAxisID' => 'y'
+                            'yAxisID' => 'y',
+                            'order' => 1
                         ],
                         [
                             'type' => 'line',
@@ -38,7 +39,8 @@ class YTDYearlyAveragesChart
                             'pointRadius' => 4,
                             'pointHoverRadius' => 4,
                             'tension' => 0.2,
-                            'yAxisID' => 'y1'
+                            'yAxisID' => 'y1',
+                            'order' => 2
                         ],
                         [
                             'type' => 'line',
@@ -50,7 +52,8 @@ class YTDYearlyAveragesChart
                             'pointRadius' => 4,
                             'pointHoverRadius' => 4,
                             'tension' => 0.2,
-                            'yAxisID' => 'y1'
+                            'yAxisID' => 'y1',
+                            'order' => 3
                         ],
                         [
                             'type' => 'line',
@@ -62,7 +65,8 @@ class YTDYearlyAveragesChart
                             'pointRadius' => 4,
                             'pointHoverRadius' => 4,
                             'tension' => 0.2,
-                            'yAxisID' => 'y1'
+                            'yAxisID' => 'y1',
+                            'order' => 4
                         ],
                         [
                             'type' => 'line',
@@ -75,7 +79,8 @@ class YTDYearlyAveragesChart
                             'pointRadius' => 0,
                             'pointHoverRadius' => 0,
                             'tension' => 0,
-                            'yAxisID' => 'y1'
+                            'yAxisID' => 'y1',
+                            'order' => 5
                         ],
                         [
                             'type' => 'line',
@@ -88,7 +93,8 @@ class YTDYearlyAveragesChart
                             'pointRadius' => 0,
                             'pointHoverRadius' => 0,
                             'tension' => 0,
-                            'yAxisID' => 'y1'
+                            'yAxisID' => 'y1',
+                            'order' => 6
                         ]
                     ]
                 ],
