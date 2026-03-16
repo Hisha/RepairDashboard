@@ -1062,6 +1062,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lblSlide5Title->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lblSlide5Title->createTextRun($fillerData['title'])->getFont()->setName('Helvetica')->setBold(true)->setColor(new Color('FFFFFFFF'))->setSize(32);
             
+            $boRows = $cavRequisitions->getBackOrderListByDate_Recv(
+                $selectedProgram,
+                $dateRanges['month_start'],
+                $dateRanges['month_end']
+                );
+            
+            $labels = [];
+            $data = [];
+            
+            foreach ($boRows as $row) {
+                $labels[] = $row['label'];   // CONCAT result
+                $data[] = (int)$row['total'];
+            }
+            
+            $boChartOutput = APP_ROOT . '/reports/tmp/backorder_bar_' . uniqid() . '.png';
+            
+            $boChartConfig = BackOrderChart::build(
+                $boChartOutput,
+                $labels,
+                $data
+                );
+            
+            $boChartJson = 'backorder_bar_' . uniqid() . '.json';
+            
+            $boChartPath = $renderer->render($boChartConfig, $boChartJson);
+            
+            $boShape = new File();
+            
+            $boShape->setName('Backorder List')
+            ->setDescription('Backorder quantities by NIIN')
+            ->setPath($boChartPath)
+            ->setWidth(900)
+            ->setOffsetX(80)
+            ->setOffsetY(180);
+            
+            $slide5->addShape($boShape);
+            
             $lblSlide5PM = $slide5->createRichTextShape()
             ->setHeight(50)
             ->setWidth(575)

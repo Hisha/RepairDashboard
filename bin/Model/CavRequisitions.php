@@ -700,16 +700,16 @@ class CavRequisitions
         
         $sql = "
         SELECT
-            SUM(CASE
-                WHEN cav_requisitions.priority = 'CASREP' THEN 1
-                ELSE 0
-            END) AS casrep
+            CONCAT(niin, ' (', nomen, ')') AS label,
+            SUM(qty) AS total
         FROM cav_requisitions
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
-          AND cav_requisitions.date_shipped BETWEEN ? AND ?
-          AND cav_requisitions.status IN ('SHIPPED', 'PICK UP', 'B/O SHIPPED')
+            AND cav_requisitions.date_recv BETWEEN ? AND ?
+            AND cav_requisitions.status = 'BACKORDERED'
+        GROUP BY niin, nomen
+        ORDER BY total DESC
     ";
         
         $results = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchAll();
