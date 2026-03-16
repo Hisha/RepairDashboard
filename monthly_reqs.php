@@ -1073,12 +1073,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $bodata = [];
             
             foreach ($boRows as $row) {
-                $bolabels[] = $row['label'];   // CONCAT result
+                $bolabels[] = $row['label'];
                 $bodata[] = (int)$row['total'];
             }
             
             $rowCount = count($bolabels);
-            $chartHeight = max(250, min(700, $rowCount * 32));
+            $chartHeight = max(350, $rowCount * 38);
+            
+            if ($rowCount <= 8) {
+                $chartFontSize = 13;
+            } elseif ($rowCount <= 14) {
+                $chartFontSize = 11;
+            } else {
+                $chartFontSize = 10;
+            }
             
             $boChartOutput = APP_ROOT . '/reports/tmp/backorder_bar_' . uniqid() . '.png';
             
@@ -1086,23 +1094,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $boChartOutput,
                 $bolabels,
                 $bodata,
-                $chartHeight
+                $chartHeight,
+                $chartFontSize
                 );
             
             $boChartJson = 'backorder_bar_' . uniqid() . '.json';
-            
             $boChartPath = $renderer->render($boChartConfig, $boChartJson);
             
+            $chartAreaX = 70;
+            $chartAreaY = 150;
+            $chartAreaHeight = 440;
+            
             $boShape = new File();
-            
-            $displayWidth = $rowCount > 15 ? 700 : 800;
-            
             $boShape->setName('Backorder List')
             ->setDescription('Backorder quantities by NIIN')
             ->setPath($boChartPath)
-            ->setWidth($displayWidth)
-            ->setOffsetX(70)
-            ->setOffsetY(150);
+            ->setHeight($chartAreaHeight)
+            ->setOffsetX($chartAreaX)
+            ->setOffsetY($chartAreaY);
             
             $slide5->addShape($boShape);
             
