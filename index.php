@@ -31,7 +31,7 @@ include 'menu.php';
         .chart-card {
             width: 420px;
             max-width: 100%;
-            height: 420px;
+            min-height: 420px;
             background: #fff;
             border: 1px solid #ddd;
             border-radius: 6px;
@@ -43,14 +43,18 @@ include 'menu.php';
             margin-top: 0;
             margin-bottom: 15px;
         }
+
+        .chart-canvas-wrap {
+            position: relative;
+            width: 100%;
+            height: 340px;
+        }
     </style>
 </head>
 <body>
     <div class="dashboard-wrap">
-        <h1>MESC Dashboard</h1>
-
-        <div class="chart-grid">
-            <?php include 'backorders_piechart.php'; ?>
+		<div class="chart-grid">
+            <?php require_once __DIR__ . '/backorders_piechart.php'; ?>
         </div>
     </div>
 </body>
