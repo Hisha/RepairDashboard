@@ -1,6 +1,7 @@
 <?php
 
 require_once APP_ROOT . '/vendor/autoload.php';
+require_once APP_ROOT . '/bin/Model/SYS_LstUpdate.php;'
 require_once APP_ROOT . '/bin/Utilities/db.php';
 require_once APP_ROOT . '/bin/Utilities/excelverify.php';
 require_once APP_ROOT . '/bin/Utilities/excelformat.php';
