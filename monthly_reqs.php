@@ -1126,7 +1126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $displayHeight = (int) round($imgHeight * $scale);
             
             $offsetX = $chartAreaX + (int)(($chartAreaWidth - $displayWidth) / 2);
-            $offsetY = $chartAreaY + (int)(($chartAreaHeight - $displayHeight) / 2);
+            $offsetY = $chartAreaY;
             
             $boShape = new File();
             $boShape->setName('Backorder List')
