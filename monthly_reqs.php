@@ -718,8 +718,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $ytdAverageShape->setName('YTD Yearly Averages By Month')
             ->setDescription('YTD yearly averages by month')
             ->setPath($ytdAverageChartPath)
-            ->setWidth(725)
-            ->setOffsetX(200)
+            ->setWidth(730)
+            ->setOffsetX(195)
             ->setOffsetY(150);
             
             $slide3->addShape($ytdAverageShape);
@@ -741,7 +741,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             TableBuilder::renderMonthlyDataTable(
                 $slide3,
                 $tableAverageData,
-                215,  // xStart
+                220,  // xStart
                 560,  // yStart
                 60,   // colWidth
                 20,   // rowHeight
