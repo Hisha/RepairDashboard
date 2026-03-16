@@ -94,14 +94,30 @@ class excelupload
             for ($col = 1; $col <= $columnCount; $col++) {
                 $cellRef = Coordinate::stringFromColumnIndex($col) . $headerRow;
                 $cell = $sheet->getCell($cellRef);
-                $actualHeaders[] = trim((string) self::getCellDisplayValue($cell));
+                $actualHeaders[] = (string) self::getCellDisplayValue($cell);
             }
-
-            if ($actualHeaders !== $expectedHeaders) {
+            
+            $normalizedExpectedHeaders = array_map([self::class, 'normalizeHeader'], $expectedHeaders);
+            $normalizedActualHeaders   = array_map([self::class, 'normalizeHeader'], $actualHeaders);
+            
+            if ($normalizedActualHeaders !== $normalizedExpectedHeaders) {
+                $headerDifferences = [];
+                
+                foreach ($normalizedExpectedHeaders as $i => $expected) {
+                    $actual = $normalizedActualHeaders[$i] ?? '(missing)';
+                    
+                    if ($expected !== $actual) {
+                        $columnNumber = $i + 1;
+                        $headerDifferences[] =
+                        "Col {$columnNumber} expected [" . ($expectedHeaders[$i] ?? '') .
+                        "] found [" . ($actualHeaders[$i] ?? '') . "]";
+                    }
+                }
+                
                 throw new Exception(
-                    'Header mismatch. Expected: [' . implode(', ', $expectedHeaders) .
-                    '] Found: [' . implode(', ', $actualHeaders) . ']'
-                );
+                    'Header mismatch. ' .
+                    implode('; ', $headerDifferences)
+                    );
             }
 
             $preparedRows = [];
@@ -301,6 +317,27 @@ class excelupload
             $refs[$key] = &$arr[$key];
         }
         return $refs;
+    }
+    
+    private static function normalizeHeader(?string $value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+        
+        $value = (string)$value;
+        
+        // Remove UTF-8 BOM if present
+        $value = preg_replace('/^\xEF\xBB\xBF/', '', $value);
+        
+        // Convert non-breaking spaces to normal spaces
+        $value = str_replace("\xC2\xA0", ' ', $value);
+        
+        // Trim and collapse repeated whitespace
+        $value = trim($value);
+        $value = preg_replace('/\s+/', ' ', $value);
+        
+        return $value;
     }
 
     private static function getUploadErrorMessage(int $errorCode): string
