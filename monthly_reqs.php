@@ -718,7 +718,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $ytdAverageShape->setName('YTD Yearly Averages By Month')
             ->setDescription('YTD yearly averages by month')
             ->setPath($ytdAverageChartPath)
-            ->setWidth(730)
+            ->setWidth(740)
             ->setOffsetX(195)
             ->setOffsetY(150);
             
