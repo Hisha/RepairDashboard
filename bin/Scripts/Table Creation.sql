@@ -72,3 +72,13 @@ INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VA
 INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('EL1/CANES','C4I PBL-O METRICS','Dane Nearhoof','EL1/EDL');
 INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('JXA/N94','C4I PBL-O METRICS','Jenna Pickings','N94');
 
+-- Last Update Table --
+
+CREATE TABLE last_update (
+    id INT NOT NULL AUTO_INCREMENT,
+    updatefield VARCHAR(50) NOT NULL,
+    uploaddate DATETIME NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uniq_updatefield (updatefield)
+);
+

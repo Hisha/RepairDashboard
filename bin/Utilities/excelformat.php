@@ -9,6 +9,7 @@ class excelformat
             'Batteries' => [
                 'table_name' => 'batteries',
                 'sheet_name' => 'Report',
+                'updatefield' => 'CMPro',
                 
                 'headers' => [
                     'PRIMARYPARTNO',
@@ -71,6 +72,7 @@ class excelformat
             'CAV REQUISITIONS' => [
                 'table_name' => 'cav_requisitions',
                 'sheet_name' => 'DATA Sheet',
+                'updatefield' => 'CAVS',
                 
                 'headers' => [
                     'Program',
@@ -167,6 +169,7 @@ class excelformat
             'DRMO' => [
                 'table_name' => 'drmo',
                 'sheet_name' => 'Report',
+                'updatefield' => 'CMPro',
                 
                 'headers' => [
                     'Date',
@@ -227,6 +230,7 @@ class excelformat
             'Installed' => [
                 'table_name' => 'installed',
                 'sheet_name' => 'Report',
+                'updatefield' => 'CMPro',
                 
                 'headers' => [
                     'CREATEDATE',
@@ -283,6 +287,7 @@ class excelformat
             'Inventory' => [
                 'table_name' => 'inventory',
                 'sheet_name' => 'Report',
+                'updatefield' => 'CMPro',
                 
                 'headers' => [
                     'PRIMARYPARTNO',
@@ -349,6 +354,7 @@ class excelformat
             'Receipts' => [
                 'table_name' => 'receipts',
                 'sheet_name' => 'Report',
+                'updatefield' => 'CMPro',
                 
                 'headers' => [
                     'SIMINVADJ_TRANSACTIONDATE',
@@ -406,6 +412,7 @@ class excelformat
             'Repairs' => [
                 'table_name' => 'repairs',
                 'sheet_name' => 'Report',
+                'updatefield' => 'CMPro',
                 
                 'headers' => [
                     'TRANSACTIONDATE',
@@ -484,6 +491,7 @@ class excelformat
             'Shipments' => [
                 'table_name' => 'shipments',
                 'sheet_name' => 'Report',
+                'updatefield' => 'CMPro',
                 
                 'headers' => [
                     'SIMINVADJ_TRANSACTIONDATE',

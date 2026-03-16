@@ -54,6 +54,7 @@ class excelupload
 
             $tableName       = $config['table_name'];
             $sheetName       = $config['sheet_name'] ?? null;
+            $updateField     = $config['updatefield'] ?? null;
             $expectedHeaders = $config['headers'];
             $dbColumns       = $config['db_columns'];
             $requiredColumns = $config['required_columns'] ?? [];
@@ -177,6 +178,18 @@ class excelupload
                 call_user_func_array([$db, 'query'], self::makeValuesReferenced($params));
             }
 
+            if ($updateField !== null && trim($updateField) !== '') {
+                $db->query(
+                    "
+                    INSERT INTO last_update (updatefield, uploaddate)
+                    VALUES (?, NOW())
+                    ON DUPLICATE KEY UPDATE
+                        uploaddate = NOW()
+                    ",
+                    $updateField
+                    );
+            }
+            
             $db->commit();
 
             return [

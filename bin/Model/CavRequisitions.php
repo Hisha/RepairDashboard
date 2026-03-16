@@ -694,6 +694,31 @@ class CavRequisitions
         return $results;
     }
     
+    public function getBackOrderListByDate_Recv(string $selectedProgram, string $startDate, string $endDate): array
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            SUM(CASE
+                WHEN cav_requisitions.priority = 'CASREP' THEN 1
+                ELSE 0
+            END) AS casrep
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.status IN ('SHIPPED', 'PICK UP', 'B/O SHIPPED')
+    ";
+        
+        $results = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
 }
   
 ?>
