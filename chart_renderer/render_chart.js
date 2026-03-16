@@ -30,6 +30,9 @@ Chart.register(
   ChartDataLabels
 );
 
+// Disable datalabels globally
+Chart.defaults.plugins.datalabels.display = false;
+
 async function main() {
   try {
     const inputPath = process.argv[2];
