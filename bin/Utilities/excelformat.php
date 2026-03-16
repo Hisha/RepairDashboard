@@ -453,7 +453,7 @@ class excelformat
                         `award_date` DATE NULL,
                         `edd_date` DATE NULL,
                         `receive_date` DATE NULL,
-                        `comment` TEXT NULL,
+                        `comments` TEXT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "

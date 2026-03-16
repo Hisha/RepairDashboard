@@ -28,6 +28,7 @@ INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_activ
 INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Receipts', 'receipts', 4, 1);
 INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Repairs', 'repairs', 3, 1);
 INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Shipments', 'shipments', 3, 1);
+INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Procurement Tracker2026', 'procurements', 1, 1);
 
 -- Program Mapping
 
