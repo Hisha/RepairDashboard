@@ -53,8 +53,8 @@ include 'menu.php';
 </head>
 <body>
     <div class="dashboard-wrap">
-		<div class="chart-grid">
-            <?php require_once __DIR__ . '/bin/Charts/backorders_piechart.php'; ?>
+        <div class="chart-grid">
+            <?php require_once APP_ROOT . '/bin/Charts/backorders_piechart.php'; ?>
         </div>
     </div>
 </body>
