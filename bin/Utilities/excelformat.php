@@ -351,6 +351,114 @@ class excelformat
                 "
             ],
             
+            'Procurement Tracker2026' => [
+                'table_name' => 'procurements',
+                'sheet_name' => 'DATA Sheet',
+                'updatefield' => 'Procurement',
+                
+                'headers' => [
+                    'Program',
+                    'REQUEST DATE',
+                    'NIIN',
+                    'PART #',
+                    'NOMEN',
+                    'QTY REQUESTED',
+                    'REQUESTED BY',
+                    'PURCHASE VEHICLE',
+                    'ITEM COST (EACH)',
+                    'STATUS',
+                    'DATE SUBMITTED',
+                    'CONTRACT #',
+                    'QUOTE #',
+                    'PO #',
+                    'QTY ORDERED',
+                    'AWARD DATE',
+                    'EDD DATE',
+                    'RECEIVE DATE',
+                    'COMMENTS'
+                ],
+                
+                'db_columns' => [
+                    'program',
+                    'request_date',
+                    'niin',
+                    'part',
+                    'nomen',
+                    'qty_requested',
+                    'requested_by',
+                    'purchase_vehicle',
+                    'item_cost',
+                    'status',
+                    'date_submitted',
+                    'contract_num',
+                    'quote_num',
+                    'po_num',
+                    'qty_ordered',
+                    'award_date',
+                    'edd_date',
+                    'receive_date',
+                    'comments'
+                ],
+                
+                'required_columns' => [
+                    'program',
+                    'request_date',
+                    'niin',
+                    'part',
+                    'nomen',
+                    'qty_requested',
+                    'requested_by'
+                ],
+                
+                'column_types' => [
+                    'program'   => 'string',
+                    'request_date'   => 'date',
+                    'niin'   => 'string',
+                    'part'   => 'string',
+                    'nomen'   => 'string',
+                    'qty_requested'   => 'int',
+                    'requested_by'   => 'string',
+                    'purchase_vehicle'   => 'string',
+                    'item_cost'   => 'decimal',
+                    'status'   => 'string',
+                    'date_submitted'   => 'date',
+                    'contract_num'   => 'string',
+                    'quote_num'   => 'string',
+                    'po_num'   => 'string',
+                    'qty_ordered'   => 'int',
+                    'award_date'   => 'date',
+                    'edd_date'   => 'date',
+                    'receive_date'   => 'date',
+                    'comments'   => 'string'
+                ],
+                
+                'create_sql' => "
+                    CREATE TABLE `procurements` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `program` VARCHAR(12) NOT NULL,
+                        `request_date` DATE NOT NULL,
+                        `niin` VARCHAR(12) NOT NULL,
+                        `part` VARCHAR(100) NOT NULL,
+                        `nomen` VARCHAR(255) NOT NULL,
+                        `qty_requested` INT(11) NOT NULL,
+                        `requested_by` VARCHAR(100) NOT NULL,
+                        `purchase_vehicle` VARCHAR(100) NULL,
+                        `item_cost` DECIMAL(12,2) NULL,
+                        `status` VARCHAR(50) NULL,
+                        `date_submitted` DATE NULL,
+                        `contract_num` VARCHAR(100) NULL,
+                        `quote_num` VARCHAR(100) NULL,
+                        `po_num` VARCHAR(100) NULL,
+                        `qty_ordered` INT(11) NULL,
+                        `award_date` DATE NULL,
+                        `edd_date` DATE NULL,
+                        `receive_date` DATE NULL,
+                        `comment` TEXT NULL,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                "
+            ],
+            
             'Receipts' => [
                 'table_name' => 'receipts',
                 'sheet_name' => 'Report',

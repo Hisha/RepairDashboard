@@ -5,6 +5,7 @@ $lastUpdateModel = new SYS_LastUpdate();
 
 $lastCavsUpdate = $lastUpdateModel->getLastUpdate('CAVS');
 $lastCMProUpdate = $lastUpdateModel->getLastUpdate('CMPro');
+$lastProcurementUpdate = $lastUpdateModel->getLastUpdate('Procurement');
 
 $lastCavsUpdateFormatted = $lastCavsUpdate
     ? date('M d, Y g:i A', strtotime($lastCavsUpdate))
@@ -12,6 +13,10 @@ $lastCavsUpdateFormatted = $lastCavsUpdate
 
 $lastCMProUpdateFormatted = $lastCMProUpdate
     ? date('M d, Y g:i A', strtotime($lastCMProUpdate))
+    : 'Never';
+
+$lastProcurementUpdateFormatted = $lastProcurementUpdate
+    ? date('M d, Y g:i A', strtotime($lastProcurementUpdate))
     : 'Never';
 ?>
 
@@ -51,7 +56,8 @@ $lastCMProUpdateFormatted = $lastCMProUpdate
 
   <div class="menu-updates">
     Last CAVs Update: <?= htmlspecialchars($lastCavsUpdateFormatted ?? 'N/A') ?><br>
-    Last CMPro Update: <?= htmlspecialchars($lastCMProUpdateFormatted ?? 'N/A') ?>
+    Last CMPro Update: <?= htmlspecialchars($lastCMProUpdateFormatted ?? 'N/A') ?><br>
+    Last Procurement Update: <?= htmlspecialchars($lastProcurementUpdateFormatted ?? 'N/A') ?>
   </div>
 
 </div>
