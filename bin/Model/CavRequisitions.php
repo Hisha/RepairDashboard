@@ -614,9 +614,20 @@ class CavRequisitions
         return $results;
     }
     
-    public function getTop5ByStatus(string $selectedProgram, string $startDate, string $endDate, string $status): array
+    public function getTop5ByStatus(string $selectedProgram, string $startDate, string $endDate, string|array $status): array
     {
         $db = new db();
+        
+        // Normalize to array
+        if (!is_array($status)) {
+            $status = [$status];
+        }
+        
+        if (empty($status)) {
+            return [];
+        }
+        
+        $placeholders = implode(',', array_fill(0, count($status), '?'));
         
         $sql = "
         SELECT
@@ -628,13 +639,15 @@ class CavRequisitions
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
           AND cav_requisitions.date_recv BETWEEN ? AND ?
-          AND cav_requisitions.status = ?
+          AND cav_requisitions.status IN ($placeholders)
         GROUP BY cav_requisitions.niin, cav_requisitions.nomen
         ORDER BY total DESC
         LIMIT 5
     ";
         
-        $results = $db->query($sql, $selectedProgram, $startDate, $endDate, $status)->fetchAll();
+        $params = array_merge([$selectedProgram, $startDate, $endDate], $status);
+        
+        $results = call_user_func_array([$db, 'query'], array_merge([$sql], $params))->fetchAll();
         
         $db->close();
         
