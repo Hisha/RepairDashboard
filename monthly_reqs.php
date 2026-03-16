@@ -1101,17 +1101,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $boChartJson = 'backorder_bar_' . uniqid() . '.json';
             $boChartPath = $renderer->render($boChartConfig, $boChartJson);
             
+            /*
+             * Fit rendered chart into a slide area without overflowing
+             */
             $chartAreaX = 70;
             $chartAreaY = 150;
+            $chartAreaWidth = 820;
             $chartAreaHeight = 440;
+            
+            $imgInfo = getimagesize($boChartPath);
+            
+            if ($imgInfo === false) {
+                throw new Exception('Unable to read generated backorder chart dimensions.');
+            }
+            
+            $imgWidth = $imgInfo[0];
+            $imgHeight = $imgInfo[1];
+            
+            $widthRatio = $chartAreaWidth / $imgWidth;
+            $heightRatio = $chartAreaHeight / $imgHeight;
+            $scale = min($widthRatio, $heightRatio);
+            
+            $displayWidth = (int) round($imgWidth * $scale);
+            $displayHeight = (int) round($imgHeight * $scale);
+            
+            $offsetX = $chartAreaX + (int)(($chartAreaWidth - $displayWidth) / 2);
+            $offsetY = $chartAreaY + (int)(($chartAreaHeight - $displayHeight) / 2);
             
             $boShape = new File();
             $boShape->setName('Backorder List')
             ->setDescription('Backorder quantities by NIIN')
             ->setPath($boChartPath)
-            ->setHeight($chartAreaHeight)
-            ->setOffsetX($chartAreaX)
-            ->setOffsetY($chartAreaY);
+            ->setWidth($displayWidth)
+            ->setHeight($displayHeight)
+            ->setOffsetX($offsetX)
+            ->setOffsetY($offsetY);
             
             $slide5->addShape($boShape);
             
