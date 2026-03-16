@@ -14,6 +14,12 @@ foreach ($pieData as $row) {
 }
 ?>
 
+<style>
+#backordersPieChart {
+    cursor: pointer;
+}
+</style>
+
 <div class="chart-card">
     <h3>Backorders by Priority</h3>
 

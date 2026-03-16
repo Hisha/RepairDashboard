@@ -17,15 +17,15 @@ include 'menu.php';
         }
 
         .dashboard-wrap {
-            max-width: 1400px;
-            margin: 0 auto;
+            width: 100%;
+            padding-left: 10px;
         }
 
         .chart-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            margin-top: 20px;
+            justify-content: flex-start;
         }
 
         .chart-card {
