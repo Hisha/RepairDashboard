@@ -48,8 +48,8 @@ $lastCMProUpdateFormatted = $lastCMProUpdate
   </div>
 
   <div class="menu-updates">
-    Last CAVs Update: <?= htmlspecialchars($lastCavsUpdate ?? 'N/A') ?><br>
-    Last CMPro Update: <?= htmlspecialchars($lastCmproUpdate ?? 'N/A') ?>
+    Last CAVs Update: <?= htmlspecialchars($lastCavsUpdateFormatted ?? 'N/A') ?><br>
+    Last CMPro Update: <?= htmlspecialchars($lastCmproUpdateFormatted ?? 'N/A') ?>
   </div>
 
 </div>

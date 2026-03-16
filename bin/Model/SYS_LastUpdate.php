@@ -8,7 +8,7 @@ class SYS_LastUpdate
         
         $sql = "
             SELECT uploaddate
-            FROM last_update
+            FROM SYS_last_update
             WHERE updatefield = ?
             LIMIT 1
         ";

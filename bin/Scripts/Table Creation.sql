@@ -74,7 +74,7 @@ INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VA
 
 -- Last Update Table --
 
-CREATE TABLE last_update (
+CREATE TABLE SYS_last_update (
     id INT NOT NULL AUTO_INCREMENT,
     updatefield VARCHAR(50) NOT NULL,
     uploaddate DATETIME NOT NULL,
