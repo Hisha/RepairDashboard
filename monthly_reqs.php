@@ -975,6 +975,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(30)
             ->setOffsetX(490)
             ->setOffsetY(320);
+            $lbltop5BOShippedTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lbltop5BOShippedTitle->createTextRun('B/O Shipped')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5BOShipped = $cavRequisitions->getTop5ByPriority(
