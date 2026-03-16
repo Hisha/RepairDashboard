@@ -1069,13 +1069,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $dateRanges['month_end']
                 );
             
-            error_log('Backorder row count: ' . count($boRows));
-            
-            echo '<pre>';
-            print_r($boRows);
-            echo '</pre>';
-            exit;
-            
             $bolabels = [];
             $bodata = [];
             
