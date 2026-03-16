@@ -4,7 +4,7 @@ require_once APP_ROOT . '/bin/Model/SYS_LastUpdate.php';
 $lastUpdateModel = new SYS_LastUpdate();
 
 $lastCavsUpdate = $lastUpdateModel->getLastUpdate('CAVS');
-$lastCMProUpdate = $lastUpdateModel->getLastUpdate('CMPRO');
+$lastCMProUpdate = $lastUpdateModel->getLastUpdate('CMPro');
 
 $lastCavsUpdateFormatted = $lastCavsUpdate
     ? date('M d, Y g:i A', strtotime($lastCavsUpdate))
@@ -49,7 +49,7 @@ $lastCMProUpdateFormatted = $lastCMProUpdate
 
   <div class="menu-updates">
     Last CAVs Update: <?= htmlspecialchars($lastCavsUpdateFormatted ?? 'N/A') ?><br>
-    Last CMPro Update: <?= htmlspecialchars($lastCmproUpdateFormatted ?? 'N/A') ?>
+    Last CMPro Update: <?= htmlspecialchars($lastCMProUpdateFormatted ?? 'N/A') ?>
   </div>
 
 </div>
