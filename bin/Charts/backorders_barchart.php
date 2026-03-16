@@ -11,7 +11,7 @@ class BackOrderChart
         ): array {
             return [
                 'type' => 'bar',
-                'width' => 900,
+                'width' => 800,
                 'height' => $height,
                 'output' => $outputPath,
                 'indexAxis' => 'y',
