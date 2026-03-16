@@ -1069,20 +1069,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $dateRanges['month_end']
                 );
             
-            $labels = [];
-            $data = [];
+            $bolabels = [];
+            $bodata = [];
             
             foreach ($boRows as $row) {
-                $labels[] = $row['label'];   // CONCAT result
-                $data[] = (int)$row['total'];
+                $bolabels[] = $row['label'];   // CONCAT result
+                $bodata[] = (int)$row['total'];
             }
+            
+            $rowCount = count($bolabels);
+            $chartHeight = max(250, min(700, $rowCount * 32));
             
             $boChartOutput = APP_ROOT . '/reports/tmp/backorder_bar_' . uniqid() . '.png';
             
             $boChartConfig = BackOrderChart::build(
                 $boChartOutput,
-                $labels,
-                $data
+                $bolabels,
+                $bodata,
+                $chartHeight
                 );
             
             $boChartJson = 'backorder_bar_' . uniqid() . '.json';
@@ -1091,10 +1095,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             
             $boShape = new File();
             
+            $displayWidth = $rowCount > 15 ? 700 : 800;
+            
             $boShape->setName('Backorder List')
             ->setDescription('Backorder quantities by NIIN')
             ->setPath($boChartPath)
-            ->setWidth(800)
+            ->setWidth($displayWidth)
             ->setOffsetX(70)
             ->setOffsetY(150);
             
