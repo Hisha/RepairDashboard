@@ -1,4 +1,5 @@
 <?php
+include_once APP_ROOT . '/bin/Utilities/db.php';
 
 class SYS_LastUpdate
 {
