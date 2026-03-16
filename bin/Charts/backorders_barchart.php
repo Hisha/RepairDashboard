@@ -6,8 +6,8 @@ class BackOrderChart
     {
         return [
             'type' => 'bar',
-            'width' => 1000,
-            'height' => 650,
+            'width' => 900,
+            'height' => 550,
             'output' => $outputPath,
             'indexAxis' => 'y',
             'legendDisplay' => false,
