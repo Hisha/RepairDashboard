@@ -11,24 +11,11 @@ class BackOrderChart
         ): array {
             return [
                 'type' => 'bar',
-                'width' => 700,
+                'width' => 900,
                 'height' => $height,
                 'output' => $outputPath,
                 'indexAxis' => 'y',
                 'legendDisplay' => false,
-                
-                'plugins' => [
-                    'datalabels' => [
-                        'anchor' => 'end',
-                        'align' => 'right',
-                        'color' => '#000000',
-                        'font' => [
-                            'size' => $fontSize,
-                            'weight' => 'bold'
-                        ]
-                    ]
-                ],
-                
                 'data' => [
                     'labels' => $labels,
                     'datasets' => [[
@@ -36,10 +23,25 @@ class BackOrderChart
                         'backgroundColor' => '#3B6FB6'
                     ]]
                 ],
-                
                 'options' => [
                     'layout' => [
-                        'padding' => 10
+                        'padding' => [
+                            'right' => 30
+                        ]
+                    ],
+                    'plugins' => [
+                        'datalabels' => [
+                            'display' => true,
+                            'anchor' => 'end',
+                            'align' => 'right',
+                            'offset' => 4,
+                            'color' => '#000000',
+                            'font' => [
+                                'size' => $fontSize,
+                                'weight' => 'bold'
+                            ],
+                            'formatter' => 'function(value) { return value; }'
+                        ]
                     ],
                     'scales' => [
                         'x' => [

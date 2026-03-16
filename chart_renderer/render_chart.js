@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
+const ChartDataLabels = require('chartjs-plugin-datalabels');
 const {
   Chart,
   ArcElement,
@@ -25,7 +26,8 @@ Chart.register(
   Legend,
   Title,
   Tooltip,
-  Filler
+  Filler,
+  ChartDataLabels
 );
 
 async function main() {
