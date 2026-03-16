@@ -949,7 +949,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lbltop5BackordersTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lbltop5BackordersTitle->createTextRun('Backorders')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
-            $top5Backorders = $cavRequisitions->getTop5ByStatus(
+            $top5Backorders = $cavRequisitions->getTop5ByStatusByDate_Recv(
                 $selectedProgram,
                 $dateRanges['month_start'],
                 $dateRanges['month_end'],
@@ -978,7 +978,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lbltop5BOShippedTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lbltop5BOShippedTitle->createTextRun('B/O Shipped')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
-            $top5BOShipped = $cavRequisitions->getTop5ByPriority(
+            $top5BOShipped = $cavRequisitions->getTop5ByStatusByDate_Shipped(
                 $selectedProgram,
                 $dateRanges['month_start'],
                 $dateRanges['month_end'],
@@ -1007,7 +1007,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $lbltop5ShipPickTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $lbltop5ShipPickTitle->createTextRun('Shipped/Pick Up')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
-            $top5ShipPick = $cavRequisitions->getTop5ByStatus(
+            $top5ShipPick = $cavRequisitions->getTop5ByStatusByDate_Shipped(
                 $selectedProgram,
                 $dateRanges['month_start'],
                 $dateRanges['month_end'],
