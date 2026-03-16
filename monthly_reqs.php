@@ -844,16 +844,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(30)
             ->setOffsetX(80)
             ->setOffsetY(145);
-            $lbltop5PriorityTitle->createTextRun('Most Requested Parts by')->getFont()->setName('Helvetica')->setSize(12)->setColor(new Color('FF000000'));
+            $lbltop5PriorityTitle->createTextRun('Most Requested Parts by')->getFont()->setName('Calibri')->setSize(12)->setColor(new Color('FF000000'));
             $lbltop5PriorityTitle->createBreak();
-            $lbltop5PriorityTitle->createTextRun('Priority')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            $lbltop5PriorityTitle->createTextRun('Priority')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $lbltop5CasrepTitle = $slide4->createRichTextShape()
             ->setWidth(420)
             ->setHeight(30)
             ->setOffsetX(80)
             ->setOffsetY(190);
-            $lbltop5CasrepTitle->createTextRun('CASREPS')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            $lbltop5CasrepTitle->createTextRun('CASREPS')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5Casrep = $cavRequisitions->getTop5ByPriority(
                 $selectedProgram,
@@ -869,7 +869,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 210,  // y
                 500,  // width
                 180,  // height
-                'Helvetica',
+                'Calibri',
                 12,
                 'FF000000',
                 false
@@ -880,7 +880,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(30)
             ->setOffsetX(80)
             ->setOffsetY(320);
-            $lbltop5Anors999Title->createTextRun('ANORS/999')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            $lbltop5Anors999Title->createTextRun('ANORS/999')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5Anors999 = $cavRequisitions->getTop5ByPriority(
                 $selectedProgram,
@@ -896,7 +896,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 340,  // y
                 500,  // width
                 180,  // height
-                'Helvetica',
+                'Calibri',
                 12,
                 'FF000000',
                 false,
@@ -908,7 +908,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setHeight(30)
             ->setOffsetX(80)
             ->setOffsetY(450);
-            $lbltop5FleetFailureTitle->createTextRun('Fleet Failure')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            $lbltop5FleetFailureTitle->createTextRun('Fleet Failure')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5FleetFailure = $cavRequisitions->getTop5ByPriority(
                 $selectedProgram,
@@ -924,7 +924,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 470,  // y
                 500,  // width
                 180,  // height
-                'Helvetica',
+                'Calibri',
                 12,
                 'FF000000',
                 false,
@@ -937,9 +937,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetX(490)
             ->setOffsetY(145);
             $lbltop5StatusTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-            $lbltop5StatusTitle->createTextRun('Most Requested Parts by')->getFont()->setName('Helvetica')->setSize(12)->setColor(new Color('FF000000'));
+            $lbltop5StatusTitle->createTextRun('Most Requested Parts by')->getFont()->setName('Calibri')->setSize(12)->setColor(new Color('FF000000'));
             $lbltop5StatusTitle->createBreak();
-            $lbltop5StatusTitle->createTextRun('Disposition')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            $lbltop5StatusTitle->createTextRun('Disposition')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $lbltop5BackordersTitle = $slide4->createRichTextShape()
             ->setWidth(420)
@@ -947,7 +947,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetX(490)
             ->setOffsetY(190);
             $lbltop5BackordersTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-            $lbltop5BackordersTitle->createTextRun('Backorders')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            $lbltop5BackordersTitle->createTextRun('Backorders')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5Backorders = $cavRequisitions->getTop5ByStatus(
                 $selectedProgram,
@@ -963,7 +963,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 210,  // y
                 500,  // width
                 180,  // height
-                'Helvetica',
+                'Calibri',
+                12,
+                'FF000000',
+                false,
+                Alignment::HORIZONTAL_RIGHT
+                );
+            
+            $lbltop5BOShippedTitle = $slide4->createRichTextShape()
+            ->setWidth(420)
+            ->setHeight(30)
+            ->setOffsetX(490)
+            ->setOffsetY(320);
+            $lbltop5BOShippedTitle->createTextRun('B/O Shipped')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            
+            $top5BOShipped = $cavRequisitions->getTop5ByPriority(
+                $selectedProgram,
+                $dateRanges['month_start'],
+                $dateRanges['month_end'],
+                'B/O SHIPPED'
+                );
+            
+            ListBuilder::renderNiinNomenList(
+                $slide4,
+                $top5BOShipped,
+                80,   // x
+                470,  // y
+                500,  // width
+                180,  // height
+                'Calibri',
                 12,
                 'FF000000',
                 false,
@@ -976,7 +1004,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ->setOffsetX(490)
             ->setOffsetY(450);
             $lbltop5ShipPickTitle->getActiveParagraph()->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-            $lbltop5ShipPickTitle->createTextRun('Shipped/Pick Up')->getFont()->setName('Helvetica')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
+            $lbltop5ShipPickTitle->createTextRun('Shipped/Pick Up')->getFont()->setName('Calibri')->setSize(12)->setBold(true)->setColor(new Color('FF000000'));
             
             $top5ShipPick = $cavRequisitions->getTop5ByStatus(
                 $selectedProgram,
@@ -992,7 +1020,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 470,  // y
                 500,  // width
                 180,  // height
-                'Helvetica',
+                'Calibri',
                 12,
                 'FF000000',
                 false,
