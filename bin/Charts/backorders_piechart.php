@@ -16,6 +16,7 @@ foreach ($pieData as $row) {
 
 <div class="chart-card">
     <h3>Backorders by Priority</h3>
+    <?php echo '<p>chart file loaded</p>'; ?>
 
     <?php if (empty($labels)): ?>
         <p>No backorder chart data found.</p>
