@@ -709,7 +709,7 @@ class CavRequisitions
             AND cav_requisitions.date_recv BETWEEN ? AND ?
             AND cav_requisitions.status = 'BACKORDERED'
         GROUP BY niin, nomen
-        ORDER BY total DESC
+        ORDER BY total ASC
     ";
         
         $results = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchAll();

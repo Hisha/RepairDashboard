@@ -1094,9 +1094,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $boShape->setName('Backorder List')
             ->setDescription('Backorder quantities by NIIN')
             ->setPath($boChartPath)
-            ->setWidth(900)
-            ->setOffsetX(80)
-            ->setOffsetY(180);
+            ->setWidth(800)
+            ->setOffsetX(70)
+            ->setOffsetY(150);
             
             $slide5->addShape($boShape);
             
