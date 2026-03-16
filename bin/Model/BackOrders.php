@@ -10,20 +10,20 @@ class BackOrders
         
         $sql = "
         SELECT
-            (date_recv) as 'Date Received',
-            (program) as 'Program',
-            (priority) as 'Priority',
-            (command) as 'Command',
-            (req_number) as 'Req Number',
-            (niin) as 'NIIN',
-            (nomen) as 'Nomen',
-            (qty) as 'QTY',
-            (notes) as 'Notes'
+            (cav_requisitions.date_recv) as 'Date Received',
+            (cav_requisitions.program) as 'Program',
+            (cav_requisitions.priority) as 'Priority',
+            (cav_requisitions.command) as 'Command',
+            (cav_requisitions.req_number) as 'Req Number',
+            (cav_requisitions.niin) as 'NIIN',
+            (cav_requisitions.nomen) as 'Nomen',
+            (cav_requisitions.qty) as 'QTY',
+            (cav_requisitions.notes) as 'Notes'
         FROM cav_requisitions
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE cav_requisitions.status = 'BACKORDERED'
-        ORDER BY date_recv ASC
+        ORDER BY cav_requisitions.date_recv ASC
     ";
         
         $results = $db->query($sql)->fetchAll();
