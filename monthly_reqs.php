@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/bootstrap.php';
 require_once APP_ROOT . '/vendor/autoload.php';
+require_once APP_ROOT . '/bin/Charts/backorders_barchart.php';
 require_once APP_ROOT . '/bin/Charts/shipped_piechart.php';
 require_once APP_ROOT . '/bin/Charts/shipped_doughnutchart.php';
 require_once APP_ROOT . '/bin/Charts/ytd_demand_misses_chart.php';
