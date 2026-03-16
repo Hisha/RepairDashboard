@@ -11,8 +11,6 @@ use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 
-$sysLastUpdate = new SYS_LastUpdate();
-
 class excelupload
 {
     
@@ -182,7 +180,8 @@ class excelupload
                 call_user_func_array([$db, 'query'], self::makeValuesReferenced($params));
             }
 
-            $sysLastUpdate->updateLastUpdate($updateField);
+            $sysLastUpdate = new SYS_LastUpdate();
+            $sysLastUpdate->setLastUpdate($updateField);
 
             return [
                 'success' => true,

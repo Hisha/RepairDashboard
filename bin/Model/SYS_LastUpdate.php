@@ -3,7 +3,7 @@ include_once APP_ROOT . '/bin/Utilities/db.php';
 
 class SYS_LastUpdate
 {
-    public function updateLastUpdate(string $updatefield): void
+    public function setLastUpdate(string $updatefield): void
     {
         $db = new db();
         
