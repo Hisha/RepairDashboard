@@ -1107,7 +1107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $chartAreaX = 70;
             $chartAreaY = 150;
             $chartAreaWidth = 820;
-            $chartAreaHeight = 750;
+            $chartAreaHeight = 700;
             
             $imgInfo = getimagesize($boChartPath);
             
