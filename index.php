@@ -5,7 +5,7 @@ include 'menu.php';
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Repair Dashboard</title>
+<title>MESC Dashboard</title>
 </head>
 <body>
 	<table>
