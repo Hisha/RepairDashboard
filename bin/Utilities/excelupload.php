@@ -11,8 +11,11 @@ use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 
+$sysLastUpdate = new SYS_LastUpdate();
+
 class excelupload
 {
+    
     public static function processUpload(array $file): array
     {
         $db = null;
@@ -179,19 +182,7 @@ class excelupload
                 call_user_func_array([$db, 'query'], self::makeValuesReferenced($params));
             }
 
-            if ($updateField !== null && trim($updateField) !== '') {
-                $db->query(
-                    "
-                    INSERT INTO last_update (updatefield, uploaddate)
-                    VALUES (?, NOW())
-                    ON DUPLICATE KEY UPDATE
-                        uploaddate = NOW()
-                    ",
-                    $updateField
-                    );
-            }
-            
-            $db->commit();
+            $sysLastUpdate->updateLastUpdate($updateField);
 
             return [
                 'success' => true,
