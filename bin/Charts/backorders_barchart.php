@@ -16,6 +16,19 @@ class BackOrderChart
                 'output' => $outputPath,
                 'indexAxis' => 'y',
                 'legendDisplay' => false,
+                
+                'plugins' => [
+                    'datalabels' => [
+                        'anchor' => 'end',
+                        'align' => 'right',
+                        'color' => '#000000',
+                        'font' => [
+                            'size' => $fontSize,
+                            'weight' => 'bold'
+                        ]
+                    ]
+                ],
+                
                 'data' => [
                     'labels' => $labels,
                     'datasets' => [[
@@ -23,29 +36,30 @@ class BackOrderChart
                         'backgroundColor' => '#3B6FB6'
                     ]]
                 ],
-                'scales' => [
-                    'x' => [
-                        'beginAtZero' => true,
-                        'ticks' => [
-                            'font' => [
-                                'size' => $fontSize,
-                                'family' => 'Helvetica'
-                            ]
-                        ]
-                    ],
-                    'y' => [
-                        'ticks' => [
-                            'autoSkip' => false,
-                            'font' => [
-                                'size' => $fontSize,
-                                'family' => 'Helvetica'
-                            ]
-                        ]
-                    ]
-                ],
+                
                 'options' => [
                     'layout' => [
                         'padding' => 10
+                    ],
+                    'scales' => [
+                        'x' => [
+                            'beginAtZero' => true,
+                            'ticks' => [
+                                'font' => [
+                                    'size' => $fontSize,
+                                    'family' => 'Helvetica'
+                                ]
+                            ]
+                        ],
+                        'y' => [
+                            'ticks' => [
+                                'autoSkip' => false,
+                                'font' => [
+                                    'size' => $fontSize,
+                                    'family' => 'Helvetica'
+                                ]
+                            ]
+                        ]
                     ]
                 ]
             ];
