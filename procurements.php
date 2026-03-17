@@ -84,10 +84,25 @@ include 'menu.php';
             background: #157347;
         }
 
-        .table-wrap {
+        .top-scroll {
             overflow-x: auto;
+            overflow-y: hidden;
+            height: 18px;
+            margin-bottom: 6px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
+
+        .top-scroll-inner {
+            height: 1px;
+        }
+
+        .table-wrap {
+            overflow: auto;
             background: white;
             border: 1px solid #ddd;
+            max-height: 75vh;
         }
 
         table {
@@ -108,6 +123,9 @@ include 'menu.php';
             padding: 10px;
             text-align: left;
             cursor: pointer;
+            position: sticky;
+            top: 0;
+            z-index: 2;
         }
 
         th:hover {
@@ -168,7 +186,11 @@ include 'menu.php';
         </div>
     </div>
 
-    <div class="table-wrap">
+    <div class="top-scroll" id="topScroll">
+        <div class="top-scroll-inner" id="topScrollInner"></div>
+    </div>
+
+    <div class="table-wrap" id="tableWrap">
         <table id="procurementTable">
             <thead>
                 <tr>
@@ -299,6 +321,7 @@ function sortTable(col) {
     currentSortDirection = dir;
 
     updateSortIndicators(col, dir);
+    syncScrollWidths();
 }
 
 function updateSortIndicators(col, dir) {
@@ -309,6 +332,37 @@ function updateSortIndicators(col, dir) {
         arrows[col].textContent = dir === 'asc' ? '▲' : '▼';
     }
 }
+
+const topScroll = document.getElementById('topScroll');
+const tableWrap = document.getElementById('tableWrap');
+const topScrollInner = document.getElementById('topScrollInner');
+const procurementTable = document.getElementById('procurementTable');
+
+function syncScrollWidths() {
+    if (procurementTable) {
+        topScrollInner.style.width = procurementTable.scrollWidth + 'px';
+    }
+}
+
+let syncingTop = false;
+let syncingBottom = false;
+
+topScroll.addEventListener('scroll', () => {
+    if (syncingBottom) return;
+    syncingTop = true;
+    tableWrap.scrollLeft = topScroll.scrollLeft;
+    syncingTop = false;
+});
+
+tableWrap.addEventListener('scroll', () => {
+    if (syncingTop) return;
+    syncingBottom = true;
+    topScroll.scrollLeft = tableWrap.scrollLeft;
+    syncingBottom = false;
+});
+
+window.addEventListener('load', syncScrollWidths);
+window.addEventListener('resize', syncScrollWidths);
 </script>
 
 </body>
