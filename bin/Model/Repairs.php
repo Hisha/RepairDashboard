@@ -28,6 +28,32 @@ class Repairs
         return $results;
     }
     
+    public function getTechsRepairValueExpanded(string $startDate, string $endDate):array
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            repairs.technicalpocname AS 'Tech Name',
+            repairs.niin AS 'NIIN',
+            repairs.materialcode AS 'Condition',
+            COUNT(repairs.serialno) AS 'QTY',
+            SUM(LMS21Data.std_price) AS 'Total Value'
+        FROM repairs
+        INNER JOIN LMS21Data
+            ON repairs.niin = LMS21Data.niin
+        WHERE repairs.transactiondate BETWEEN ? AND ?
+        GROUP BY repairs.technicalpocname, repairs.niin, repairs.materialcode 
+        ORDER BY repairs.technicalpocname, repairs.niin, repairs.materialcode
+    ";
+        
+        $results = $db->query($sql, $startDate, $endDate)->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
     public function getRepairedDollarValue(string $startDate, string $endDate):array
     {
         $db = new db();
