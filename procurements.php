@@ -201,9 +201,9 @@ include 'menu.php';
                     <th onclick="sortTable(4)">Nomen<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(5)">Qty Requested<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(6)">Requested By<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(9)">Status<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(7)">Purchase Vehicle<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(8)">Item Cost (each)<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(9)">Status<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(10)">Date Submitted<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(11)">Contract Number<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(12)">Quote Number<span class="sort-indicator"></span></th>
@@ -226,9 +226,9 @@ include 'menu.php';
                             <td><?= htmlspecialchars((string)($row['Nomen'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Qty Requested'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Requested By'] ?? '')) ?></td>
+                            <td><?= htmlspecialchars((string)($row['Status'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Purchase Vehicle'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Item Cost (each)'] ?? '')) ?></td>
-                            <td><?= htmlspecialchars((string)($row['Status'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Date Submitted'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Contract Number'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Quote Number'] ?? '')) ?></td>
