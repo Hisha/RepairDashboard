@@ -55,6 +55,7 @@ include 'menu.php';
     <div class="dashboard-wrap">
         <div class="chart-grid">
             <?php require_once APP_ROOT . '/bin/Charts/backorders_piechart.php'; ?>
+            <?php require_once APP_ROOT . '/bin/Charts/repairs_by_program_fy_chart.php'; ?>
         </div>
     </div>
 </body>

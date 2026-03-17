@@ -55,6 +55,21 @@ INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUE
 INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('AAL/Q70','AAL/Q70');
 INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('BC5','BC5');
 
+-- Repair Program Mapping
+
+CREATE TABLE SYS_repair_program_mapping (
+   source_program VARCHAR(50) PRIMARY KEY,
+   normalized_program VARCHAR(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_DVDBM','EL1/CANES');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_DVDKW','BC5');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_NTCSS','AJ5');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_SIWCS','EFJ');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_HYDRA','EFJ');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_N94','JXA/N94');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_CANES','EL1/CANES');
+
 -- Power Point Filler
 CREATE TABLE `SYS_powerpoint_filler` (
 	`id` INT NOT NULL AUTO_INCREMENT,
