@@ -103,7 +103,10 @@ class Repairs
             WHEN repairs.materialcode = 'H' THEN COALESCE(repairs.Hours, 0)
             ELSE 0
         END) AS 'H Hours',
-        SUM(LMS21Data.std_price) AS 'Total Value'
+        SUM(CASE
+            WHEN repairs.materialcode = 'A' THEN LMS21Data.std_price
+            ELSE 0
+        END) AS 'Total Value'
     FROM repairs
     INNER JOIN LMS21Data
         ON repairs.niin = LMS21Data.niin
