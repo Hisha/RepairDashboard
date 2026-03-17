@@ -46,29 +46,12 @@ include 'menu.php';
         }
 
         .page-wrap {
-            max-width: 1600px;
-            margin: auto;
+            max-width: 100%;
+            margin: 0;
         }
 
         h1 {
             margin-bottom: 10px;
-        }
-
-        .filter-info {
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        .clear-filter {
-            display: inline-block;
-            margin-left: 10px;
-            text-decoration: none;
-            color: #0d6efd;
-            font-weight: bold;
-        }
-
-        .clear-filter:hover {
-            text-decoration: underline;
         }
 
         .toolbar {
@@ -109,7 +92,14 @@ include 'menu.php';
 
         table {
             border-collapse: collapse;
-            width: 100%;
+            width: max-content;
+            min-width: 100%;
+            table-layout: auto;
+        }
+
+        th,
+        td {
+            white-space: nowrap;
         }
 
         th {
@@ -118,7 +108,6 @@ include 'menu.php';
             padding: 10px;
             text-align: left;
             cursor: pointer;
-            white-space: nowrap;
         }
 
         th:hover {
@@ -131,20 +120,18 @@ include 'menu.php';
             vertical-align: top;
         }
 
+        td.comments-cell {
+            white-space: normal;
+            min-width: 250px;
+            max-width: 450px;
+        }
+
         tr:nth-child(even) {
             background: #f4f6f8;
         }
 
         tr:hover {
             background: #eaf2ff;
-        }
-
-        tr.high-priority {
-            background: #ffe3e3 !important;
-        }
-
-        tr.high-priority:hover {
-            background: #ffd0d0 !important;
         }
 
         .sort-indicator {
@@ -158,30 +145,13 @@ include 'menu.php';
             display: none;
             font-style: italic;
         }
-
-        .priority-chip {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            background: #ffe3e3;
-            border: 1px solid #d99;
-            margin-right: 6px;
-            vertical-align: middle;
-        }
-
-        .legend {
-            font-size: 14px;
-            color: #555;
-        }
     </style>
 </head>
 <body>
 
 <div class="page-wrap">
 
-    <h1>
-        Procurements
-    </h1>
+    <h1>Procurements</h1>
 
     <div class="toolbar">
         <div class="search-box">
@@ -226,7 +196,7 @@ include 'menu.php';
             <tbody>
                 <?php if (!empty($procurements)): ?>
                     <?php foreach ($procurements as $row): ?>
-                        <tr class="<?= htmlspecialchars($rowClass) ?>">
+                        <tr>
                             <td><?= htmlspecialchars((string)($row['Program'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Request Date'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['NIIN'] ?? '')) ?></td>
@@ -245,12 +215,12 @@ include 'menu.php';
                             <td><?= htmlspecialchars((string)($row['Award Date'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['EDD Date'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Receive Date'] ?? '')) ?></td>
-                            <td><?= htmlspecialchars((string)($row['Comments'] ?? '')) ?></td>
+                            <td class="comments-cell"><?= htmlspecialchars((string)($row['Comments'] ?? '')) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="9" style="text-align:center; padding:20px;">
+                        <td colspan="19" style="text-align:center; padding:20px;">
                             No procurements found.
                         </td>
                     </tr>
@@ -303,8 +273,8 @@ function sortTable(col) {
         let A = a.children[col].innerText.trim();
         let B = b.children[col].innerText.trim();
 
-        let numA = parseFloat(A.replace(/,/g, ''));
-        let numB = parseFloat(B.replace(/,/g, ''));
+        let numA = parseFloat(A.replace(/,/g, '').replace(/\$/g, ''));
+        let numB = parseFloat(B.replace(/,/g, '').replace(/\$/g, ''));
 
         let dateA = Date.parse(A);
         let dateB = Date.parse(B);
