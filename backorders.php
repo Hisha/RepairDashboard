@@ -125,6 +125,8 @@ include 'menu.php';
 
         .table-wrap {
             overflow-x: auto;
+            overflow-y: auto;
+            max-height: 75vh;
             background: white;
             border: 1px solid #ddd;
         }
@@ -141,6 +143,9 @@ include 'menu.php';
             text-align: left;
             cursor: pointer;
             white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 2;
         }
 
         th:hover {
