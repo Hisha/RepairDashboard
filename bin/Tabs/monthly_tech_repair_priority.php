@@ -19,15 +19,14 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     
     fputcsv($output, [
         'NIIN',
-        'Program',
+        'Quarterly Demand',
         'A OnHand',
         'D OnHand',
         'G OnHand',
         'F OnHand',
         'F Awaiting Vendor',
-        'LastShipDate',
-        'Quarterly Demand',
-        'Status'
+        'Last Ship Date',
+        'Program'
     ]);
     
     foreach ($data as $row) {
@@ -35,27 +34,16 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
         $gOnHand = (float)($row['G OnHand'] ?? 0);
         $quarterlyDemand = (float)($row['Quarterly Demand'] ?? 0);
         
-        if ($aOnHand > $quarterlyDemand) {
-            $status = 'Green';
-        } elseif ($aOnHand == $quarterlyDemand) {
-            $status = 'Yellow';
-        } elseif (($aOnHand + $gOnHand) > $quarterlyDemand) {
-            $status = 'Purple';
-        } else {
-            $status = 'Red';
-        }
-        
         fputcsv($output, [
             $row['NIIN'],
-            $row['Program'],
-            $row['A OnHand'],
+            $quarterlyDemand,
+            $aOnHand,
             $row['D OnHand'],
-            $row['G OnHand'],
+            $gOnHand,
             $row['F OnHand'],
             $row['F Awaiting Vendor'],
             $row['LastShipDate'],
-            $row['Quarterly Demand'],
-            $status
+            $row['Program']
         ]);
     }
     
@@ -119,11 +107,6 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     background: #e2d9f3 !important;
 }
 
-.priority-legend {
-    margin: 10px 0 15px 0;
-    font-size: 14px;
-}
-
 .legend-item {
     display: inline-block;
     padding: 3px 8px;
@@ -149,6 +132,8 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
 }
 
 .priority-legend {
+    margin: 10px 0 15px 0;
+    font-size: 14px;
     padding: 8px 10px;
     background: #f8f9fa;
     border: 1px solid #dee2e6;
@@ -172,19 +157,18 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
 <div class="repair-priority-table-wrap">
     <table class="repair-priority-table">
         <thead>
-        <tr>
-            <th>NIIN</th>
-            <th>Program</th>
-            <th>A OnHand</th>
-            <th>D OnHand</th>
-            <th>G OnHand</th>
-            <th>F OnHand</th>
-            <th>F Awaiting Vendor</th>
-            <th>Last Ship Date</th>
-            <th>Quarterly Demand</th>
-            <th>Status</th>
-        </tr>
-        </thead>
+		<tr>
+    		<th>NIIN</th>
+    		<th>Quarterly Demand</th>
+    		<th>A OnHand</th>
+    		<th>D OnHand</th>
+    		<th>G OnHand</th>
+    		<th>F OnHand</th>
+    		<th>F Awaiting Vendor</th>
+    		<th>Last Ship Date</th>
+    		<th>Program</th>
+		</tr>
+		</thead>
         <tbody>
         <?php foreach ($data as $row): ?>
             <?php
@@ -194,30 +178,25 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
 
             if ($aOnHand > $quarterlyDemand) {
                 $rowClass = 'status-green';
-                $status = 'Green';
             } elseif ($aOnHand == $quarterlyDemand) {
                 $rowClass = 'status-yellow';
-                $status = 'Yellow';
             } elseif (($aOnHand + $gOnHand) > $quarterlyDemand) {
                 $rowClass = 'status-purple';
-                $status = 'Purple';
             } else {
                 $rowClass = 'status-red';
-                $status = 'Red';
             }
             ?>
             <tr class="<?= htmlspecialchars($rowClass) ?>">
-                <td><?= htmlspecialchars($row['NIIN']) ?></td>
-                <td><?= htmlspecialchars($row['Program']) ?></td>
-                <td class="number-cell"><?= number_format($aOnHand, 2) ?></td>
-                <td class="number-cell"><?= number_format((float)$row['D OnHand'], 2) ?></td>
-                <td class="number-cell"><?= number_format($gOnHand, 2) ?></td>
-                <td class="number-cell"><?= number_format((float)$row['F OnHand'], 2) ?></td>
-                <td class="number-cell"><?= number_format((float)$row['F Awaiting Vendor'], 2) ?></td>
-                <td><?= htmlspecialchars($row['LastShipDate']) ?></td>
-                <td class="number-cell"><?= number_format($quarterlyDemand, 2) ?></td>
-                <td><?= htmlspecialchars($status) ?></td>
-            </tr>
+    			<td><?= htmlspecialchars($row['NIIN']) ?></td>
+    			<td class="number-cell"><?= number_format($quarterlyDemand, 2) ?></td>
+    			<td class="number-cell"><?= number_format($aOnHand, 2) ?></td>
+    			<td class="number-cell"><?= number_format((float)$row['D OnHand'], 2) ?></td>
+    			<td class="number-cell"><?= number_format($gOnHand, 2) ?></td>
+    			<td class="number-cell"><?= number_format((float)$row['F OnHand'], 2) ?></td>
+    			<td class="number-cell"><?= number_format((float)$row['F Awaiting Vendor'], 2) ?></td>
+    			<td><?= htmlspecialchars($row['LastShipDate']) ?></td>
+    			<td><?= htmlspecialchars($row['Program']) ?></td>
+			</tr>
         <?php endforeach; ?>
         </tbody>
     </table>
