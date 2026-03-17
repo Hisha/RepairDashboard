@@ -5,7 +5,7 @@ include 'menu.php';
 require_once APP_ROOT . '/bin/Model/Repairs.php';
 require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
-$allowedTabs = ['overview', 'tech_numbers', 'tech_numbers_expanded', 'tech_repairs'];
+$allowedTabs = ['overview', 'tech_numbers', 'tech_numbers_expanded', 'tech_repairs', 'repair_priority'];
 $selectedTab = $_GET['tab'] ?? 'overview';
 
 if (!in_array($selectedTab, $allowedTabs, true)) {
@@ -167,7 +167,7 @@ $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
                 </select>
             </form>
 
-            <?php if (in_array($selectedTab, ['tech_numbers_expanded', 'tech_repairs'], true)): ?>
+            <?php if (in_array($selectedTab, ['tech_numbers_expanded', 'tech_repairs', 'repair_priority'], true)): ?>
                 <a class="export-link" href="<?= htmlspecialchars($exportUrl) ?>">Export CSV</a>
             <?php endif; ?>
         </div>
@@ -185,6 +185,9 @@ $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
 
         <a class="tab-link <?= $selectedTab === 'tech_repairs' ? 'active' : '' ?>"
            href="monthly_tech.php?tab=tech_repairs&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Tech Repairs</a>
+           
+        <a class="tab-link <?= $selectedTab === 'repair_priority' ? 'active' : '' ?>"
+   		   href="monthly_tech.php?tab=repair_priority&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Repair Priority</a>
     </div>
 
     <div class="tab-panel">
@@ -202,6 +205,10 @@ $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
                 require_once APP_ROOT . '/bin/Tabs/monthly_tech_repairs.php';
                 break;
 
+            case 'repair_priority':
+                require_once APP_ROOT . '/bin/Tabs/monthly_tech_repair_priority.php';
+                break;
+                
             case 'overview':
             default:
                 require_once APP_ROOT . '/bin/Tabs/monthly_tech_overview.php';
