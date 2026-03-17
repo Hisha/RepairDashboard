@@ -3,12 +3,35 @@ require_once APP_ROOT . '/bin/Model/Repairs.php';
 require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 $repairsModel = new Repairs();
-$fyRange = helpers::getFiscalYearDateRange();
+$selectedFiscalYear = isset($_GET['fy']) ? (int)$_GET['fy'] : null;
+$fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
 
 $data = $repairsModel->getTechsRepairValueExpanded(
     $fyRange['start_date'],
     $fyRange['end_date']
     );
+
+if (isset($_GET['export']) && $_GET['export'] === 'csv') {
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename=tech_numbers_expanded_' . $fyRange['label'] . '.csv');
+    
+    $output = fopen('php://output', 'w');
+    
+    fputcsv($output, ['Tech Name', 'NIIN', 'Condition', 'QTY', 'Total Value']);
+    
+    foreach ($data as $row) {
+        fputcsv($output, [
+            $row['Tech Name'],
+            $row['NIIN'],
+            $row['Condition'],
+            $row['QTY'],
+            $row['Total Value']
+        ]);
+    }
+    
+    fclose($output);
+    exit;
+}
 ?>
 
 <h2><?= htmlspecialchars($fyRange['label']) ?> Detailed Tech Breakdown</h2>
@@ -16,7 +39,6 @@ $data = $repairsModel->getTechsRepairValueExpanded(
 <?php if (empty($data)): ?>
     <p>No data found.</p>
 <?php else: ?>
-
 <table>
     <thead>
     <tr>
@@ -39,5 +61,4 @@ $data = $repairsModel->getTechsRepairValueExpanded(
     <?php endforeach; ?>
     </tbody>
 </table>
-
 <?php endif; ?>

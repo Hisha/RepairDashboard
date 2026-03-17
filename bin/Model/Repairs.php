@@ -54,6 +54,73 @@ class Repairs
         return $results;
     }
     
+    public function getRepairsByFiscalYear(string $startDate, string $endDate): array
+    {
+        $db = new db();
+        
+        $sql = "
+    SELECT
+        repairs.niin AS 'NIIN',
+        SYS_repair_program_mapping.normalized_program AS 'Program',
+        LMS21Data.std_price AS 'STD Price',
+        SUM(CASE
+            WHEN repairs.materialcode = 'A' THEN 1
+            ELSE 0
+        END) AS 'A Reps',
+        SUM(CASE
+            WHEN repairs.materialcode = 'A' THEN COALESCE(repairs.Hours, 0)
+            ELSE 0
+        END) AS 'A Hours',
+        SUM(CASE
+            WHEN repairs.materialcode = 'D' THEN 1
+            ELSE 0
+        END) AS 'D Reps',
+        SUM(CASE
+            WHEN repairs.materialcode = 'D' THEN COALESCE(repairs.Hours, 0)
+            ELSE 0
+        END) AS 'D Hours',
+        SUM(CASE
+            WHEN repairs.materialcode = 'F' THEN 1
+            ELSE 0
+        END) AS 'F Reps',
+        SUM(CASE
+            WHEN repairs.materialcode = 'F' THEN COALESCE(repairs.Hours, 0)
+            ELSE 0
+        END) AS 'F Hours',
+        SUM(CASE
+            WHEN repairs.materialcode = 'G' THEN 1
+            ELSE 0
+        END) AS 'G Reps',
+        SUM(CASE
+            WHEN repairs.materialcode = 'G' THEN COALESCE(repairs.Hours, 0)
+            ELSE 0
+        END) AS 'G Hours',
+        SUM(CASE
+            WHEN repairs.materialcode = 'H' THEN 1
+            ELSE 0
+        END) AS 'H Reps',
+        SUM(CASE
+            WHEN repairs.materialcode = 'H' THEN COALESCE(repairs.Hours, 0)
+            ELSE 0
+        END) AS 'H Hours',
+        SUM(LMS21Data.std_price) AS 'Total Value'
+    FROM repairs
+    INNER JOIN LMS21Data
+        ON repairs.niin = LMS21Data.niin
+    INNER JOIN SYS_repair_program_mapping
+        ON repairs.subgrouptype = SYS_repair_program_mapping.source_program
+    WHERE repairs.transactiondate BETWEEN ? AND ?
+    GROUP BY repairs.niin, SYS_repair_program_mapping.normalized_program, LMS21Data.std_price
+    ORDER BY SYS_repair_program_mapping.normalized_program, repairs.niin
+    ";
+        
+        $results = $db->query($sql, $startDate, $endDate)->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
     public function getRepairedDollarValue(string $startDate, string $endDate):array
     {
         $db = new db();

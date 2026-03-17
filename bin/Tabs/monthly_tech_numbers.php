@@ -3,7 +3,8 @@ require_once APP_ROOT . '/bin/Model/Repairs.php';
 require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 $repairsModel = new Repairs();
-$fyRange = helpers::getFiscalYearDateRange();
+$selectedFiscalYear = isset($_GET['fy']) ? (int)$_GET['fy'] : null;
+$fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
 
 $data = $repairsModel->getTechsRepairValue(
     $fyRange['start_date'],
@@ -45,7 +46,7 @@ foreach ($data as $row) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            indexAxis: 'y', // 👈 horizontal bar (MUCH better for names)
+            indexAxis: 'y',
             plugins: {
                 tooltip: {
                     callbacks: {
