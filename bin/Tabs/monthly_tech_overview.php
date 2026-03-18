@@ -15,6 +15,7 @@ $priorityRows = [];
 
 foreach ($data as $row) {
     $aOnHand = (float)($row['A OnHand'] ?? 0);
+    $dOnHand = (float)($row['D OnHand'] ?? 0);
     $gOnHand = (float)($row['G OnHand'] ?? 0);
     $quarterlyDemand = (float)($row['Quarterly Demand'] ?? 0);
     $shortfall = $quarterlyDemand - $aOnHand;
@@ -22,7 +23,7 @@ foreach ($data as $row) {
     if ($shortfall > 0) {
         if ($aOnHand == $quarterlyDemand) {
             $color = '#fff3cd';
-        } elseif (($aOnHand + $gOnHand) > $quarterlyDemand) {
+        } elseif (($aOnHand + $dOnHand + $gOnHand) > $quarterlyDemand) {
             $color = '#e2d9f3';
         } else {
             $color = '#f8d7da';

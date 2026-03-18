@@ -32,6 +32,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     
     foreach ($data as $row) {
         $aOnHand = (float)($row['A OnHand'] ?? 0);
+        $dOnHand = (float)($row['D OnHand'] ?? 0);
         $gOnHand = (float)($row['G OnHand'] ?? 0);
         $quarterlyDemand = (float)($row['Quarterly Demand'] ?? 0);
         
@@ -39,7 +40,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
             $row['NIIN'],
             $quarterlyDemand,
             $aOnHand,
-            $row['D OnHand'],
+            $dOnHand,
             $gOnHand,
             $row['F OnHand'],
             $row['F Awaiting Vendor'],
@@ -180,6 +181,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
         <?php foreach ($data as $row): ?>
     		<?php
             $aOnHand = (float)($row['A OnHand'] ?? 0);
+            $dOnHand = (float)($row['D OnHand'] ?? 0);
             $gOnHand = (float)($row['G OnHand'] ?? 0);
             $quarterlyDemand = (float)($row['Quarterly Demand'] ?? 0);
 
@@ -187,7 +189,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
                 $rowClass = 'status-green';
             } elseif ($aOnHand == $quarterlyDemand) {
                 $rowClass = 'status-yellow';
-            } elseif (($aOnHand + $gOnHand) > $quarterlyDemand) {
+            } elseif (($aOnHand + $dOnHandn + $gOnHand) > $quarterlyDemand) {
                 $rowClass = 'status-purple';
             } else {
                 $rowClass = 'status-red';
