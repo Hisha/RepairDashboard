@@ -28,38 +28,6 @@ $niinAnalysis = $shipmentsModel->getNiinShipmentAnalysis(
     $fyRange['end_date']
 );
 
-if (isset($_GET['export']) && $_GET['export'] === 'csv') {
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=program_niin_analysis_' . $fyRange['label'] . '.csv');
-
-    $output = fopen('php://output', 'w');
-
-    fputcsv($output, [
-        'NIIN',
-        'Part',
-        'Nomen',
-        'Program',
-        'Total Qty',
-        'Total Reqses',
-        'Last Ship Date'
-    ]);
-
-    foreach ($niinAnalysis as $row) {
-        fputcsv($output, [
-            $row['NIIN'],
-            $row['Part'],
-            $row['Nomen'],
-            $row['Program'],
-            $row['Total Qty'],
-            $row['Total Reqs'],
-            $row['Last Ship Date']
-        ]);
-    }
-
-    fclose($output);
-    exit;
-}
-
 $chartLabels = [];
 $chartValues = [];
 
@@ -237,78 +205,80 @@ $exportUrl = 'monthly_reqs.php?tab=program_niin'
     | COG = <?= $selectedCog !== '' ? htmlspecialchars($selectedCog) : 'All COGs' ?>
 </div>
 
-<?php if (empty($chartLabels)): ?>
-    <p>No program shipment summary data found.</p>
-<?php else: ?>
-    <div class="analysis-chart-wrap">
-        <canvas id="programShipmentSummaryChart"></canvas>
-    </div>
+<?php if ($selectedProgram === ''): ?>
+    <?php if (empty($chartLabels)): ?>
+        <p>No program shipment summary data found.</p>
+    <?php else: ?>
+        <div class="analysis-chart-wrap">
+            <canvas id="programShipmentSummaryChart"></canvas>
+        </div>
 
-    <script>
-    (() => {
-        const labels = <?= json_encode($chartLabels) ?>;
-        const values = <?= json_encode($chartValues) ?>;
-        const fiscalYear = <?= json_encode((string)$fyRange['fiscal_year']) ?>;
-        const selectedCog = <?= json_encode($selectedCog) ?>;
+        <script>
+        (() => {
+            const labels = <?= json_encode($chartLabels) ?>;
+            const values = <?= json_encode($chartValues) ?>;
+            const fiscalYear = <?= json_encode((string)$fyRange['fiscal_year']) ?>;
+            const selectedCog = <?= json_encode($selectedCog) ?>;
 
-        const canvas = document.getElementById('programShipmentSummaryChart');
-        if (!canvas) {
-            return;
-        }
+            const canvas = document.getElementById('programShipmentSummaryChart');
+            if (!canvas) {
+                return;
+            }
 
-        canvas.style.cursor = 'pointer';
+            canvas.style.cursor = 'pointer';
 
-        new Chart(canvas, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Total Qty Shipped',
-                    data: values
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                indexAxis: 'y',
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    title: {
-                        display: true,
-                        text: 'Top Programs by Qty Shipped'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return 'Qty: ' + Number(context.parsed.x || 0).toLocaleString();
+            new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Reqs',
+                        data: values
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Top Programs by Total Reqs'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Total Reqs: ' + Number(context.parsed.x || 0).toLocaleString();
+                                }
                             }
                         }
+                    },
+                    onClick: (event, elements) => {
+                        if (!elements.length) {
+                            return;
+                        }
+
+                        const index = elements[0].index;
+                        const program = labels[index];
+
+                        let url = 'monthly_reqs.php?tab=program_niin'
+                            + '&fy=' + encodeURIComponent(fiscalYear)
+                            + '&program=' + encodeURIComponent(program);
+
+                        if (selectedCog !== '') {
+                            url += '&cog=' + encodeURIComponent(selectedCog);
+                        }
+
+                        window.location.href = url;
                     }
-                },
-                onClick: (event, elements) => {
-                    if (!elements.length) {
-                        return;
-                    }
-
-                    const index = elements[0].index;
-                    const program = labels[index];
-
-                    let url = 'monthly_reqs.php?tab=program_niin'
-                        + '&fy=' + encodeURIComponent(fiscalYear)
-                        + '&program=' + encodeURIComponent(program);
-
-                    if (selectedCog !== '') {
-                        url += '&cog=' + encodeURIComponent(selectedCog);
-                    }
-
-                    window.location.href = url;
                 }
-            }
-        });
-    })();
-    </script>
+            });
+        })();
+        </script>
+    <?php endif; ?>
 <?php endif; ?>
 
 <h3 class="analysis-table-title">

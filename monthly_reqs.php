@@ -23,11 +23,66 @@ use PhpOffice\PhpPresentation\Style\Fill;
 use PhpOffice\PhpPresentation\Style\Color;
 use PhpOffice\PhpPresentation\Style\Font;
 
+$selectedTab = $_GET['tab'] ?? ($_POST['tab'] ?? 'overview');
+$allowedTabs = ['overview', 'shipment_data', 'program_niin', 'powerpoint_report'];
+
+if (!in_array($selectedTab, $allowedTabs, true)) {
+    $selectedTab = 'overview';
+}
+
 $selectedFiscalYear = isset($_GET['fy'])
 ? (int)$_GET['fy']
 : (isset($_POST['fy']) ? (int)$_POST['fy'] : null);
 $fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
 
+if (
+    $selectedTab === 'program_niin'
+    && isset($_GET['export'])
+    && $_GET['export'] === 'csv'
+    ) {
+        $shipmentsModel = new Shipments();
+        
+        $selectedProgramFilter = $_GET['program'] ?? '';
+        $selectedCogFilter = $_GET['cog'] ?? '';
+        
+        $niinAnalysis = $shipmentsModel->getNiinShipmentAnalysis(
+            $selectedProgramFilter !== '' ? $selectedProgramFilter : null,
+            $selectedCogFilter !== '' ? $selectedCogFilter : null,
+            $fyRange['start_date'],
+            $fyRange['end_date']
+            );
+        
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=program_niin_analysis_' . $fyRange['label'] . '.csv');
+        
+        $output = fopen('php://output', 'w');
+        
+        fputcsv($output, [
+            'NIIN',
+            'Part',
+            'Nomen',
+            'Program',
+            'Total Qty',
+            'Total Reqs',
+            'Last Ship Date'
+        ]);
+        
+        foreach ($niinAnalysis as $row) {
+            fputcsv($output, [
+                $row['NIIN'],
+                $row['Part'],
+                $row['Nomen'],
+                $row['Program'],
+                $row['Total Qty'],
+                $row['Total Reqs'],
+                $row['Last Ship Date']
+            ]);
+        }
+        
+        fclose($output);
+        exit;
+    }
+    
 $shipmentsModel = new Shipments();
 $programMapping = new SYS_ProgramMapping();
 $cavRequisitions = new CavRequisitions();
@@ -67,21 +122,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 $dateRanges['month_start'],
                 $dateRanges['month_end'],
                 );
-            
-            $reportData = [
-                'program' => $selectedProgram,
-                'selected_month' => $selectedMonth,
-                'month_label' => $dateRanges['month_label'],
-                'month_start' => $dateRanges['month_start'],
-                'month_end' => $dateRanges['month_end'],
-                'ytd_start' => $dateRanges['ytd_start'],
-                'ytd_end' => $dateRanges['ytd_end'],
-                'month_line' => $dateRanges['month_line'],
-                'ytd_line' => $dateRanges['ytd_line'],
-                'title' => $fillerData['title'],
-                'pm' => $fillerData['pm'],
-                'programname' => $fillerData['programname']
-            ];
             
             $ytdTotalReqsRecvd = $cavRequisitions->getYTDReqsRecvd($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
             $ytdUniqueNiins = $cavRequisitions->getYTDUniqueNiins($selectedProgram, $dateRanges['ytd_start'], $dateRanges['ytd_end']);
@@ -1190,13 +1230,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $error = $e->getMessage();
         }
     }
-}
-
-$selectedTab = $_GET['tab'] ?? ($_POST['tab'] ?? 'overview');
-$allowedTabs = ['overview', 'shipment_data', 'program_niin', 'powerpoint_report'];
-
-if (!in_array($selectedTab, $allowedTabs, true)) {
-    $selectedTab = 'overview';
 }
 ?>
 <!DOCTYPE html>
