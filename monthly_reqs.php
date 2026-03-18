@@ -1196,7 +1196,7 @@ $selectedTab = $_GET['tab'] ?? ($_POST['tab'] ?? 'powerpoint_report');
 $allowedTabs = ['overview', 'shipment_data', 'program_niin', 'powerpoint_report'];
 
 if (!in_array($selectedTab, $allowedTabs, true)) {
-    $selectedTab = 'powerpoint_report';
+    $selectedTab = 'overview';
 }
 ?>
 <!DOCTYPE html>
