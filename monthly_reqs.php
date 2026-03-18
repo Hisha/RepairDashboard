@@ -1203,58 +1203,140 @@ if (!in_array($selectedTab, $allowedTabs, true)) {
             color: #212529;
         }
 
+        .page-wrap {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            margin: 0 0 15px 0;
+        }
+
         .tab-bar {
-            border-bottom: 2px solid #dee2e6;
-            margin-bottom: 15px;
+            display: flex;
+            gap: 6px;
+            align-items: flex-end;
+            margin-bottom: 0;
         }
 
         .tab-link {
             display: inline-block;
-            padding: 10px 15px;
-            margin-right: 5px;
+            padding: 12px 20px;
             text-decoration: none;
-            color: #495057;
-            border: 1px solid transparent;
-            border-top-left-radius: 6px;
-            border-top-right-radius: 6px;
-        }
-
-        .tab-link:hover {
-            background: #e9ecef;
-        }
-
-        .tab-link.active {
-            background: #fff;
-            border-color: #dee2e6 #dee2e6 #fff;
+            color: #212529;
+            background: #d9dee3;
+            border: 1px solid #bfc7cf;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
             font-weight: bold;
         }
 
+        .tab-link:hover {
+            background: #e7ebef;
+        }
+
+        .tab-link.active {
+            background: #ffffff;
+            position: relative;
+            top: 1px;
+            z-index: 2;
+        }
+
         .tab-content {
-            background: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 0 6px 6px 6px;
+            background: #ffffff;
+            border: 1px solid #bfc7cf;
+            border-radius: 0 8px 8px 8px;
             padding: 20px;
+            min-height: 500px;
+            box-sizing: border-box;
+        }
+
+        .form-block {
+            max-width: 500px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .form-row {
+            margin-bottom: 16px;
+        }
+
+        .form-row label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .form-row select {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .form-row button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #0d6efd;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .form-row button:hover {
+            background: #0b5ed7;
+        }
+
+        .success,
+        .error {
+            max-width: 700px;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .success {
+            background: #d1e7dd;
+            border: 1px solid #badbcc;
+            color: #0f5132;
+        }
+
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c2c7;
+            color: #842029;
         }
     </style>
 </head>
 <body>
-
-<?php include(APP_ROOT . '/menu.php'); ?>
+<?php include 'menu.php'; ?>
 
 <div class="page-wrap">
+    <h1 class="page-title">Monthly Requisitions</h1>
+
     <div class="tab-bar">
-    	<a class="tab-link <?= $selectedTab === 'overview' ? 'active' : '' ?>"
-       		href="monthly_reqs.php?tab=overview">Overview</a>
+        <a class="tab-link <?= $selectedTab === 'overview' ? 'active' : '' ?>"
+           href="monthly_reqs.php?tab=overview">Overview</a>
 
-    	<a class="tab-link <?= $selectedTab === 'shipment_data' ? 'active' : '' ?>"
-       		href="monthly_reqs.php?tab=shipment_data">Shipment Data</a>
+        <a class="tab-link <?= $selectedTab === 'shipment_data' ? 'active' : '' ?>"
+           href="monthly_reqs.php?tab=shipment_data">Shipment Data</a>
 
-    	<a class="tab-link <?= $selectedTab === 'program_niin' ? 'active' : '' ?>"
-       		href="monthly_reqs.php?tab=program_niin">Program / NIIN Analysis</a>
+        <a class="tab-link <?= $selectedTab === 'program_niin' ? 'active' : '' ?>"
+           href="monthly_reqs.php?tab=program_niin">Program / NIIN Analysis</a>
 
-    	<a class="tab-link <?= $selectedTab === 'powerpoint_report' ? 'active' : '' ?>"
-       		href="monthly_reqs.php?tab=powerpoint_report">PowerPoint Report</a>
-	</div>
+        <a class="tab-link <?= $selectedTab === 'powerpoint_report' ? 'active' : '' ?>"
+           href="monthly_reqs.php?tab=powerpoint_report">PowerPoint Report</a>
+    </div>
 
     <div class="tab-content">
         <?php
@@ -1276,6 +1358,5 @@ if (!in_array($selectedTab, $allowedTabs, true)) {
         ?>
     </div>
 </div>
-
 </body>
 </html>
