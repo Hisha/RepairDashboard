@@ -1192,7 +1192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
     }
 }
 
-$selectedTab = $_GET['tab'] ?? ($_POST['tab'] ?? 'powerpoint_report');
+$selectedTab = $_GET['tab'] ?? ($_POST['tab'] ?? 'overview');
 $allowedTabs = ['overview', 'shipment_data', 'program_niin', 'powerpoint_report'];
 
 if (!in_array($selectedTab, $allowedTabs, true)) {
