@@ -1,16 +1,16 @@
 <?php
 require_once dirname(__DIR__, 2) . '/bootstrap.php';
-require_once APP_ROOT . '/bin/Model/Repairs.php';
+require_once APP_ROOT . '/bin/Model/Shipments.php';
 require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 if (!isset($cog)) {
     return;
 }
 
-$repairsModel = new Repairs();
+$shipmentsModel = new Shipments();
 $fyRange = helpers::getFiscalYearDateRange();
 
-$chartData = $repairsModel->getTop10ShipmentsByCog(
+$chartData = $shipmentsModel->getTop10ShipmentsByCog(
     (string)$cog,
     $fyRange['start_date'],
     $fyRange['end_date']
