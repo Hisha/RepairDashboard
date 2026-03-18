@@ -745,12 +745,14 @@ class CavRequisitions
     (
         SELECT
             cav_requisitions.niin AS NIIN,
-            MAX(cav_requisitions.program) AS Program,
+            MAX(SYS_program_mapping.normalized_program) AS Program,
             MAX(cav_requisitions.nomen) AS Nomen,
             SUM(cav_requisitions.qty) AS `Backorder Qty`,
             MIN(cav_requisitions.priority) AS Priority,
             MIN(cav_requisitions.date_recv) AS `Oldest Backorder Date`
         FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE cav_requisitions.status = 'BACKORDERED'
         GROUP BY cav_requisitions.niin
     ) b
