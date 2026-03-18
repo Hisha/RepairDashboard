@@ -117,5 +117,109 @@ class Shipments
         return $fiscalYears;
     }
     
+    public function getProgramShipmentSummary(?string $cog = null, string $startDate, string $endDate): array
+    {
+        $db = new db();
+        
+        $sql = "
+    SELECT
+        SYS_repair_program_mapping.normalized_program AS 'Program',
+        SUM(shipments.qty) AS 'Total Qty'
+    FROM shipments
+    INNER JOIN SYS_repair_program_mapping
+        ON shipments.subgrouptype = SYS_repair_program_mapping.source_program
+    INNER JOIN LMS21Data
+        ON shipments.niin = LMS21Data.niin
+    WHERE shipments.transactiondate BETWEEN ? AND ?
+    ";
+        
+        $params = [$startDate, $endDate];
+        
+        if (!empty($cog)) {
+            $sql .= " AND LMS21Data.cog LIKE ?";
+            $params[] = $cog . '%';
+        }
+        
+        $sql .= "
+    GROUP BY SYS_repair_program_mapping.normalized_program
+    ORDER BY `Total Qty` DESC, SYS_repair_program_mapping.normalized_program ASC
+    ";
+        
+        $results = $db->query($sql, ...$params)->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
+    public function getNiinShipmentAnalysis(?string $program = null, ?string $cog = null, string $startDate, string $endDate): array
+    {
+        $db = new db();
+        
+        $sql = "
+    SELECT
+        shipments.niin AS 'NIIN',
+        shipments.primarypartno AS 'Part',
+        shipments.description AS 'Nomen',
+        SYS_repair_program_mapping.normalized_program AS 'Program',
+        SUM(shipments.qty) AS 'Total Qty',
+        COUNT(*) AS 'Shipment Lines',
+        MAX(shipments.transactiondate) AS 'Last Ship Date'
+    FROM shipments
+    INNER JOIN SYS_repair_program_mapping
+        ON shipments.subgrouptype = SYS_repair_program_mapping.source_program
+    INNER JOIN LMS21Data
+        ON shipments.niin = LMS21Data.niin
+    WHERE shipments.transactiondate BETWEEN ? AND ?
+    ";
+        
+        $params = [$startDate, $endDate];
+        
+        if (!empty($program)) {
+            $sql .= " AND SYS_repair_program_mapping.normalized_program = ?";
+            $params[] = $program;
+        }
+        
+        if (!empty($cog)) {
+            $sql .= " AND LMS21Data.cog LIKE ?";
+            $params[] = $cog . '%';
+        }
+        
+        $sql .= "
+    GROUP BY
+        shipments.niin,
+        shipments.primarypartno,
+        shipments.description,
+        SYS_repair_program_mapping.normalized_program
+    ORDER BY `Total Qty` DESC, shipments.niin ASC
+    ";
+        
+        $results = $db->query($sql, ...$params)->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
+    public function getDistinctShipmentPrograms(string $startDate, string $endDate): array
+    {
+        $db = new db();
+        
+        $sql = "
+    SELECT DISTINCT
+        SYS_repair_program_mapping.normalized_program AS 'Program'
+    FROM shipments
+    INNER JOIN SYS_repair_program_mapping
+        ON shipments.subgrouptype = SYS_repair_program_mapping.source_program
+    WHERE shipments.transactiondate BETWEEN ? AND ?
+    ORDER BY SYS_repair_program_mapping.normalized_program ASC
+    ";
+        
+        $results = $db->query($sql, $startDate, $endDate)->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
     
 }
