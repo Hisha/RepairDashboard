@@ -28,7 +28,6 @@ $renderer = new ChartRenderer();
 
 $message = '';
 $error = '';
-$reportData = [];
 
 $selectedProgram = $_POST['ddlDistinctNormalizedProgram'] ?? '';
 $selectedMonth = $_POST['ddlRecvMonth'] ?? '';
@@ -1183,6 +1182,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
         }
     }
 }
+
+$selectedTab = $_GET['tab'] ?? ($_POST['tab'] ?? 'powerpoint_report');
+$allowedTabs = ['overview', 'shipment_data', 'program_niin', 'powerpoint_report'];
+
+if (!in_array($selectedTab, $allowedTabs, true)) {
+    $selectedTab = 'powerpoint_report';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -1191,74 +1197,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
     <title>Monthly Requisitions Report</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 20px;
+            background: #f8f9fa;
+            color: #212529;
         }
 
-        .page-wrap {
+        .tab-bar {
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 15px;
+        }
+
+        .tab-link {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-right: 5px;
+            text-decoration: none;
+            color: #495057;
+            border: 1px solid transparent;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        }
+
+        .tab-link:hover {
+            background: #e9ecef;
+        }
+
+        .tab-link.active {
+            background: #fff;
+            border-color: #dee2e6 #dee2e6 #fff;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 0 6px 6px 6px;
             padding: 20px;
-        }
-        
-        .form-block {
-            max-width: 500px;
-            margin-top: 20px;
-        }
-
-        .form-row {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 6px;
-        }
-
-        select, button {
-            width: 100%;
-            max-width: 350px;
-            padding: 8px;
-            font-size: 14px;
-        }
-
-        button {
-            cursor: pointer;
-            width: auto;
-            min-width: 180px;
-        }
-
-        .success {
-            color: green;
-            margin-bottom: 15px;
-        }
-
-        .error {
-            color: red;
-            margin-bottom: 15px;
-        }
-
-        .report-preview {
-            margin-top: 30px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            max-width: 700px;
-            background: #f8f8f8;
-        }
-
-        .report-preview table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        .report-preview td {
-            padding: 8px;
-            border: 1px solid #ddd;
-        }
-
-        .report-preview td:first-child {
-            font-weight: bold;
-            width: 180px;
         }
     </style>
 </head>
@@ -1267,104 +1242,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
 <?php include(APP_ROOT . '/menu.php'); ?>
 
 <div class="page-wrap">
-    <h2>Monthly Requisitions Report</h2>
+    <div class="tab-bar">
+    	<a class="tab-link <?= $selectedTab === 'overview' ? 'active' : '' ?>"
+       		href="monthly_reqs.php?tab=overview">Overview</a>
 
-    <?php if ($message !== ''): ?>
-        <div class="success"><?= htmlspecialchars($message) ?></div>
-    <?php endif; ?>
+    	<a class="tab-link <?= $selectedTab === 'shipment_data' ? 'active' : '' ?>"
+       		href="monthly_reqs.php?tab=shipment_data">Shipment Data</a>
 
-    <?php if ($error !== ''): ?>
-        <div class="error"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
+    	<a class="tab-link <?= $selectedTab === 'program_niin' ? 'active' : '' ?>"
+       		href="monthly_reqs.php?tab=program_niin">Program / NIIN Analysis</a>
 
-    <div class="form-block">
-        <form method="post" action="">
-            <div class="form-row">
-                <label for="ddlDistinctNormalizedProgram">Program</label>
-                <?= $programMapping->getDDLDistinctNormalizedProgram($selectedProgram); ?>
-            </div>
+    	<a class="tab-link <?= $selectedTab === 'powerpoint_report' ? 'active' : '' ?>"
+       		href="monthly_reqs.php?tab=powerpoint_report">PowerPoint Report</a>
+	</div>
 
-            <div class="form-row">
-                <label for="ddlRecvMonth">Reporting Month</label>
-                <?= $cavRequisitions->getDDLRecvMonths($selectedMonth); ?>
-            </div>
-
-            <div class="form-row">
-                <button type="submit" name="btnGenerateReport">Generate Report</button>
-            </div>
-        </form>
+    <div class="tab-content">
+        <?php
+        switch ($selectedTab) {
+            case 'overview':
+                require_once APP_ROOT . '/bin/Tabs/monthly_reqs_overview.php';
+                break;
+            case 'shipment_data':
+                require_once APP_ROOT . '/bin/Tabs/monthly_reqs_shipment_data.php';
+                break;
+            case 'program_niin':
+                require_once APP_ROOT . '/bin/Tabs/monthly_reqs_program_niin.php';
+                break;
+            case 'powerpoint_report':
+            default:
+                require_once APP_ROOT . '/bin/Tabs/monthly_reqs_powerpoint_report.php';
+                break;
+        }
+        ?>
     </div>
-
-    <?php if (!empty($reportData)): ?>
-        <div class="report-preview">
-            <h3>Selected Report Values</h3>
-            <table>
-                <tr>
-                    <td>Program</td>
-                    <td><?= htmlspecialchars($reportData['program']) ?></td>
-                </tr>
-                <tr>
-                    <td>Month</td>
-                    <td><?= htmlspecialchars($reportData['month_label']) ?></td>
-                </tr>
-                <tr>
-                    <td>Month Start</td>
-                    <td><?= htmlspecialchars($reportData['month_start']) ?></td>
-                </tr>
-                <tr>
-                    <td>Month End</td>
-                    <td><?= htmlspecialchars($reportData['month_end']) ?></td>
-                </tr>
-                <tr>
-                    <td>YTD Start</td>
-                    <td><?= htmlspecialchars($reportData['ytd_start']) ?></td>
-                </tr>
-                <tr>
-                    <td>YTD End</td>
-                    <td><?= htmlspecialchars($reportData['ytd_end']) ?></td>
-                </tr>
-                <tr>
-                    <td>Month Line</td>
-                    <td><?= htmlspecialchars($reportData['month_line']) ?></td>
-                </tr>
-                <tr>
-                    <td>YTD Line</td>
-                    <td><?= htmlspecialchars($reportData['ytd_line']) ?></td>
-                </tr>
-                <tr>
-                    <td>Title</td>
-                    <td><?= htmlspecialchars($reportData['title']) ?></td>
-                </tr>
-                <tr>
-                    <td>PM</td>
-                    <td><?= htmlspecialchars($reportData['pm']) ?></td>
-                </tr>
-                <tr>
-                    <td>Program Name</td>
-                    <td><?= htmlspecialchars($reportData['programname']) ?></td>
-                </tr>
-            </table>
-        </div>
-    <?php endif; ?>
-    <?php if (!empty($reportData['shipped_pie_path'])): ?>
-    <?php $chartUrl = str_replace(APP_ROOT, '/dashboard', $reportData['shipped_pie_path']); ?>
-    <div class="report-preview">
-        <h3>Generated Shipped Pie Chart</h3>
-        <table>
-            <tr>
-                <td>Shipped</td>
-                <td><?= htmlspecialchars((string)$reportData['shipped']) ?></td>
-            </tr>
-            <tr>
-                <td>B/O Shipped</td>
-                <td><?= htmlspecialchars((string)$reportData['shippedBO']) ?></td>
-            </tr>
-        </table>
-        <p style="margin-top:15px;">
-            <img src="<?= htmlspecialchars($chartUrl) ?>" alt="Shipped Pie Chart" style="max-width:700px;">
-        </p>
-    </div>
-<?php endif; ?>
 </div>
 
 </body>
