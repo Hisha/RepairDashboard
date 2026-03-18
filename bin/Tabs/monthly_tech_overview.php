@@ -54,7 +54,19 @@ usort($priorityRows, function ($a, $b) {
     }
     ?>
 
-<h2><?= htmlspecialchars($fyRange['label']) ?> Overview</h2>
+<h2><?= htmlspecialchars($fyRange['label']) ?> Repair Priority Overview</h2>
+
+<p style="margin-top:-10px; margin-bottom:15px; color:#555;">
+    This chart highlights the top 10 NIINs where demand exceeds available A-condition inventory.
+    Bar length represents the shortfall (Quarterly Demand - A OnHand).
+</p>
+
+<p style="margin-top:-10px; margin-bottom:15px; font-size:14px;">
+    <strong>Color Guide:</strong>
+    <span style="background:#f8d7da; padding:3px 6px; border-radius:4px;">Red</span> = Not enough stock |
+    <span style="background:#e2d9f3; padding:3px 6px; border-radius:4px;">Purple</span> = Covered with G stock |
+    <span style="background:#fff3cd; padding:3px 6px; border-radius:4px;">Yellow</span> = Exact match
+</p>
 
 <?php if (empty($chartLabels)): ?>
     <p>No priority repair data found.</p>
