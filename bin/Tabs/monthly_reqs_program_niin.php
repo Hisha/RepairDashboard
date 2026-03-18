@@ -87,8 +87,14 @@ $exportUrl = 'monthly_reqs.php?tab=program_niin'
 .analysis-filter-form {
     display: flex;
     gap: 16px;
-    align-items: end;
+    align-items: flex-end;
     flex-wrap: wrap;
+}
+
+.analysis-filter-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 .analysis-filter-group label {
@@ -107,6 +113,7 @@ $exportUrl = 'monthly_reqs.php?tab=program_niin'
 
 .analysis-filter-group button,
 .analysis-export-link {
+    display: inline-block;
     padding: 9px 12px;
     border: none;
     border-radius: 6px;
@@ -114,7 +121,10 @@ $exportUrl = 'monthly_reqs.php?tab=program_niin'
     color: #fff;
     text-decoration: none;
     font-size: 14px;
+    line-height: 1.2;
     cursor: pointer;
+    box-sizing: border-box;
+    margin: 0;
 }
 
 .analysis-filter-group button:hover,
@@ -134,7 +144,7 @@ $exportUrl = 'monthly_reqs.php?tab=program_niin'
     width: 100%;
     max-width: 1000px;
     height: 420px;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
 .analysis-table-wrap {
@@ -158,6 +168,11 @@ $exportUrl = 'monthly_reqs.php?tab=program_niin'
     border: 1px solid #ddd;
     text-align: left;
     white-space: nowrap;
+}
+
+.analysis-table-title {
+    margin-top: 10px;
+    margin-bottom: 12px;
 }
 
 .analysis-table thead th {
@@ -296,7 +311,7 @@ $exportUrl = 'monthly_reqs.php?tab=program_niin'
     </script>
 <?php endif; ?>
 
-<h3>
+<h3 class="analysis-table-title">
     <?= $selectedProgram !== '' ? htmlspecialchars($selectedProgram) . ' NIIN Breakdown' : 'Top NIINs Overall' ?>
 </h3>
 
