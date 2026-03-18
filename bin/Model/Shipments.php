@@ -82,4 +82,40 @@ class Shipments
             return $results;
     }
     
+    public function getAvailableFiscalYearsDetailed(): array
+    {
+        $db = new db();
+        
+        $sql = "
+    SELECT DISTINCT
+        CASE
+            WHEN MONTH(transactiondate) >= 10 THEN YEAR(transactiondate) + 1
+            ELSE YEAR(transactiondate)
+        END AS fiscal_year
+    FROM shipments
+    WHERE transactiondate IS NOT NULL
+    ORDER BY fiscal_year DESC
+    ";
+        
+        $results = $db->query($sql)->fetchAll();
+        
+        $db->close();
+        
+        $fiscalYears = [];
+        
+        foreach ($results as $row) {
+            $range = helpers::getFiscalYearDateRange((int)$row['fiscal_year']);
+            
+            $fiscalYears[] = [
+                'fiscal_year' => $range['fiscal_year'],
+                'label' => $range['label'],
+                'start_date' => $range['start_date'],
+                'end_date' => $range['end_date']
+            ];
+        }
+        
+        return $fiscalYears;
+    }
+    
+    
 }

@@ -23,7 +23,9 @@ use PhpOffice\PhpPresentation\Style\Fill;
 use PhpOffice\PhpPresentation\Style\Color;
 use PhpOffice\PhpPresentation\Style\Font;
 
-$selectedFiscalYear = isset($_GET['fy']) ? (int)$_GET['fy'] : null;
+$selectedFiscalYear = isset($_GET['fy'])
+? (int)$_GET['fy']
+: (isset($_POST['fy']) ? (int)$_POST['fy'] : null);
 $fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
 
 $shipmentsModel = new Shipments();
@@ -35,6 +37,7 @@ $renderer = new ChartRenderer();
 $message = '';
 $error = '';
 
+$availableFiscalYears = $shipmentsModel->getAvailableFiscalYearsDetailed();
 $selectedProgram = $_POST['ddlDistinctNormalizedProgram'] ?? '';
 $selectedMonth = $_POST['ddlRecvMonth'] ?? '';
 
@@ -1215,8 +1218,36 @@ if (!in_array($selectedTab, $allowedTabs, true)) {
             margin: 0 auto;
         }
 
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
         .page-title {
-            margin: 0 0 15px 0;
+            margin: 0;
+        }
+
+        .page-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .page-controls label {
+            font-weight: bold;
+        }
+
+        .page-controls select {
+            padding: 8px 10px;
+            font-size: 14px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            background: #fff;
         }
 
         .tab-bar {
@@ -1330,19 +1361,44 @@ if (!in_array($selectedTab, $allowedTabs, true)) {
 <div class="page-wrap">
     <h1 class="page-title">Monthly Requisitions</h1>
 
-    <div class="tab-bar">
-        <a class="tab-link <?= $selectedTab === 'overview' ? 'active' : '' ?>"
-           href="monthly_reqs.php?tab=overview">Overview</a>
+	<div class="page-controls">
+        <form method="get" action="monthly_reqs.php">
+        	<input type="hidden" name="tab" value="<?= htmlspecialchars($selectedTab) ?>">
+        	<input type="hidden" name="fy" value="<?= htmlspecialchars((string)$fyRange['fiscal_year']) ?>">
 
-        <a class="tab-link <?= $selectedTab === 'shipment_data' ? 'active' : '' ?>"
-           href="monthly_reqs.php?tab=shipment_data">Shipment Data</a>
+            <?php if (!empty($_GET['niin'])): ?>
+                <input type="hidden" name="niin" value="<?= htmlspecialchars($_GET['niin']) ?>">
+            <?php endif; ?>
 
-        <a class="tab-link <?= $selectedTab === 'program_niin' ? 'active' : '' ?>"
-           href="monthly_reqs.php?tab=program_niin">Program / NIIN Analysis</a>
+            <?php if (!empty($_GET['cog'])): ?>
+                <input type="hidden" name="cog" value="<?= htmlspecialchars($_GET['cog']) ?>">
+            <?php endif; ?>
 
-        <a class="tab-link <?= $selectedTab === 'powerpoint_report' ? 'active' : '' ?>"
-           href="monthly_reqs.php?tab=powerpoint_report">PowerPoint Report</a>
+            <label for="fy">Fiscal Year:</label>
+            <select name="fy" id="fy" onchange="this.form.submit()">
+                <?php foreach ($availableFiscalYears as $fy): ?>
+                	<option value="<?= htmlspecialchars((string)$fy['fiscal_year']) ?>"
+                        <?= $fy['fiscal_year'] === $fyRange['fiscal_year'] ? 'selected' : '' ?>>
+                    	<?= htmlspecialchars($fy['label']) ?>
+                    </option>
+            	<?php endforeach; ?>
+            </select>
+		</form>
     </div>
+
+    <div class="tab-bar">
+    		<a class="tab-link <?= $selectedTab === 'overview' ? 'active' : '' ?>"
+       			href="monthly_reqs.php?tab=overview&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Overview</a>
+
+    		<a class="tab-link <?= $selectedTab === 'shipment_data' ? 'active' : '' ?>"
+       			href="monthly_reqs.php?tab=shipment_data&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Shipment Data</a>
+
+    		<a class="tab-link <?= $selectedTab === 'program_niin' ? 'active' : '' ?>"
+       			href="monthly_reqs.php?tab=program_niin&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Program / NIIN Analysis</a>
+
+    		<a class="tab-link <?= $selectedTab === 'powerpoint_report' ? 'active' : '' ?>"
+       			href="monthly_reqs.php?tab=powerpoint_report&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">PowerPoint Report</a>
+	</div>
 
     <div class="tab-content">
         <?php
