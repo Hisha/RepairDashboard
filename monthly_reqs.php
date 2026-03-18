@@ -36,6 +36,56 @@ $selectedFiscalYear = isset($_GET['fy'])
 $fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
 
 if (
+    $selectedTab === 'shipment_data'
+    && isset($_GET['export'])
+    && $_GET['export'] === 'csv'
+    ) {
+        $shipmentsModel = new Shipments();
+        
+        $selectedNiinFilter = $_GET['niin'] ?? null;
+        $selectedCogFilter = $_GET['cog'] ?? null;
+        
+        $shipmentData = $shipmentsModel->getShipmentsListByFiscalYear(
+            $selectedNiinFilter !== '' ? $selectedNiinFilter : null,
+            $selectedCogFilter !== '' ? $selectedCogFilter : null,
+            $fyRange['start_date'],
+            $fyRange['end_date']
+            );
+        
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=shipment_data_' . $fyRange['label'] . '.csv');
+        
+        $output = fopen('php://output', 'w');
+        
+        fputcsv($output, [
+            'Ship Date',
+            'NIIN',
+            'Part',
+            'Nomen',
+            'Qty',
+            'Program',
+            'Condition',
+            'Issued To'
+        ]);
+        
+        foreach ($shipmentData as $row) {
+            fputcsv($output, [
+                $row['Ship Date'],
+                $row['NIIN'],
+                $row['Part'],
+                $row['Nomen'],
+                $row['Qty'],
+                $row['Program'],
+                $row['Condition'],
+                $row['Issued To']
+            ]);
+        }
+        
+        fclose($output);
+        exit;
+    }
+
+if (
     $selectedTab === 'program_niin'
     && isset($_GET['export'])
     && $_GET['export'] === 'csv'

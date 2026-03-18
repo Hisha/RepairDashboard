@@ -16,40 +16,6 @@ $data = $shipmentsModel->getShipmentsListByFiscalYear(
     $fyRange['start_date'],
     $fyRange['end_date']
 );
-
-if (isset($_GET['export']) && $_GET['export'] === 'csv') {
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=shipment_data_' . $fyRange['label'] . '.csv');
-
-    $output = fopen('php://output', 'w');
-
-    fputcsv($output, [
-        'Ship Date',
-        'NIIN',
-        'Part',
-        'Nomen',
-        'Qty',
-        'Program',
-        'Condition',
-        'Issued To'
-    ]);
-
-    foreach ($data as $row) {
-        fputcsv($output, [
-            $row['Ship Date'],
-            $row['NIIN'],
-            $row['Part'],
-            $row['Nomen'],
-            $row['Qty'],
-            $row['Program'],
-            $row['Condition'],
-            $row['Issued To']
-        ]);
-    }
-
-    fclose($output);
-    exit;
-}
 ?>
 
 <style>
