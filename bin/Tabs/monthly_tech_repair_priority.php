@@ -189,11 +189,11 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
             <tr class="<?= htmlspecialchars($rowClass) ?>">
     			<td><?= htmlspecialchars($row['NIIN']) ?></td>
     			<td class="number-cell"><?= number_format($quarterlyDemand, 2) ?></td>
-    			<td class="number-cell"><?= number_format($aOnHand, 2) ?></td>
-    			<td class="number-cell"><?= number_format((float)$row['D OnHand'], 2) ?></td>
-    			<td class="number-cell"><?= number_format($gOnHand, 2) ?></td>
-    			<td class="number-cell"><?= number_format((float)$row['F OnHand'], 2) ?></td>
-    			<td class="number-cell"><?= number_format((float)$row['F Awaiting Vendor'], 2) ?></td>
+    			<td class="number-cell"><?= number_format($aOnHand, 0) ?></td>
+    			<td class="number-cell"><?= number_format((float)$row['D OnHand'], 0) ?></td>
+    			<td class="number-cell"><?= number_format($gOnHand, 0) ?></td>
+    			<td class="number-cell"><?= number_format((float)$row['F OnHand'], 0) ?></td>
+    			<td class="number-cell"><?= number_format((float)$row['F Awaiting Vendor'], 0) ?></td>
     			<td><?= htmlspecialchars($row['LastShipDate']) ?></td>
     			<td><?= htmlspecialchars($row['Program']) ?></td>
 			</tr>
