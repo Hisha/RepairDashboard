@@ -26,7 +26,7 @@ $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Monthly Tech</title>
+    <title>Repairs</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -151,7 +151,7 @@ $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
 <div class="page-wrap">
 
     <div class="page-header">
-        <h1 class="page-title">Monthly Tech - <?= htmlspecialchars($fyRange['label']) ?></h1>
+        <h1 class="page-title">Repairs - <?= htmlspecialchars($fyRange['label']) ?></h1>
 
         <div class="page-controls">
             <form method="get" action="monthly_tech.php">

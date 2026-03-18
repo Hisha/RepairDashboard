@@ -1286,7 +1286,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Monthly Requisitions Report</title>
+    <title>Shipments</title>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -1445,7 +1445,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
 <?php include 'menu.php'; ?>
 
 <div class="page-wrap">
-    <h1 class="page-title">Monthly Requisitions</h1>
+    <h1 class="page-title">Shipments</h1>
 
 	<div class="page-controls">
         <form method="get" action="monthly_reqs.php">
