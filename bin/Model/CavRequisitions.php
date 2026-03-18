@@ -719,6 +719,89 @@ class CavRequisitions
         return $results;
     }
     
+    public function getBackorderActionList(): array
+    {
+        $db = new db();
+        
+        $sql = "
+    SELECT
+        b.NIIN,
+        b.Program,
+        b.Nomen,
+        b.`Backorder Qty`,
+        b.Priority,
+        b.`Oldest Backorder Date`,
+        COALESCE(i.`Repairable F Qty`, 0) AS `Repairable F Qty`,
+        COALESCE(i.`F Awaiting Vendor Qty`, 0) AS `F Awaiting Vendor Qty`,
+        COALESCE(p.`Active Procurement Count`, 0) AS `Active Procurement Count`,
+        GREATEST(b.`Backorder Qty` - COALESCE(i.`Repairable F Qty`, 0), 0) AS `Qty Short`,
+        CASE
+            WHEN COALESCE(i.`Repairable F Qty`, 0) >= b.`Backorder Qty` THEN 'REPAIR'
+            WHEN COALESCE(i.`Repairable F Qty`, 0) > 0 THEN 'PARTIAL REPAIR'
+            WHEN COALESCE(p.`Active Procurement Count`, 0) > 0 THEN 'IN PROCUREMENT'
+            ELSE 'PROCURE'
+        END AS `Action`
+    FROM
+    (
+        SELECT
+            cav_requisitions.niin AS NIIN,
+            MAX(cav_requisitions.program) AS Program,
+            MAX(cav_requisitions.nomen) AS Nomen,
+            SUM(cav_requisitions.qty) AS `Backorder Qty`,
+            MIN(cav_requisitions.priority) AS Priority,
+            MIN(cav_requisitions.date_recv) AS `Oldest Backorder Date`
+        FROM cav_requisitions
+        WHERE cav_requisitions.status = 'BACKORDERED'
+        GROUP BY cav_requisitions.niin
+    ) b
+    LEFT JOIN
+    (
+        SELECT
+            inventory.niin AS NIIN,
+            SUM(CASE
+                WHEN inventory.materialcode = 'F' AND inventory.purposecode <> 'Z'
+                THEN inventory.onhandqty
+                ELSE 0
+            END) AS `Repairable F Qty`,
+            SUM(CASE
+                WHEN inventory.materialcode = 'F' AND inventory.purposecode = 'Z'
+                THEN inventory.onhandqty
+                ELSE 0
+            END) AS `F Awaiting Vendor Qty`
+        FROM inventory
+        GROUP BY inventory.niin
+    ) i
+        ON b.NIIN = i.NIIN
+    LEFT JOIN
+    (
+        SELECT
+            procurements.niin AS NIIN,
+            COUNT(*) AS `Active Procurement Count`
+        FROM procurements
+        WHERE procurements.status NOT IN ('CANCELED', 'COMPLETED')
+        GROUP BY procurements.niin
+    ) p
+        ON b.NIIN = p.NIIN
+    ORDER BY
+        CASE
+            WHEN COALESCE(i.`Repairable F Qty`, 0) >= b.`Backorder Qty` THEN 1
+            WHEN COALESCE(i.`Repairable F Qty`, 0) > 0 THEN 2
+            WHEN COALESCE(p.`Active Procurement Count`, 0) > 0 THEN 4
+            ELSE 3
+        END,
+        b.Priority ASC,
+        b.`Backorder Qty` DESC,
+        b.NIIN ASC
+    ";
+        
+        $results = $db->query($sql)->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
+    
 }
   
 ?>
