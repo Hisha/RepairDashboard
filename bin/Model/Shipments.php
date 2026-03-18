@@ -163,7 +163,7 @@ class Shipments
         shipments.description AS 'Nomen',
         SYS_repair_program_mapping.normalized_program AS 'Program',
         SUM(shipments.qty) AS 'Total Qty',
-        COUNT(*) AS 'Shipment Lines',
+        COUNT(*) AS 'Total Reqs',
         MAX(shipments.transactiondate) AS 'Last Ship Date'
     FROM shipments
     INNER JOIN SYS_repair_program_mapping

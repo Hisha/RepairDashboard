@@ -40,7 +40,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
         'Nomen',
         'Program',
         'Total Qty',
-        'Shipment Lines',
+        'Total Reqses',
         'Last Ship Date'
     ]);
 
@@ -51,7 +51,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
             $row['Nomen'],
             $row['Program'],
             $row['Total Qty'],
-            $row['Shipment Lines'],
+            $row['Total Reqs'],
             $row['Last Ship Date']
         ]);
     }
@@ -327,7 +327,7 @@ $exportUrl = 'monthly_reqs.php?tab=program_niin'
             <th>Nomen</th>
             <th>Program</th>
             <th>Total Qty</th>
-            <th>Shipment Lines</th>
+            <th>Total Reqs</th>
             <th>Last Ship Date</th>
         </tr>
         </thead>
@@ -339,7 +339,7 @@ $exportUrl = 'monthly_reqs.php?tab=program_niin'
                 <td><?= htmlspecialchars($row['Nomen']) ?></td>
                 <td><?= htmlspecialchars($row['Program']) ?></td>
                 <td class="number-cell"><?= number_format((float)$row['Total Qty'], 0) ?></td>
-                <td class="number-cell"><?= number_format((float)$row['Shipment Lines'], 0) ?></td>
+                <td class="number-cell"><?= number_format((float)$row['Total Reqs'], 0) ?></td>
                 <td><?= htmlspecialchars($row['Last Ship Date']) ?></td>
             </tr>
         <?php endforeach; ?>

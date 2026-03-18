@@ -1354,6 +1354,9 @@ if (!in_array($selectedTab, $allowedTabs, true)) {
             color: #842029;
         }
     </style>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 </head>
 <body>
 <?php include 'menu.php'; ?>
