@@ -56,7 +56,10 @@ include 'menu.php';
         <div class="chart-grid">
             <?php require_once APP_ROOT . '/bin/Charts/backorders_piechart.php'; ?>
             <?php require_once APP_ROOT . '/bin/Charts/repairs_by_program_fy_chart.php'; ?>
-        </div>
+            
+            <?php $cog = '1'; require APP_ROOT . '/bin/Charts/top10_shipments_by_cog_chart.php'; ?>
+    		<?php $cog = '7'; require APP_ROOT . '/bin/Charts/top10_shipments_by_cog_chart.php'; ?>
+    	</div>
     </div>
 </body>
 </html>
