@@ -51,6 +51,7 @@ usort($priorityRows, function ($a, $b) {
         $chartLabels[] = $item['niin'] . ' (' . $item['program'] . ')';
         $chartValues[] = round($item['shortfall'], 2);
         $chartColors[] = $item['color'];
+        $chartNiins[] = $item['niin'];
     }
     ?>
 
@@ -80,11 +81,15 @@ usort($priorityRows, function ($a, $b) {
     const labels = <?= json_encode($chartLabels) ?>;
     const values = <?= json_encode($chartValues) ?>;
     const colors = <?= json_encode($chartColors) ?>;
+    const niins = <?= json_encode($chartNiins) ?>;
+    const fiscalYear = <?= json_encode((string)$fyRange['fiscal_year']) ?>;
 
     const canvas = document.getElementById('topPriorityRepairsChart');
     if (!canvas) {
         return;
     }
+
+    canvas.style.cursor = 'pointer';
 
     new Chart(canvas, {
         type: 'bar',
@@ -104,6 +109,10 @@ usort($priorityRows, function ($a, $b) {
                 legend: {
                     display: false
                 },
+                title: {
+                    display: true,
+                    text: 'Top 10 Repair Shortfalls (Quarterly Demand vs A OnHand)'
+                },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -114,6 +123,20 @@ usort($priorityRows, function ($a, $b) {
                         }
                     }
                 }
+            },
+            onClick: (event, elements) => {
+                if (!elements.length) {
+                    return;
+                }
+
+                const index = elements[0].index;
+                const niin = niins[index];
+
+                window.location.href =
+                    'monthly_tech.php?tab=repair_priority&fy=' +
+                    encodeURIComponent(fiscalYear) +
+                    '&niin=' +
+                    encodeURIComponent(niin);
             }
         }
     });

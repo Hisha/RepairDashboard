@@ -4,6 +4,7 @@ require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 $repairsModel = new Repairs();
 $selectedFiscalYear = isset($_GET['fy']) ? (int)$_GET['fy'] : null;
+$selectedNiin = $_GET['niin'] ?? '';
 $fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
 
 $data = $repairsModel->getRepairPriorityReport(
@@ -139,6 +140,12 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     border: 1px solid #dee2e6;
     border-radius: 6px;
 }
+
+.highlight-niin td {
+    outline: 3px solid #0d6efd;
+    outline-offset: -3px;
+    font-weight: bold;
+}
 </style>
 
 <h2><?= htmlspecialchars($fyRange['label']) ?> Repair Priority</h2>
@@ -171,7 +178,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
 		</thead>
         <tbody>
         <?php foreach ($data as $row): ?>
-            <?php
+    		<?php
             $aOnHand = (float)($row['A OnHand'] ?? 0);
             $gOnHand = (float)($row['G OnHand'] ?? 0);
             $quarterlyDemand = (float)($row['Quarterly Demand'] ?? 0);
@@ -185,20 +192,40 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
             } else {
                 $rowClass = 'status-red';
             }
+
+            $isHighlighted = ($selectedNiin !== '' && (string)$row['NIIN'] === (string)$selectedNiin);
+            $combinedRowClass = $rowClass . ($isHighlighted ? ' highlight-niin' : '');
             ?>
-            <tr class="<?= htmlspecialchars($rowClass) ?>">
-    			<td><?= htmlspecialchars($row['NIIN']) ?></td>
-    			<td class="number-cell"><?= number_format($quarterlyDemand, 2) ?></td>
-    			<td class="number-cell"><?= number_format($aOnHand, 0) ?></td>
-    			<td class="number-cell"><?= number_format((float)$row['D OnHand'], 0) ?></td>
-    			<td class="number-cell"><?= number_format($gOnHand, 0) ?></td>
-    			<td class="number-cell"><?= number_format((float)$row['F OnHand'], 0) ?></td>
-    			<td class="number-cell"><?= number_format((float)$row['F Awaiting Vendor'], 0) ?></td>
-    			<td><?= htmlspecialchars($row['LastShipDate']) ?></td>
-    			<td><?= htmlspecialchars($row['Program']) ?></td>
-			</tr>
-        <?php endforeach; ?>
+    		<tr class="<?= htmlspecialchars($combinedRowClass) ?>"<?= $isHighlighted ? ' id="selected-niin-row"' : '' ?>>
+        		<td><?= htmlspecialchars($row['NIIN']) ?></td>
+        		<td class="number-cell"><?= number_format($quarterlyDemand, 2) ?></td>
+        		<td class="number-cell"><?= number_format($aOnHand, 0) ?></td>
+        		<td class="number-cell"><?= number_format((float)$row['D OnHand'], 0) ?></td>
+        		<td class="number-cell"><?= number_format($gOnHand, 0) ?></td>
+        		<td class="number-cell"><?= number_format((float)$row['F OnHand'], 0) ?></td>
+        		<td class="number-cell"><?= number_format((float)$row['F Awaiting Vendor'], 0) ?></td>
+        		<td><?= htmlspecialchars($row['LastShipDate']) ?></td>
+        		<td><?= htmlspecialchars($row['Program']) ?></td>
+    		</tr>
+		<?php endforeach; ?>
         </tbody>
     </table>
 </div>
+<?php endif; ?>
+
+<?php if (!empty($selectedNiin)): ?>
+<script>
+(() => {
+    const row = document.getElementById('selected-niin-row');
+    if (!row) {
+        return;
+    }
+
+    row.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+    });
+})();
+</script>
 <?php endif; ?>
