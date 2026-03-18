@@ -156,7 +156,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     <span class="legend-item legend-red">Red</span> = A OnHand below Quarterly Demand |
     <span class="legend-item legend-yellow">Yellow</span> = A OnHand equals Quarterly Demand |
     <span class="legend-item legend-green">Green</span> = A OnHand above Quarterly Demand |
-    <span class="legend-item legend-purple">Purple</span> = A OnHand + G OnHand covers Quarterly Demand
+    <span class="legend-item legend-purple">Purple</span> = A OnHand + D OnHand + G OnHand covers Quarterly Demand
 </p>
 
 <?php if (empty($data)): ?>
@@ -189,7 +189,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
                 $rowClass = 'status-green';
             } elseif ($aOnHand == $quarterlyDemand) {
                 $rowClass = 'status-yellow';
-            } elseif (($aOnHand + $dOnHandn + $gOnHand) > $quarterlyDemand) {
+            } elseif (($aOnHand + $dOnHand + $gOnHand) > $quarterlyDemand) {
                 $rowClass = 'status-purple';
             } else {
                 $rowClass = 'status-red';
@@ -202,7 +202,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
         		<td><?= htmlspecialchars($row['NIIN']) ?></td>
         		<td class="number-cell"><?= number_format($quarterlyDemand, 2) ?></td>
         		<td class="number-cell"><?= number_format($aOnHand, 0) ?></td>
-        		<td class="number-cell"><?= number_format((float)$row['D OnHand'], 0) ?></td>
+        		<td class="number-cell"><?= number_format($dOnHand, 0) ?></td>
         		<td class="number-cell"><?= number_format($gOnHand, 0) ?></td>
         		<td class="number-cell"><?= number_format((float)$row['F OnHand'], 0) ?></td>
         		<td class="number-cell"><?= number_format((float)$row['F Awaiting Vendor'], 0) ?></td>
