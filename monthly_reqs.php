@@ -9,10 +9,12 @@ require_once APP_ROOT . '/bin/Charts/ytd_demand_misses_chart.php';
 require_once APP_ROOT . '/bin/Charts/ytd_yearly_averages_by_month_chart.php';
 require_once APP_ROOT . '/bin/Presentations/ListBuilder.php';
 require_once APP_ROOT . '/bin/Presentations/TableBuilder.php';
-require_once APP_ROOT . '/bin/Utilities/ChartRenderer.php';
-require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
 require_once APP_ROOT . '/bin/Model/CavRequisitions.php';
+require_once APP_ROOT . '/bin/Model/Shipments.php';
 require_once APP_ROOT . '/bin/Model/SYS_PowerPointFiller.php';
+require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
+require_once APP_ROOT . '/bin/Utilities/ChartRenderer.php';
+require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 use PhpOffice\PhpPresentation\IOFactory;
 use PhpOffice\PhpPresentation\Shape\Drawing\File;
@@ -21,6 +23,10 @@ use PhpOffice\PhpPresentation\Style\Fill;
 use PhpOffice\PhpPresentation\Style\Color;
 use PhpOffice\PhpPresentation\Style\Font;
 
+$selectedFiscalYear = isset($_GET['fy']) ? (int)$_GET['fy'] : null;
+$fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
+
+$shipmentsModel = new Shipments();
 $programMapping = new SYS_ProgramMapping();
 $cavRequisitions = new CavRequisitions();
 $powerPointFiller = new SYS_PowerPointFiller();

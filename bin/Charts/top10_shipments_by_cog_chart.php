@@ -90,7 +90,8 @@ $chartId = 'top10ShipmentsCog' . preg_replace('/[^a-zA-Z0-9]/', '', (string)$cog
     					const fiscalYear = <?= json_encode((string)$fyRange['fiscal_year']) ?>;
 
     					window.location.href =
-        					'monthly_reqs.php?niin=' + encodeURIComponent(niin) +
+        					'monthly_reqs.php?tab=shipment_data' +
+        					'&niin=' + encodeURIComponent(niin) +
         					'&cog=' + encodeURIComponent(cog) +
         					'&fy=' + encodeURIComponent(fiscalYear);
 					}
