@@ -12,53 +12,50 @@ class Cog7Repairables
             l.niin,
             l.lrc,
             l.std_price,
+            s.last_ship_date,
             
-            COALESCE(r12.receipts, 0) AS receipts_12m,
-            
-            COALESCE(rall.receipts, 0) AS receipts_all,
-            COALESCE(repall.repaired, 0) AS repaired_all,
-            COALESCE(repall.ber, 0) AS ber_all,
-            COALESCE(repall.eval, 0) AS eval_all,
-            
-            GREATEST(
-                COALESCE(rall.receipts, 0) - (COALESCE(repall.repaired, 0) + COALESCE(repall.ber, 0)),
-                0
-            ) AS backlog,
-            
+            COALESCE(rep12.repair_actions_12m, 0) AS repair_actions_12m,
             CASE
-                WHEN (COALESCE(repall.repaired, 0) + COALESCE(repall.ber, 0)) > 0
-                THEN COALESCE(repall.repaired, 0) /
-                     (COALESCE(repall.repaired, 0) + COALESCE(repall.ber, 0))
+                WHEN COALESCE(rep12.repair_actions_12m, 0) > 0
+                THEN COALESCE(rep12.success_actions_12m, 0) / COALESCE(rep12.repair_actions_12m, 0)
                 ELSE NULL
-            END AS survival_rate
+            END AS survival_12m,
+            
+            COALESCE(repall.repair_actions_all, 0) AS repair_actions_all,
+            CASE
+                WHEN COALESCE(repall.repair_actions_all, 0) > 0
+                THEN COALESCE(repall.success_actions_all, 0) / COALESCE(repall.repair_actions_all, 0)
+                ELSE NULL
+            END AS survival_all
             
         FROM LMS21Data l
             
+        INNER JOIN (
+            SELECT
+                niin,
+                MAX(transactiondate) AS last_ship_date
+            FROM shipments
+            WHERE transactiondate >= DATE_SUB(CURDATE(), INTERVAL 36 MONTH)
+            GROUP BY niin
+        ) s
+            ON l.niin = s.niin
+            
         LEFT JOIN (
             SELECT
                 niin,
-                SUM(qty) AS receipts
-            FROM receipts
+                COUNT(*) AS repair_actions_12m,
+                SUM(CASE WHEN materialcode IN ('A', 'D', 'G') THEN 1 ELSE 0 END) AS success_actions_12m
+            FROM repairs
             WHERE transactiondate >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
             GROUP BY niin
-        ) r12
-            ON l.niin = r12.niin
+        ) rep12
+            ON l.niin = rep12.niin
             
         LEFT JOIN (
             SELECT
                 niin,
-                SUM(qty) AS receipts
-            FROM receipts
-            GROUP BY niin
-        ) rall
-            ON l.niin = rall.niin
-            
-        LEFT JOIN (
-            SELECT
-                niin,
-                SUM(CASE WHEN materialcode IN ('A', 'D', 'G') THEN 1 ELSE 0 END) AS repaired,
-                SUM(CASE WHEN materialcode = 'H' THEN 1 ELSE 0 END) AS ber,
-                SUM(CASE WHEN materialcode = 'F' THEN 1 ELSE 0 END) AS eval
+                COUNT(*) AS repair_actions_all,
+                SUM(CASE WHEN materialcode IN ('A', 'D', 'G') THEN 1 ELSE 0 END) AS success_actions_all
             FROM repairs
             GROUP BY niin
         ) repall
@@ -66,16 +63,11 @@ class Cog7Repairables
             
         WHERE l.cog LIKE '7%'
           AND (
-                COALESCE(rall.receipts, 0) > 0
-                OR COALESCE(repall.repaired, 0) > 0
-                OR COALESCE(repall.ber, 0) > 0
+                COALESCE(rep12.repair_actions_12m, 0) > 0
+                OR COALESCE(repall.repair_actions_all, 0) > 0
           )
             
-        ORDER BY
-            survival_rate ASC,
-            backlog DESC,
-            receipts_12m DESC,
-            l.niin ASC
+        ORDER BY s.last_ship_date DESC, l.niin ASC
         ";
         
         $result = $db->query($sql)->fetchAll();

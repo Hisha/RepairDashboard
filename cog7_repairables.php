@@ -33,7 +33,8 @@ $rows = $model->getReport();
 
 <h2>Survival Report</h2>
 <div class="subtext">
-    12M Receipts are a demand signal only. Survival is based on lifetime repair outcomes.
+    Shows COG 7 NIINs shipped in the last 3 years, sorted by most recent ship date.
+    Survival % = percent of repair actions that ended in A, D, or G condition.
 </div>
 
 <div class="table-wrap">
@@ -43,48 +44,50 @@ $rows = $model->getReport();
             <th>NIIN</th>
             <th>LRC</th>
             <th>Std Price</th>
-            <th>12M Rec</th>
-            <th>Total Rec</th>
-            <th>Repaired</th>
-            <th>BER</th>
-            <th>Eval</th>
-            <th>Backlog</th>
-            <th>Survival %</th>
+            <th>Last Ship Date</th>
+            <th>12M Repair Actions</th>
+            <th>12M Survival %</th>
+            <th>Lifetime Repair Actions</th>
+            <th>Lifetime Survival %</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($rows as $r): ?>
             <?php
-                $cls = '';
-                if ($r['survival_rate'] !== null) {
-                    if ($r['survival_rate'] < 0.50) {
-                        $cls = 'bad';
-                    } elseif ($r['survival_rate'] < 0.75) {
-                        $cls = 'warn';
+                $cls12 = '';
+                if ($r['survival_12m'] !== null) {
+                    if ($r['survival_12m'] < 0.50) {
+                        $cls12 = 'bad';
+                    } elseif ($r['survival_12m'] < 0.75) {
+                        $cls12 = 'warn';
                     } else {
-                        $cls = 'good';
+                        $cls12 = 'good';
                     }
                 }
 
-                $backlogClass = '';
-                if ((int)$r['backlog'] > 100) {
-                    $backlogClass = 'bad';
-                } elseif ((int)$r['backlog'] > 25) {
-                    $backlogClass = 'warn';
+                $clsAll = '';
+                if ($r['survival_all'] !== null) {
+                    if ($r['survival_all'] < 0.50) {
+                        $clsAll = 'bad';
+                    } elseif ($r['survival_all'] < 0.75) {
+                        $clsAll = 'warn';
+                    } else {
+                        $clsAll = 'good';
+                    }
                 }
             ?>
             <tr>
                 <td><?= htmlspecialchars($r['niin']) ?></td>
                 <td><?= htmlspecialchars($r['lrc']) ?></td>
                 <td class="num"><?= number_format((float)$r['std_price'], 2) ?></td>
-                <td class="num"><?= (int)$r['receipts_12m'] ?></td>
-                <td class="num"><?= (int)$r['receipts_all'] ?></td>
-                <td class="num"><?= (int)$r['repaired_all'] ?></td>
-                <td class="num"><?= (int)$r['ber_all'] ?></td>
-                <td class="num"><?= (int)$r['eval_all'] ?></td>
-                <td class="num <?= $backlogClass ?>"><?= (int)$r['backlog'] ?></td>
-                <td class="num <?= $cls ?>">
-                    <?= $r['survival_rate'] !== null ? number_format($r['survival_rate'] * 100, 1) . '%' : 'N/A' ?>
+                <td class="center"><?= htmlspecialchars($r['last_ship_date']) ?></td>
+                <td class="num"><?= (int)$r['repair_actions_12m'] ?></td>
+                <td class="num <?= $cls12 ?>">
+                    <?= $r['survival_12m'] !== null ? number_format($r['survival_12m'] * 100, 1) . '%' : 'N/A' ?>
+                </td>
+                <td class="num"><?= (int)$r['repair_actions_all'] ?></td>
+                <td class="num <?= $clsAll ?>">
+                    <?= $r['survival_all'] !== null ? number_format($r['survival_all'] * 100, 1) . '%' : 'N/A' ?>
                 </td>
             </tr>
         <?php endforeach; ?>
