@@ -61,7 +61,11 @@ $top10Highest = $model->getTop10Highest12MActions();
                         }
                     ?>
                     <tr>
-                        <td><?= htmlspecialchars($r['niin']) ?></td>
+                        <td>
+                            <a href="cog7_repairables.php?niin=<?= urlencode($r['niin']) ?>">
+                                <?= htmlspecialchars($r['niin']) ?>
+                            </a>
+                        </td>
                         <td class="num"><?= (int)$r['repair_actions_12m'] ?></td>
                         <td class="num <?= $cls ?>">
                             <?= $r['survival_12m'] !== null
@@ -101,7 +105,11 @@ $top10Highest = $model->getTop10Highest12MActions();
                         }
                     ?>
                     <tr>
-                        <td><?= htmlspecialchars($r['niin']) ?></td>
+                        <td>
+                            <a href="cog7_repairables.php?niin=<?= urlencode($r['niin']) ?>">
+                                <?= htmlspecialchars($r['niin']) ?>
+                            </a>
+                        </td>
                         <td class="num"><?= (int)$r['repair_actions_12m'] ?></td>
                         <td class="num <?= $cls ?>">
                             <?= $r['survival_12m'] !== null

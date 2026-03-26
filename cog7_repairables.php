@@ -6,6 +6,8 @@ require_once APP_ROOT . "/bin/Model/Cog7Repairables.php";
 $model = new Cog7Repairables();
 $rows = $model->getReport();
 
+$preselectedNiin = trim($_GET['niin'] ?? '');
+
 $lrcOptions = [];
 foreach ($rows as $row) {
     if (!empty($row['lrc'])) {
@@ -87,7 +89,12 @@ sort($lrcOptions);
 <div class="controls">
     <div class="control-group">
         <label for="searchText">Search NIIN / LRC</label>
-        <input type="text" id="searchText" placeholder="Type NIIN or LRC">
+        <input
+            type="text"
+            id="searchText"
+            placeholder="Type NIIN or LRC"
+            value="<?= htmlspecialchars($preselectedNiin) ?>"
+        >
     </div>
 
     <div class="control-group">
