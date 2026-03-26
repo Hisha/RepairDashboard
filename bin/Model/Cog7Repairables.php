@@ -72,7 +72,7 @@ class Cog7Repairables
             LEFT JOIN (
                 SELECT
                     p.niin,
-                    SUM(p.qty) AS repair_qty_12m
+                    COUNT(*) AS repair_qty_12m
                 FROM repairs p
                 WHERE p.transactiondate >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
                 GROUP BY p.niin
