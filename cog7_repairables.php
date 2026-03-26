@@ -16,6 +16,14 @@ foreach ($rows as $row) {
 }
 $lrcOptions = array_keys($lrcOptions);
 sort($lrcOptions);
+
+$selectedNiin = trim($_GET['niin'] ?? '');
+$trendData = [];
+
+if ($selectedNiin !== '') {
+    $trendData = $model->getMonthlyTrend($selectedNiin);
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -85,6 +93,82 @@ sort($lrcOptions);
     Shows COG 7 NIINs shipped in the last 3 years, sorted by most recent ship date.
     Survival % = percent of repair actions that ended in A, D, or G condition.
 </div>
+
+<?php if ($selectedNiin !== '' && !empty($trendData)): ?>
+
+<div class="chart-card" style="width: 100%; margin-bottom: 20px;">
+    <h3>Repair Trend for NIIN <?= htmlspecialchars($selectedNiin) ?></h3>
+    <div class="chart-canvas-wrap">
+        <canvas id="trendChart"></canvas>
+    </div>
+</div>
+
+<script>
+(() => {
+    const raw = <?= json_encode($trendData) ?>;
+
+    const labels = [];
+    const survival = [];
+    const volume = [];
+
+    raw.forEach(r => {
+        labels.push(r.month);
+
+        const total = parseInt(r.total_actions);
+        const success = parseInt(r.success_actions);
+
+        volume.push(total);
+
+        if (total > 0) {
+            survival.push((success / total) * 100);
+        } else {
+            survival.push(null);
+        }
+    });
+
+    new Chart(document.getElementById('trendChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Repair Actions',
+                    data: volume,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'line',
+                    label: 'Survival %',
+                    data: survival,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            scales: {
+                y: {
+                    title: { display: true, text: 'Repair Actions' }
+                },
+                y1: {
+                    position: 'right',
+                    min: 0,
+                    max: 100,
+                    title: { display: true, text: 'Survival %' },
+                    grid: { drawOnChartArea: false }
+                }
+            }
+        }
+    });
+})();
+</script>
+
+<?php endif; ?>
 
 <div class="controls">
     <div class="control-group">

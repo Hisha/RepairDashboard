@@ -326,4 +326,32 @@ class Cog7Repairables
         return $result;
     }
     
+    public function getMonthlyTrend(string $niin)
+    {
+        $db = new db();
+        
+        $sql = "
+    SELECT
+        DATE_FORMAT(transactiondate, '%Y-%m') AS month,
+            
+        COUNT(*) AS total_actions,
+            
+        SUM(CASE WHEN materialcode IN ('A','D','G') THEN 1 ELSE 0 END) AS success_actions
+            
+    FROM repairs
+    WHERE niin = ?
+      AND transactiondate >= DATE_SUB(CURDATE(), INTERVAL 18 MONTH)
+            
+    GROUP BY DATE_FORMAT(transactiondate, '%Y-%m')
+    ORDER BY month ASC
+    ";
+        
+        $stmt = $db->query($sql, [$niin]);
+        $rows = $stmt->fetchAll();
+        
+        $db->close();
+        
+        return $rows;
+    }
+    
 }
