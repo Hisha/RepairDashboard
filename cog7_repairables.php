@@ -125,16 +125,18 @@ sort($lrcOptions);
 
 <div class="table-wrap">
 <table id="survivalTable">
-    <tr>
-        <th class="sortable">NIIN</th>
-        <th class="sortable">LRC</th>
-        <th class="sortable">Std Price</th>
-        <th class="sortable">Last Ship Date</th>
-        <th class="sortable">12M Repair Actions</th>
-        <th class="sortable">12M Survival %</th>
-        <th class="sortable">Lifetime Repair Actions</th>
-        <th class="sortable">Lifetime Survival %</th>
-    </tr>
+    <thead>
+        <tr>
+            <th class="sortable">NIIN</th>
+            <th class="sortable">LRC</th>
+            <th class="sortable">Std Price</th>
+            <th class="sortable">Last Ship Date</th>
+            <th class="sortable">12M Repair Actions</th>
+            <th class="sortable">12M Survival %</th>
+            <th class="sortable">Lifetime Repair Actions</th>
+            <th class="sortable">Lifetime Survival %</th>
+        </tr>
+    </thead>
     <tbody>
         <?php foreach ($rows as $r): ?>
             <?php
@@ -294,56 +296,55 @@ sort($lrcOptions);
 // COLUMN SORTING
 (function () {
     const table = document.getElementById('survivalTable');
-    const headers = table.querySelectorAll('th.sortable');
-    let sortDirection = {};
+    const headers = table.querySelectorAll('thead th.sortable');
+    const tbody = table.querySelector('tbody');
+    const directions = {};
 
     headers.forEach((header, index) => {
-        sortDirection[index] = 1;
-
+        directions[index] = 1;
         header.style.cursor = 'pointer';
 
         header.addEventListener('click', () => {
-            const tbody = table.querySelector('tbody');
             const rows = Array.from(tbody.querySelectorAll('tr'));
+            const dir = directions[index];
 
-            const dir = sortDirection[index];
+            headers.forEach(h => {
+                h.textContent = h.textContent.replace(/[▲▼]/g, '').trim();
+            });
 
             rows.sort((a, b) => {
                 let A = a.children[index].textContent.trim();
                 let B = b.children[index].textContent.trim();
 
-                // Remove % and commas
-                A = A.replace('%','').replace(/,/g,'');
-                B = B.replace('%','').replace(/,/g,'');
+                // Handle N/A
+                if (A === 'N/A') A = '';
+                if (B === 'N/A') B = '';
 
-                // Try number
-                let numA = parseFloat(A);
-                let numB = parseFloat(B);
+                // Remove percent signs and commas
+                const cleanA = A.replace('%', '').replace(/,/g, '');
+                const cleanB = B.replace('%', '').replace(/,/g, '');
+
+                const numA = parseFloat(cleanA);
+                const numB = parseFloat(cleanB);
 
                 if (!isNaN(numA) && !isNaN(numB)) {
                     return (numA - numB) * dir;
                 }
 
-                // Try date
-                let dateA = Date.parse(A);
-                let dateB = Date.parse(B);
+                const dateA = Date.parse(A);
+                const dateB = Date.parse(B);
 
                 if (!isNaN(dateA) && !isNaN(dateB)) {
                     return (dateA - dateB) * dir;
                 }
 
-                // Default string
                 return A.localeCompare(B) * dir;
             });
 
-            // Flip direction
-            sortDirection[index] *= -1;
-
-			// Add arrow
-			header.textContent = header.textContent.replace(/[▲▼]/g, '') + (dir === 1 ? ' ▲' : ' ▼');
-
-            // Re-append rows
             rows.forEach(row => tbody.appendChild(row));
+
+            header.textContent = header.textContent.replace(/[▲▼]/g, '').trim() + (dir === 1 ? ' ▲' : ' ▼');
+            directions[index] *= -1;
         });
     });
 })();
