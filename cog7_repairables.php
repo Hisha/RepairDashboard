@@ -88,20 +88,24 @@ if ($selectedNiin !== '') {
         
         .chart-card {
             width: 100%;
-            max-width: 100%;
-            min-height: 420px;
             background: #fff;
             border: 1px solid #ddd;
             border-radius: 6px;
-            padding: 15px;
+            padding: 12px 15px;
             box-sizing: border-box;
-            margin-bottom: 20px;
+            margin: 0 0 18px 0;
+        }
+        
+        .chart-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
         }
         
         .chart-canvas-wrap {
             position: relative;
             width: 100%;
-            height: 340px;
+            height: 220px;
+            max-height: 220px;
         }
     </style>
 </head>
@@ -115,7 +119,9 @@ if ($selectedNiin !== '') {
 
 <?php if ($selectedNiin !== '' && !empty($trendData)): ?>
 
-<div class="chart-card" style="width: 100%; margin-bottom: 20px;">
+<?php if ($selectedNiin !== '' && !empty($trendData)): ?>
+
+<div class="chart-card">
     <h3>Repair Trend for NIIN <?= htmlspecialchars($selectedNiin) ?></h3>
     <div class="chart-canvas-wrap">
         <canvas id="trendChart"></canvas>
@@ -133,19 +139,17 @@ if ($selectedNiin !== '') {
     raw.forEach(r => {
         labels.push(r.month);
 
-        const total = parseInt(r.total_actions);
-        const success = parseInt(r.success_actions);
+        const total = parseInt(r.total_actions, 10);
+        const success = parseInt(r.success_actions, 10);
 
         volume.push(total);
-
-        if (total > 0) {
-            survival.push((success / total) * 100);
-        } else {
-            survival.push(null);
-        }
+        survival.push(total > 0 ? (success / total) * 100 : null);
     });
 
-    new Chart(document.getElementById('trendChart'), {
+    const canvas = document.getElementById('trendChart');
+    if (!canvas) return;
+
+    new Chart(canvas, {
         type: 'bar',
         data: {
             labels: labels,
@@ -160,26 +164,42 @@ if ($selectedNiin !== '') {
                     type: 'line',
                     label: 'Survival %',
                     data: survival,
-                    yAxisID: 'y1'
+                    yAxisID: 'y1',
+                    tension: 0.25
                 }
             ]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             interaction: {
                 mode: 'index',
                 intersect: false
             },
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
             scales: {
                 y: {
-                    title: { display: true, text: 'Repair Actions' }
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Repair Actions'
+                    }
                 },
                 y1: {
                     position: 'right',
                     min: 0,
                     max: 100,
-                    title: { display: true, text: 'Survival %' },
-                    grid: { drawOnChartArea: false }
+                    title: {
+                        display: true,
+                        text: 'Survival %'
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
                 }
             }
         }
