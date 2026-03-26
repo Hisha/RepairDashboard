@@ -125,18 +125,16 @@ sort($lrcOptions);
 
 <div class="table-wrap">
 <table id="survivalTable">
-    <thead>
-        <tr>
-            <th>NIIN</th>
-            <th>LRC</th>
-            <th>Std Price</th>
-            <th>Last Ship Date</th>
-            <th>12M Repair Actions</th>
-            <th>12M Survival %</th>
-            <th>Lifetime Repair Actions</th>
-            <th>Lifetime Survival %</th>
-        </tr>
-    </thead>
+    <tr>
+        <th class="sortable">NIIN</th>
+        <th class="sortable">LRC</th>
+        <th class="sortable">Std Price</th>
+        <th class="sortable">Last Ship Date</th>
+        <th class="sortable">12M Repair Actions</th>
+        <th class="sortable">12M Survival %</th>
+        <th class="sortable">Lifetime Repair Actions</th>
+        <th class="sortable">Lifetime Survival %</th>
+    </tr>
     <tbody>
         <?php foreach ($rows as $r): ?>
             <?php
@@ -291,6 +289,62 @@ sort($lrcOptions);
     exportCsv.addEventListener('click', exportVisibleRowsToCsv);
 
     applyFilters();
+})();
+
+// COLUMN SORTING
+(function () {
+    const table = document.getElementById('survivalTable');
+    const headers = table.querySelectorAll('th.sortable');
+    let sortDirection = {};
+
+    headers.forEach((header, index) => {
+        sortDirection[index] = 1;
+
+        header.style.cursor = 'pointer';
+
+        header.addEventListener('click', () => {
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            const dir = sortDirection[index];
+
+            rows.sort((a, b) => {
+                let A = a.children[index].textContent.trim();
+                let B = b.children[index].textContent.trim();
+
+                // Remove % and commas
+                A = A.replace('%','').replace(/,/g,'');
+                B = B.replace('%','').replace(/,/g,'');
+
+                // Try number
+                let numA = parseFloat(A);
+                let numB = parseFloat(B);
+
+                if (!isNaN(numA) && !isNaN(numB)) {
+                    return (numA - numB) * dir;
+                }
+
+                // Try date
+                let dateA = Date.parse(A);
+                let dateB = Date.parse(B);
+
+                if (!isNaN(dateA) && !isNaN(dateB)) {
+                    return (dateA - dateB) * dir;
+                }
+
+                // Default string
+                return A.localeCompare(B) * dir;
+                
+                header.textContent = header.textContent.replace(/[▲▼]/g, '') + (dir === 1 ? ' ▲' : ' ▼');
+            });
+
+            // Flip direction
+            sortDirection[index] *= -1;
+
+            // Re-append rows
+            rows.forEach(row => tbody.appendChild(row));
+        });
+    });
 })();
 </script>
 
