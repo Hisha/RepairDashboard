@@ -334,12 +334,13 @@ sort($lrcOptions);
 
                 // Default string
                 return A.localeCompare(B) * dir;
-                
-                header.textContent = header.textContent.replace(/[▲▼]/g, '') + (dir === 1 ? ' ▲' : ' ▼');
             });
 
             // Flip direction
             sortDirection[index] *= -1;
+
+			// Add arrow
+			header.textContent = header.textContent.replace(/[▲▼]/g, '') + (dir === 1 ? ' ▲' : ' ▼');
 
             // Re-append rows
             rows.forEach(row => tbody.appendChild(row));
