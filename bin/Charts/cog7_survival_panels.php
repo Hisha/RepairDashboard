@@ -6,6 +6,7 @@ $model = new Cog7Repairables();
 
 $top10Worst = $model->getTop10Worst();
 $top10Highest = $model->getTop10Highest12MActions();
+$top10Trending = $model->getTop10TrendingWorse();
 ?>
 
 <style>
@@ -115,6 +116,51 @@ $top10Highest = $model->getTop10Highest12MActions();
                             <?= $r['survival_12m'] !== null
                                 ? number_format($r['survival_12m'] * 100, 1) . '%'
                                 : 'N/A' ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
+<!-- 🔵 Top 10 Trending Worse -->
+<div class="chart-card">
+    <h3>Top 10 Trending Worse</h3>
+
+    <?php if (empty($top10Trending)): ?>
+        <p>No data found.</p>
+    <?php else: ?>
+        <table class="table-mini">
+            <thead>
+                <tr>
+                    <th>NIIN</th>
+                    <th>12M</th>
+                    <th>12M %</th>
+                    <th>Life %</th>
+                    <th>Δ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($top10Trending as $r): ?>
+                    <?php
+                        $delta = $r['trend_delta'];
+                        $cls = $delta < -0.15 ? 'bad' : ($delta < -0.05 ? 'warn' : '');
+                    ?>
+                    <tr>
+                        <td>
+                            <a href="cog7_repairables.php?niin=<?= urlencode($r['niin']) ?>">
+                                <?= htmlspecialchars($r['niin']) ?>
+                            </a>
+                        </td>
+                        <td class="num"><?= (int)$r['repair_actions_12m'] ?></td>
+                        <td class="num">
+                            <?= number_format($r['survival_12m'] * 100, 1) ?>%
+                        </td>
+                        <td class="num">
+                            <?= number_format($r['survival_all'] * 100, 1) ?>%
+                        </td>
+                        <td class="num <?= $cls ?>">
+                            <?= number_format($delta * 100, 1) ?>%
                         </td>
                     </tr>
                 <?php endforeach; ?>
