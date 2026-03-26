@@ -80,6 +80,11 @@ class Cog7Repairables
             ) repall ON l.niin = repall.niin
                         
             WHERE l.cog LIKE '7%'
+            AND (
+                COALESCE(r12.receipts,0) > 0
+                OR COALESCE(rep12.repaired,0) > 0
+                OR COALESCE(rep12.ber,0) > 0
+            )
                         
             ORDER BY survival_12m ASC, l.niin
             ";
