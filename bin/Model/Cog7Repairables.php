@@ -3,115 +3,85 @@ require_once APP_ROOT . '/bin/Utilities/db.php';
 
 class Cog7Repairables
 {
-    public function getSummary12M()
+    public function getReport()
     {
         $db = new db();
         
         $sql = "
+        SELECT
+            l.niin,
+            l.lrc,
+            l.std_price,
+            
+            -- 12 MONTH
+            COALESCE(r12.receipts, 0) AS receipts_12m,
+            COALESCE(rep12.repaired, 0) AS repaired_12m,
+            COALESCE(rep12.ber, 0) AS ber_12m,
+            COALESCE(rep12.eval, 0) AS eval_12m,
+            
+            (COALESCE(r12.receipts,0) - (COALESCE(rep12.repaired,0) + COALESCE(rep12.ber,0))) AS open_12m,
+            
+            CASE
+                WHEN (COALESCE(rep12.repaired,0) + COALESCE(rep12.ber,0)) > 0
+                THEN COALESCE(rep12.repaired,0) /
+                     (COALESCE(rep12.repaired,0) + COALESCE(rep12.ber,0))
+                ELSE NULL
+            END AS survival_12m,
+            
+            -- LIFETIME
+            COALESCE(rall.receipts, 0) AS receipts_all,
+            COALESCE(repall.repaired, 0) AS repaired_all,
+            COALESCE(repall.ber, 0) AS ber_all,
+            COALESCE(repall.eval, 0) AS eval_all,
+            
+            (COALESCE(rall.receipts,0) - (COALESCE(repall.repaired,0) + COALESCE(repall.ber,0))) AS open_all,
+            
+            CASE
+                WHEN (COALESCE(repall.repaired,0) + COALESCE(repall.ber,0)) > 0
+                THEN COALESCE(repall.repaired,0) /
+                     (COALESCE(repall.repaired,0) + COALESCE(repall.ber,0))
+                ELSE NULL
+            END AS survival_all
+            
+        FROM LMS21Data l
+            
+        WHERE l.cog LIKE '7%'
+            
+        LEFT JOIN (
+            SELECT niin, SUM(qty) AS receipts
+            FROM receipts
+            WHERE transactiondate >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+            GROUP BY niin
+        ) r12 ON l.niin = r12.niin
+            
+        LEFT JOIN (
             SELECT
-                l.niin,
-                l.lrc,
-                l.std_price,
+                niin,
+                COUNT(CASE WHEN materialcode IN ('A','D','G') THEN 1 END) AS repaired,
+                COUNT(CASE WHEN materialcode = 'H' THEN 1 END) AS ber,
+                COUNT(CASE WHEN materialcode = 'F' THEN 1 END) AS eval
+            FROM repairs
+            WHERE transactiondate >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+            GROUP BY niin
+        ) rep12 ON l.niin = rep12.niin
             
-                COALESCE(s.ship_qty_12m, 0) AS ship_qty_12m,
-                COALESCE(r.receipt_qty_12m, 0) AS receipt_qty_12m,
-                COALESCE(p.repair_qty_12m, 0) AS repair_qty_12m,
+        LEFT JOIN (
+            SELECT niin, SUM(qty) AS receipts
+            FROM receipts
+            GROUP BY niin
+        ) rall ON l.niin = rall.niin
             
-                COALESCE(f.approx_fielded_base, 0) AS fielded_base,
+        LEFT JOIN (
+            SELECT
+                niin,
+                COUNT(CASE WHEN materialcode IN ('A','D','G') THEN 1 END) AS repaired,
+                COUNT(CASE WHEN materialcode = 'H' THEN 1 END) AS ber,
+                COUNT(CASE WHEN materialcode = 'F' THEN 1 END) AS eval
+            FROM repairs
+            GROUP BY niin
+        ) repall ON l.niin = repall.niin
             
-                CASE
-                    WHEN COALESCE(f.approx_fielded_base, 0) > 0
-                    THEN COALESCE(r.receipt_qty_12m, 0) / COALESCE(f.approx_fielded_base, 0)
-                    ELSE NULL
-                END AS return_rate,
-            
-                CASE
-                    WHEN COALESCE(r.receipt_qty_12m, 0) > 0
-                    THEN COALESCE(p.repair_qty_12m, 0) / COALESCE(r.receipt_qty_12m, 0)
-                    ELSE NULL
-                END AS repair_rate,
-            
-                (COALESCE(r.receipt_qty_12m, 0) - COALESCE(p.repair_qty_12m, 0)) AS pipeline_delta,
-            
-                COALESCE(inv.on_hand, 0) AS on_hand,
-            
-                s.last_ship_date
-            
-            FROM LMS21Data l
-            
-            INNER JOIN (
-                SELECT DISTINCT s.niin
-                FROM shipments s
-                INNER JOIN LMS21Data l2
-                    ON s.niin = l2.niin
-                WHERE l2.cog LIKE '7%'
-                  AND s.transactiondate >= DATE_SUB(CURDATE(), INTERVAL 24 MONTH)
-            ) active
-                ON l.niin = active.niin
-            
-            LEFT JOIN (
-                SELECT
-                    s.niin,
-                    SUM(s.qty) AS ship_qty_12m,
-                    MAX(s.transactiondate) AS last_ship_date
-                FROM shipments s
-                WHERE s.transactiondate >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
-                GROUP BY s.niin
-            ) s
-                ON l.niin = s.niin
-            
-            LEFT JOIN (
-                SELECT
-                    r.niin,
-                    SUM(r.qty) AS receipt_qty_12m
-                FROM receipts r
-                WHERE r.transactiondate >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
-                GROUP BY r.niin
-            ) r
-                ON l.niin = r.niin
-            
-            LEFT JOIN (
-                SELECT
-                    p.niin,
-                    COUNT(*) AS repair_qty_12m
-                FROM repairs p
-                WHERE p.transactiondate >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
-                  AND p.materialcode IN ('A', 'D', 'G')
-                GROUP BY p.niin
-            ) p
-                ON l.niin = p.niin
-            
-            LEFT JOIN (
-                SELECT
-                    s.niin,
-                    GREATEST(SUM(s.qty) - COALESCE(rc.total_receipts, 0), 0) AS approx_fielded_base
-                FROM shipments s
-                LEFT JOIN (
-                    SELECT
-                        niin,
-                        SUM(qty) AS total_receipts
-                    FROM receipts
-                    GROUP BY niin
-                ) rc
-                    ON s.niin = rc.niin
-                GROUP BY s.niin
-            ) f
-                ON l.niin = f.niin
-            
-            LEFT JOIN (
-                SELECT
-                    i.niin,
-                    SUM(i.onhandqty) AS on_hand
-                FROM inventory i
-                GROUP BY i.niin
-            ) inv
-                ON l.niin = inv.niin
-            
-            WHERE l.cog LIKE '7%'
-            ORDER BY
-                return_rate DESC,
-                repair_rate ASC,
-                l.niin ASC
+        ORDER BY survival_12m ASC, l.niin
         ";
         
         $result = $db->query($sql)->fetchAll();

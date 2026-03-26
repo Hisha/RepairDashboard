@@ -4,150 +4,86 @@ include 'menu.php';
 require_once APP_ROOT . "/bin/Model/Cog7Repairables.php";
 
 $model = new Cog7Repairables();
-$rows = $model->getSummary12M();
+$rows = $model->getReport();
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>COG 7 Repairables</title>
+    <title>Survival Report</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        h1 {
-            margin-bottom: 8px;
-        }
-
-        .subtext {
-            margin-bottom: 20px;
-            color: #555;
-            font-size: 14px;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 14px;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-            vertical-align: top;
-        }
-
-        th {
-            background: #f2f2f2;
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-
-        tr:nth-child(even) {
-            background: #fafafa;
-        }
-
-        .bad {
-            background-color: #ffd6d6;
-        }
-
-        .warn {
-            background-color: #fff3cd;
-        }
-
-        .good {
-            background-color: #d9f2d9;
-        }
-
-        .num {
-            text-align: right;
-            white-space: nowrap;
-        }
-
-        .center {
-            text-align: center;
-        }
-
-        .table-wrap {
-            overflow-x: auto;
-        }
+        body { font-family: Arial; margin:20px; }
+        table { border-collapse: collapse; width:100%; }
+        th, td { border:1px solid #ccc; padding:6px; }
+        th { background:#f2f2f2; position: sticky; top:0; }
+        .bad { background:#ffd6d6; }
+        .warn { background:#fff3cd; }
+        .good { background:#d9f2d9; }
     </style>
 </head>
 <body>
 
-<h1>Repairables - Last 12 Months</h1>
-<div class="subtext">
-    Active NIINs are COG 7 items with at least one shipment in the last 24 months.
-</div>
+<h2>Survival Report</h2>
 
-<div class="table-wrap">
 <table>
-    <thead>
-        <tr>
-            <th>NIIN</th>
-            <th>LRC</th>
-            <th>Std Price</th>
-            <th>12M Ship</th>
-            <th>12M Receipt</th>
-            <th>12M Repair</th>
-            <th>Fielded Base</th>
-            <th>Return Rate</th>
-            <th>Repair Rate</th>
-            <th>Pipeline Delta</th>
-            <th>On Hand</th>
-            <th>Last Ship Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($rows as $row): ?>
-            <?php
-                $returnClass = '';
-                if ($row['return_rate'] !== null && $row['return_rate'] > 0.15) {
-                    $returnClass = 'bad';
-                }
+<thead>
+<tr>
+    <th>NIIN</th>
+    <th>LRC</th>
+    <th>Std Price</th>
 
-                $repairClass = '';
-                if ($row['repair_rate'] !== null && $row['repair_rate'] < 0.60) {
-                    $repairClass = 'warn';
-                } elseif ($row['repair_rate'] !== null && $row['repair_rate'] >= 1.00) {
-                    $repairClass = 'good';
-                }
+    <th>12M Rec</th>
+    <th>12M Rep</th>
+    <th>12M BER</th>
+    <th>12M Eval</th>
+    <th>12M Open</th>
+    <th>12M Survival</th>
 
-                $pipelineClass = '';
-                if ((int)$row['pipeline_delta'] > 0) {
-                    $pipelineClass = 'warn';
-                } elseif ((int)$row['pipeline_delta'] < 0) {
-                    $pipelineClass = 'good';
-                }
-            ?>
-            <tr>
-                <td><?= htmlspecialchars($row['niin']) ?></td>
-                <td><?= htmlspecialchars($row['lrc']) ?></td>
-                <td class="num"><?= number_format((float)$row['std_price'], 2) ?></td>
-                <td class="num"><?= (int)$row['ship_qty_12m'] ?></td>
-                <td class="num"><?= (int)$row['receipt_qty_12m'] ?></td>
-                <td class="num"><?= (int)$row['repair_qty_12m'] ?></td>
-                <td class="num"><?= (int)$row['fielded_base'] ?></td>
-                <td class="num <?= $returnClass ?>">
-                    <?= $row['return_rate'] !== null ? number_format($row['return_rate'] * 100, 2) . '%' : 'N/A' ?>
-                </td>
-                <td class="num <?= $repairClass ?>">
-                    <?= $row['repair_rate'] !== null ? number_format($row['repair_rate'] * 100, 2) . '%' : 'N/A' ?>
-                </td>
-                <td class="num <?= $pipelineClass ?>">
-                    <?= (int)$row['pipeline_delta'] ?>
-                </td>
-                <td class="num"><?= (int)$row['on_hand'] ?></td>
-                <td class="center"><?= htmlspecialchars($row['last_ship_date'] ?? '') ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
+    <th>All Rec</th>
+    <th>All Rep</th>
+    <th>All BER</th>
+    <th>All Eval</th>
+    <th>All Open</th>
+    <th>All Survival</th>
+</tr>
+</thead>
+
+<tbody>
+<?php foreach($rows as $r): ?>
+
+<?php
+$cls12 = ($r['survival_12m'] !== null && $r['survival_12m'] < 0.6) ? 'bad' : '';
+$clsAll = ($r['survival_all'] !== null && $r['survival_all'] < 0.6) ? 'bad' : '';
+?>
+
+<tr>
+<td><?= $r['niin'] ?></td>
+<td><?= $r['lrc'] ?></td>
+<td><?= number_format($r['std_price'],2) ?></td>
+
+<td><?= $r['receipts_12m'] ?></td>
+<td><?= $r['repaired_12m'] ?></td>
+<td><?= $r['ber_12m'] ?></td>
+<td><?= $r['eval_12m'] ?></td>
+<td><?= $r['open_12m'] ?></td>
+<td class="<?= $cls12 ?>">
+<?= $r['survival_12m'] !== null ? number_format($r['survival_12m']*100,1).'%' : 'N/A' ?>
+</td>
+
+<td><?= $r['receipts_all'] ?></td>
+<td><?= $r['repaired_all'] ?></td>
+<td><?= $r['ber_all'] ?></td>
+<td><?= $r['eval_all'] ?></td>
+<td><?= $r['open_all'] ?></td>
+<td class="<?= $clsAll ?>">
+<?= $r['survival_all'] !== null ? number_format($r['survival_all']*100,1).'%' : 'N/A' ?>
+</td>
+
+</tr>
+
+<?php endforeach; ?>
+</tbody>
 </table>
-</div>
 
 </body>
 </html>
