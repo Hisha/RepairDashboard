@@ -59,6 +59,8 @@ include 'menu.php';
             
             <?php $cog = '1'; require APP_ROOT . '/bin/Charts/top10_shipments_by_cog_chart.php'; ?>
     		<?php $cog = '7'; require APP_ROOT . '/bin/Charts/top10_shipments_by_cog_chart.php'; ?>
+    		
+    		<?php require_once APP_ROOT . '/bin/Charts/cog7_survival_panels.php'; ?>
     	</div>
     </div>
 </body>
