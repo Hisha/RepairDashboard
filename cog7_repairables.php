@@ -30,6 +30,7 @@ if ($selectedNiin !== '') {
 <head>
     <meta charset="UTF-8">
     <title>Survival Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         h2 { margin-bottom: 8px; }
@@ -83,6 +84,24 @@ if ($selectedNiin !== '') {
             margin-bottom: 10px;
             font-size: 14px;
             color: #444;
+        }
+        
+        .chart-card {
+            width: 100%;
+            max-width: 100%;
+            min-height: 420px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        
+        .chart-canvas-wrap {
+            position: relative;
+            width: 100%;
+            height: 340px;
         }
     </style>
 </head>
