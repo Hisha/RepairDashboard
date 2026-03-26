@@ -119,8 +119,6 @@ if ($selectedNiin !== '') {
 
 <?php if ($selectedNiin !== '' && !empty($trendData)): ?>
 
-<?php if ($selectedNiin !== '' && !empty($trendData)): ?>
-
 <div class="chart-card">
     <h3>Repair Trend for NIIN <?= htmlspecialchars($selectedNiin) ?></h3>
     <div class="chart-canvas-wrap">
