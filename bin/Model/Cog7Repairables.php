@@ -76,6 +76,7 @@ class Cog7Repairables
                     COUNT(*) AS repair_qty_12m
                 FROM repairs p
                 WHERE p.transactiondate >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+                    AND p.materialcode IN ('A', 'D', 'G')
                 GROUP BY p.niin
             ) p
                 ON l.niin = p.niin

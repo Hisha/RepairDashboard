@@ -98,7 +98,7 @@ $rows = $model->getSummary12M();
                     <?= $row['return_rate'] !== null ? number_format($row['return_rate'] * 100, 2) . '%' : '' ?>
                 </td>
                 <td class="<?= $repairClass ?>">
-                    <?= $row['repair_rate'] !== null ? number_format($row['repair_rate'] * 100, 2) . '%' : '' ?>
+                    <?= $row['repair_rate'] !== null ? number_format($row['repair_rate'] * 100, 2) . '%' : 'N/A' ?>
                 </td>
                 <td><?= (int)$row['pipeline_delta'] ?></td>
                 <td><?= (int)$row['on_hand'] ?></td>
