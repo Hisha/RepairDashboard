@@ -17,13 +17,6 @@ foreach ($rows as $row) {
 $lrcOptions = array_keys($lrcOptions);
 sort($lrcOptions);
 
-$selectedNiin = trim($_GET['niin'] ?? '');
-$trendData = [];
-
-if ($selectedNiin !== '') {
-    $trendData = $model->getMonthlyTrend($selectedNiin);
-}
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -86,28 +79,7 @@ if ($selectedNiin !== '') {
             color: #444;
         }
         
-        .chart-card {
-            width: 100%;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 12px 15px;
-            box-sizing: border-box;
-            margin: 0 0 18px 0;
-        }
-        
-        .chart-card h3 {
-            margin: 0 0 10px 0;
-            font-size: 16px;
-        }
-        
-        .chart-canvas-wrap {
-            position: relative;
-            width: 100%;
-            height: 220px;
-            max-height: 220px;
-        }
-    </style>
+     </style>
 </head>
 <body>
 
@@ -116,96 +88,6 @@ if ($selectedNiin !== '') {
     Shows COG 7 NIINs shipped in the last 3 years, sorted by most recent ship date.
     Survival % = percent of repair actions that ended in A, D, or G condition.
 </div>
-
-<?php if ($selectedNiin !== '' && !empty($trendData)): ?>
-
-<div class="chart-card">
-    <h3>Repair Trend for NIIN <?= htmlspecialchars($selectedNiin) ?></h3>
-    <div class="chart-canvas-wrap">
-        <canvas id="trendChart"></canvas>
-    </div>
-</div>
-
-<script>
-(() => {
-    const raw = <?= json_encode($trendData) ?>;
-
-    const labels = [];
-    const survival = [];
-    const volume = [];
-
-    raw.forEach(r => {
-        labels.push(r.month);
-
-        const total = parseInt(r.total_actions, 10);
-        const success = parseInt(r.success_actions, 10);
-
-        volume.push(total);
-        survival.push(total > 0 ? (success / total) * 100 : null);
-    });
-
-    const canvas = document.getElementById('trendChart');
-    if (!canvas) return;
-
-    new Chart(canvas, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    type: 'bar',
-                    label: 'Repair Actions',
-                    data: volume,
-                    yAxisID: 'y'
-                },
-                {
-                    type: 'line',
-                    label: 'Survival %',
-                    data: survival,
-                    yAxisID: 'y1',
-                    tension: 0.25
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false
-            },
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Repair Actions'
-                    }
-                },
-                y1: {
-                    position: 'right',
-                    min: 0,
-                    max: 100,
-                    title: {
-                        display: true,
-                        text: 'Survival %'
-                    },
-                    grid: {
-                        drawOnChartArea: false
-                    }
-                }
-            }
-        }
-    });
-})();
-</script>
-
-<?php endif; ?>
 
 <div class="controls">
     <div class="control-group">
