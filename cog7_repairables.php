@@ -18,7 +18,13 @@ $rows = $model->getSummary12M();
         }
 
         h1 {
+            margin-bottom: 8px;
+        }
+
+        .subtext {
             margin-bottom: 20px;
+            color: #555;
+            font-size: 14px;
         }
 
         table {
@@ -31,12 +37,14 @@ $rows = $model->getSummary12M();
             border: 1px solid #ccc;
             padding: 8px;
             text-align: left;
+            vertical-align: top;
         }
 
         th {
             background: #f2f2f2;
             position: sticky;
             top: 0;
+            z-index: 2;
         }
 
         tr:nth-child(even) {
@@ -50,19 +58,40 @@ $rows = $model->getSummary12M();
         .warn {
             background-color: #fff3cd;
         }
+
+        .good {
+            background-color: #d9f2d9;
+        }
+
+        .num {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body>
 
-<h1>COG 7 Repairables - Last 12 Months</h1>
+<h1>Repairables - Last 12 Months</h1>
+<div class="subtext">
+    Active NIINs are COG 7 items with at least one shipment in the last 24 months.
+</div>
 
+<div class="table-wrap">
 <table>
     <thead>
         <tr>
             <th>NIIN</th>
             <th>LRC</th>
-			<th>Std Price</th>
-			<th>12M Ship</th>
+            <th>Std Price</th>
+            <th>12M Ship</th>
             <th>12M Receipt</th>
             <th>12M Repair</th>
             <th>Fielded Base</th>
@@ -84,29 +113,41 @@ $rows = $model->getSummary12M();
                 $repairClass = '';
                 if ($row['repair_rate'] !== null && $row['repair_rate'] < 0.60) {
                     $repairClass = 'warn';
+                } elseif ($row['repair_rate'] !== null && $row['repair_rate'] >= 1.00) {
+                    $repairClass = 'good';
+                }
+
+                $pipelineClass = '';
+                if ((int)$row['pipeline_delta'] > 0) {
+                    $pipelineClass = 'warn';
+                } elseif ((int)$row['pipeline_delta'] < 0) {
+                    $pipelineClass = 'good';
                 }
             ?>
             <tr>
                 <td><?= htmlspecialchars($row['niin']) ?></td>
                 <td><?= htmlspecialchars($row['lrc']) ?></td>
-				<td><?= number_format($row['std_price'], 2) ?></td>
-                <td><?= (int)$row['ship_qty_12m'] ?></td>
-                <td><?= (int)$row['receipt_qty_12m'] ?></td>
-                <td><?= (int)$row['repair_qty_12m'] ?></td>
-                <td><?= (int)$row['fielded_base'] ?></td>
-                <td class="<?= $returnClass ?>">
-                    <?= $row['return_rate'] !== null ? number_format($row['return_rate'] * 100, 2) . '%' : '' ?>
+                <td class="num"><?= number_format((float)$row['std_price'], 2) ?></td>
+                <td class="num"><?= (int)$row['ship_qty_12m'] ?></td>
+                <td class="num"><?= (int)$row['receipt_qty_12m'] ?></td>
+                <td class="num"><?= (int)$row['repair_qty_12m'] ?></td>
+                <td class="num"><?= (int)$row['fielded_base'] ?></td>
+                <td class="num <?= $returnClass ?>">
+                    <?= $row['return_rate'] !== null ? number_format($row['return_rate'] * 100, 2) . '%' : 'N/A' ?>
                 </td>
-                <td class="<?= $repairClass ?>">
+                <td class="num <?= $repairClass ?>">
                     <?= $row['repair_rate'] !== null ? number_format($row['repair_rate'] * 100, 2) . '%' : 'N/A' ?>
                 </td>
-                <td><?= (int)$row['pipeline_delta'] ?></td>
-                <td><?= (int)$row['on_hand'] ?></td>
-                <td><?= htmlspecialchars($row['last_ship_date'] ?? '') ?></td>
+                <td class="num <?= $pipelineClass ?>">
+                    <?= (int)$row['pipeline_delta'] ?>
+                </td>
+                <td class="num"><?= (int)$row['on_hand'] ?></td>
+                <td class="center"><?= htmlspecialchars($row['last_ship_date'] ?? '') ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+</div>
 
 </body>
 </html>

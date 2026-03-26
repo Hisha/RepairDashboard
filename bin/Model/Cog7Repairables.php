@@ -21,13 +21,13 @@ class Cog7Repairables
             
                 CASE
                     WHEN COALESCE(f.approx_fielded_base, 0) > 0
-                    THEN COALESCE(r.receipt_qty_12m, 0) / f.approx_fielded_base
+                    THEN COALESCE(r.receipt_qty_12m, 0) / COALESCE(f.approx_fielded_base, 0)
                     ELSE NULL
                 END AS return_rate,
             
                 CASE
                     WHEN COALESCE(r.receipt_qty_12m, 0) > 0
-                    THEN COALESCE(p.repair_qty_12m, 0) / r.receipt_qty_12m
+                    THEN COALESCE(p.repair_qty_12m, 0) / COALESCE(r.receipt_qty_12m, 0)
                     ELSE NULL
                 END AS repair_rate,
             
@@ -76,7 +76,7 @@ class Cog7Repairables
                     COUNT(*) AS repair_qty_12m
                 FROM repairs p
                 WHERE p.transactiondate >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
-                    AND p.materialcode IN ('A', 'D', 'G')
+                  AND p.materialcode IN ('A', 'D', 'G')
                 GROUP BY p.niin
             ) p
                 ON l.niin = p.niin
@@ -84,7 +84,7 @@ class Cog7Repairables
             LEFT JOIN (
                 SELECT
                     s.niin,
-                    SUM(s.qty) - COALESCE(rc.total_receipts, 0) AS approx_fielded_base
+                    GREATEST(SUM(s.qty) - COALESCE(rc.total_receipts, 0), 0) AS approx_fielded_base
                 FROM shipments s
                 LEFT JOIN (
                     SELECT
@@ -108,7 +108,10 @@ class Cog7Repairables
                 ON l.niin = inv.niin
             
             WHERE l.cog LIKE '7%'
-            ORDER BY return_rate DESC, l.niin ASC
+            ORDER BY
+                return_rate DESC,
+                repair_rate ASC,
+                l.niin ASC
         ";
         
         $result = $db->query($sql)->fetchAll();
