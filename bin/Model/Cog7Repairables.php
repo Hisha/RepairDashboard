@@ -99,11 +99,7 @@ class Cog7Repairables
             LEFT JOIN (
                 SELECT
                     i.niin,
-                    SUM(
-                        COALESCE(i.`A Qty`, 0) +
-                        COALESCE(i.`F Qty`, 0) +
-                        COALESCE(i.`G Qty`, 0)
-                    ) AS on_hand
+                    SUM(i.onhandqty) AS on_hand
                 FROM inventory i
                 GROUP BY i.niin
             ) inv
