@@ -60,8 +60,9 @@ $rows = $model->getSummary12M();
     <thead>
         <tr>
             <th>NIIN</th>
-            <th>Nomen</th>
-            <th>12M Ship</th>
+            <th>LRC</th>
+			<th>Std Price</th>
+			<th>12M Ship</th>
             <th>12M Receipt</th>
             <th>12M Repair</th>
             <th>Fielded Base</th>
@@ -87,7 +88,8 @@ $rows = $model->getSummary12M();
             ?>
             <tr>
                 <td><?= htmlspecialchars($row['niin']) ?></td>
-                <td><?= htmlspecialchars($row['nomen']) ?></td>
+                <td><?= htmlspecialchars($row['lrc']) ?></td>
+				<td><?= number_format($row['std_price'], 2) ?></td>
                 <td><?= (int)$row['ship_qty_12m'] ?></td>
                 <td><?= (int)$row['receipt_qty_12m'] ?></td>
                 <td><?= (int)$row['repair_qty_12m'] ?></td>

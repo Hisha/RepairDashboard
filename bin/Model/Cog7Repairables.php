@@ -10,7 +10,8 @@ class Cog7Repairables
         $sql = "
             SELECT
                 l.niin,
-                l.nomen,
+                l.lrc,
+                l.std_price,
             
                 COALESCE(s.ship_qty_12m, 0) AS ship_qty_12m,
                 COALESCE(r.receipt_qty_12m, 0) AS receipt_qty_12m,
