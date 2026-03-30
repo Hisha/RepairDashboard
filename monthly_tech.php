@@ -70,7 +70,6 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     fclose($output);
     exit;
 }
-?>
 
 $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
 . '&fy=' . urlencode((string)$fyRange['fiscal_year'])
