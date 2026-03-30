@@ -243,6 +243,36 @@ class Repairs
         return $results;
     }
     
+    public function getRepairsByMonthAndSubgroup(string $startDate, string $endDate): array
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            DATE_FORMAT(transactiondate, '%M %Y') AS MonthYear,
+            DATE_FORMAT(transactiondate, '%Y-%m') AS MonthSort,
+            subgrouptype AS SUBGROUPTYPE,
+            partnotobuild AS Part,
+            COUNT(*) AS Qty
+        FROM repairs
+        WHERE transactiondate BETWEEN ? AND ?
+        GROUP BY
+            DATE_FORMAT(transactiondate, '%Y-%m'),
+            DATE_FORMAT(transactiondate, '%M %Y'),
+            subgrouptype,
+            partnotobuild
+        ORDER BY
+            MonthSort DESC,
+            subgrouptype ASC,
+            partnotobuild ASC
+    ";
+        
+        $results = $db->query($sql, $startDate, $endDate)->fetchAll();
+        $db->close();
+        
+        return $results;
+    }
+    
     public function getAvailableFiscalYears(): array
     {
         $db = new db();

@@ -4,7 +4,7 @@ require_once __DIR__ . '/bootstrap.php';
 require_once APP_ROOT . '/bin/Model/Repairs.php';
 require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
-$allowedTabs = ['overview', 'tech_numbers', 'tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'battery_tracker'];
+$allowedTabs = ['overview', 'tech_numbers', 'tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'battery_tracker', 'repairs_by_month'];
 $selectedTab = $_GET['tab'] ?? 'overview';
 
 if (!in_array($selectedTab, $allowedTabs, true)) {
@@ -42,6 +42,11 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
             $filename = 'battery_tracker_' . date('Y-m-d') . '.csv';
             break;
             
+        case 'repairs_by_month':
+            $rows = $repairsModel->getRepairsByMonthAndSubgroup($fyRange['start_date'], $fyRange['end_date']);
+            $filename = 'repairs_by_month_' . date('Y-m-d') . '.csv';
+            break;
+            
         default:
             $rows = [];
             $filename = 'export_' . date('Y-m-d') . '.csv';
@@ -53,7 +58,27 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     
     $output = fopen('php://output', 'w');
     
-    if (!empty($rows)) {
+    if ($selectedTab === 'repairs_by_month') {
+        fputcsv($output, ['MonthYear', 'SUBGROUPTYPE', 'Part', 'Sum of Qty']);
+        
+        $lastMonth = '';
+        $lastSubgroup = '';
+        
+        foreach ($rows as $row) {
+            if ($row['MonthYear'] !== $lastMonth) {
+                fputcsv($output, [$row['MonthYear'], '', '', '']);
+                $lastMonth = $row['MonthYear'];
+                $lastSubgroup = '';
+            }
+            
+            if ($row['SUBGROUPTYPE'] !== $lastSubgroup) {
+                fputcsv($output, ['', $row['SUBGROUPTYPE'], '', '']);
+                $lastSubgroup = $row['SUBGROUPTYPE'];
+            }
+            
+            fputcsv($output, ['', '', $row['Part'], $row['Qty']]);
+        }
+    } elseif (!empty($rows)) {
         fputcsv($output, array_keys($rows[0]));
         foreach ($rows as $row) {
             fputcsv($output, $row);
@@ -216,7 +241,7 @@ $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
                 </select>
             </form>
 
-            <?php if (in_array($selectedTab, ['tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'battery_tracker'], true)): ?>
+            <?php if (in_array($selectedTab, ['tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'battery_tracker', 'repairs_by_month'], true)): ?>
                 <a class="export-link" href="<?= htmlspecialchars($exportUrl) ?>">Export CSV</a>
             <?php endif; ?>
         </div>
@@ -240,6 +265,9 @@ $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
    		   
    		<a class="tab-link <?= $selectedTab === 'battery_tracker' ? 'active' : '' ?>"
    			href="monthly_tech.php?tab=battery_tracker&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Battery Tracker</a>
+   			
+   		<a class="tab-link <?= $selectedTab === 'repairs_by_month' ? 'active' : '' ?>"
+   			href="monthly_tech.php?tab=repairs_by_month&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Repairs by Month</a>
     </div>
 
     <div class="tab-panel">
@@ -263,6 +291,10 @@ $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
                 
             case 'battery_tracker':
                 require_once APP_ROOT . '/bin/Tabs/monthly_tech_battery_tracker.php';
+                break;
+                
+            case 'repairs_by_month':
+                require_once APP_ROOT . '/bin/Tabs/monthly_tech_repairs_by_month.php';
                 break;
                 
             case 'overview':
