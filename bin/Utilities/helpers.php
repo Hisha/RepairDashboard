@@ -33,7 +33,7 @@ class helpers
         ];
     }
     
-    function getCurrentQuarterStart(): string
+    public static function getCurrentQuarterStart(): string
     {
         $today = new DateTime();
         
@@ -53,18 +53,18 @@ class helpers
         return sprintf('%04d-%02d-01', $year, $startMonth);
     }
     
-    function getRollingQuarterStart(int $quartersBack = 5): string
+    public static function getRollingQuarterStart(int $quartersBack = 5): string
     {
-        $start = new DateTime(getCurrentQuarterStart());
+        $start = new DateTime(self::getCurrentQuarterStart());
         $monthsToSubtract = ($quartersBack - 1) * 3;
         $start->modify("-{$monthsToSubtract} months");
         
         return $start->format('Y-m-d');
     }
     
-    function getCurrentQuarterEnd(): string
+    public static function getCurrentQuarterEnd(): string
     {
-        $start = new DateTime(getCurrentQuarterStart());
+        $start = new DateTime(self::getCurrentQuarterStart());
         $start->modify('+3 months');
         $start->modify('-1 day');
         
