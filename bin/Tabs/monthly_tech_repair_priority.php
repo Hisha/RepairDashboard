@@ -12,46 +12,6 @@ $data = $repairsModel->getRepairPriorityReport(
     $fyRange['end_date']
     );
 
-if (isset($_GET['export']) && $_GET['export'] === 'csv') {
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=repair_priority_' . $fyRange['label'] . '.csv');
-    
-    $output = fopen('php://output', 'w');
-    
-    fputcsv($output, [
-        'NIIN',
-        'Quarterly Demand',
-        'A OnHand',
-        'D OnHand',
-        'G OnHand',
-        'F OnHand',
-        'F Awaiting Vendor',
-        'Last Ship Date',
-        'Program'
-    ]);
-    
-    foreach ($data as $row) {
-        $aOnHand = (float)($row['A OnHand'] ?? 0);
-        $dOnHand = (float)($row['D OnHand'] ?? 0);
-        $gOnHand = (float)($row['G OnHand'] ?? 0);
-        $quarterlyDemand = (float)($row['Quarterly Demand'] ?? 0);
-        
-        fputcsv($output, [
-            $row['NIIN'],
-            $quarterlyDemand,
-            $aOnHand,
-            $dOnHand,
-            $gOnHand,
-            $row['F OnHand'],
-            $row['F Awaiting Vendor'],
-            $row['LastShipDate'],
-            $row['Program']
-        ]);
-    }
-    
-    fclose($output);
-    exit;
-}
 ?>
 
 <style>

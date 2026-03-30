@@ -18,6 +18,61 @@ $availableFiscalYears = $repairsModel->getAvailableFiscalYearsDetailed();
 $selectedFiscalYear = isset($_GET['fy']) ? (int)$_GET['fy'] : null;
 $fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
 
+<?php
+if (isset($_GET['export']) && $_GET['export'] === 'csv') {
+    
+    switch ($selectedTab) {
+        case 'tech_numbers_expanded':
+            require_once APP_ROOT . '/bin/Model/Repairs.php';
+            $repairsModel = new Repairs();
+            $rows = $repairsModel->getTechsRepairValueExpanded($fyRange['start_date'], $fyRange['end_date']);
+            $filename = 'tech_numbers_expanded_' . date('Y-m-d') . '.csv';
+            break;
+            
+        case 'tech_repairs':
+            require_once APP_ROOT . '/bin/Model/Repairs.php';
+            $repairsModel = new Repairs();
+            $rows = $repairsModel->getRepairsByFiscalYear($fyRange['start_date'], $fyRange['end_date']);
+            $filename = 'tech_repairs_' . date('Y-m-d') . '.csv';
+            break;
+            
+        case 'repair_priority':
+            require_once APP_ROOT . '/bin/Model/Repairs.php';
+            $repairsModel = new Repairs();
+            $rows = $repairsModel->getRepairPriority($fyRange['start_date'], $fyRange['end_date']);
+            $filename = 'repair_priority_' . date('Y-m-d') . '.csv';
+            break;
+            
+        case 'battery_tracker':
+            require_once APP_ROOT . '/bin/Model/Batteries.php';
+            $batteryModel = new Batteries();
+            $rows = $batteryModel->getBatteryTracker();
+            $filename = 'battery_tracker_' . date('Y-m-d') . '.csv';
+            break;
+            
+        default:
+            $rows = [];
+            $filename = 'export_' . date('Y-m-d') . '.csv';
+            break;
+    }
+    
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename=' . $filename);
+    
+    $output = fopen('php://output', 'w');
+    
+    if (!empty($rows)) {
+        fputcsv($output, array_keys($rows[0]));
+        foreach ($rows as $row) {
+            fputcsv($output, $row);
+        }
+    }
+    
+    fclose($output);
+    exit;
+}
+?>
+
 $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
 . '&fy=' . urlencode((string)$fyRange['fiscal_year'])
 . '&export=csv';
