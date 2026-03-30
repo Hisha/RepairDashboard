@@ -167,7 +167,7 @@ $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
                 </select>
             </form>
 
-            <?php if (in_array($selectedTab, ['tech_numbers_expanded', 'tech_repairs', 'repair_priority'], true)): ?>
+            <?php if (in_array($selectedTab, ['tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'battery_tracker'], true)): ?>
                 <a class="export-link" href="<?= htmlspecialchars($exportUrl) ?>">Export CSV</a>
             <?php endif; ?>
         </div>
