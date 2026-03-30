@@ -9,9 +9,77 @@ $selectedDrmoMonth = $_GET['drmo_month'] ?? ($availableMonths[0]['month_value'] 
 $data = $selectedDrmoMonth !== ''
     ? $drmoModel->getDRMOByMonth($selectedDrmoMonth)
     : [];
+    
+    $selectedDrmoMonthLabel = '';
+    foreach ($availableMonths as $month) {
+        if ($month['month_value'] === $selectedDrmoMonth) {
+            $selectedDrmoMonthLabel = $month['month_label'];
+            break;
+        }
+    }
     ?>
 
-<h3>DRMO Activity</h3>
+<style>
+.drmo-data-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 70vh;
+    border: 1px solid #ddd;
+    background: #fff;
+}
+
+.drmo-data-table {
+    width: 100%;
+    min-width: 1100px;
+    border-collapse: collapse;
+}
+
+.drmo-data-table th,
+.drmo-data-table td {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.drmo-data-table thead th {
+    position: sticky;
+    top: 0;
+    background: #f1f3f5;
+    z-index: 3;
+}
+
+.drmo-data-table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.number-cell {
+    text-align: right;
+}
+
+.filter-summary {
+    margin: 10px 0 15px 0;
+    padding: 8px 10px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+}
+
+.export-link {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 8px 12px;
+    text-decoration: none;
+    background: #0d6efd;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.export-link:hover {
+    background: #0b5ed7;
+}
+</style>
 
 <form method="get" action="monthly_reqs.php" style="margin-bottom: 15px;">
     <input type="hidden" name="tab" value="drmo">
@@ -28,14 +96,20 @@ $data = $selectedDrmoMonth !== ''
     </select>
 </form>
 
-<p>
-    <a href="monthly_reqs.php?tab=drmo&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>&drmo_month=<?= urlencode($selectedDrmoMonth) ?>&export=csv">
-        Export CSV
-    </a>
-</p>
+<a class="export-link"
+   href="monthly_reqs.php?tab=drmo&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>&drmo_month=<?= urlencode($selectedDrmoMonth) ?>&export=csv">
+    Export CSV
+</a>
 
-<div class="table-responsive">
-    <table>
+<div class="filter-summary">
+    <strong>Selected Month:</strong>
+    <?= htmlspecialchars($selectedDrmoMonthLabel !== '' ? $selectedDrmoMonthLabel : 'None') ?>
+    <br>
+    <strong>Rows:</strong> <?= number_format(count($data)) ?>
+</div>
+
+<div class="drmo-data-table-wrap">
+    <table class="drmo-data-table">
         <thead>
             <tr>
                 <th>Transaction Date</th>
@@ -57,8 +131,8 @@ $data = $selectedDrmoMonth !== ''
                         <td><?= htmlspecialchars($row['Part']) ?></td>
                         <td><?= htmlspecialchars($row['Nomen']) ?></td>
                         <td><?= htmlspecialchars($row['Program']) ?></td>
-                        <td><?= number_format((float)$row['Qty']) ?></td>
-                        <td>$<?= number_format((float)$row['Unit Price'], 2) ?></td>
+                        <td class="number-cell"><?= number_format((float)$row['Qty']) ?></td>
+                        <td class="number-cell">$<?= number_format((float)$row['Unit Price'], 2) ?></td>
                         <td><?= htmlspecialchars($row['Document Number']) ?></td>
                     </tr>
                 <?php endforeach; ?>
