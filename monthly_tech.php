@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/bootstrap.php';
-include 'menu.php';
 
 require_once APP_ROOT . '/bin/Model/Repairs.php';
 require_once APP_ROOT . '/bin/Utilities/helpers.php';
@@ -22,22 +21,16 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     
     switch ($selectedTab) {
         case 'tech_numbers_expanded':
-            require_once APP_ROOT . '/bin/Model/Repairs.php';
-            $repairsModel = new Repairs();
             $rows = $repairsModel->getTechsRepairValueExpanded($fyRange['start_date'], $fyRange['end_date']);
             $filename = 'tech_numbers_expanded_' . date('Y-m-d') . '.csv';
             break;
             
         case 'tech_repairs':
-            require_once APP_ROOT . '/bin/Model/Repairs.php';
-            $repairsModel = new Repairs();
             $rows = $repairsModel->getRepairsByFiscalYear($fyRange['start_date'], $fyRange['end_date']);
             $filename = 'tech_repairs_' . date('Y-m-d') . '.csv';
             break;
             
         case 'repair_priority':
-            require_once APP_ROOT . '/bin/Model/Repairs.php';
-            $repairsModel = new Repairs();
             $rows = $repairsModel->getRepairPriority($fyRange['start_date'], $fyRange['end_date']);
             $filename = 'repair_priority_' . date('Y-m-d') . '.csv';
             break;
@@ -71,10 +64,13 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     exit;
 }
 
+include 'menu.php';
+
 $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
 . '&fy=' . urlencode((string)$fyRange['fiscal_year'])
 . '&export=csv';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
