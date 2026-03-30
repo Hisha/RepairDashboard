@@ -59,7 +59,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     $output = fopen('php://output', 'w');
     
     if ($selectedTab === 'repairs_by_month') {
-        fputcsv($output, ['MonthYear', 'SUBGROUPTYPE', 'Part', 'Sum of Qty']);
+        fputcsv($output, ['MonthYear', 'SUBGROUPTYPE', 'NIIN', 'Sum of Qty']);
         
         $lastMonth = '';
         $lastSubgroup = '';
@@ -76,7 +76,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
                 $lastSubgroup = $row['SUBGROUPTYPE'];
             }
             
-            fputcsv($output, ['', '', $row['Part'], $row['Qty']]);
+            fputcsv($output, ['', '', $row['NIIN'], $row['Qty']]);
         }
     } elseif (!empty($rows)) {
         fputcsv($output, array_keys($rows[0]));

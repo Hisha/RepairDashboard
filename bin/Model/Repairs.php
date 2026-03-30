@@ -252,7 +252,7 @@ class Repairs
             DATE_FORMAT(transactiondate, '%M %Y') AS MonthYear,
             DATE_FORMAT(transactiondate, '%Y-%m') AS MonthSort,
             subgrouptype AS SUBGROUPTYPE,
-            partnotobuild AS Part,
+            niin AS NIIN,
             COUNT(*) AS Qty
         FROM repairs
         WHERE transactiondate BETWEEN ? AND ?
@@ -260,11 +260,11 @@ class Repairs
             DATE_FORMAT(transactiondate, '%Y-%m'),
             DATE_FORMAT(transactiondate, '%M %Y'),
             subgrouptype,
-            partnotobuild
+            niin
         ORDER BY
             MonthSort DESC,
             subgrouptype ASC,
-            partnotobuild ASC
+            niin ASC
     ";
         
         $results = $db->query($sql, $startDate, $endDate)->fetchAll();

@@ -81,7 +81,7 @@ $lastSubgroup = '';
             <tr>
                 <th>MonthYear</th>
                 <th>SUBGROUPTYPE</th>
-                <th>Part</th>
+                <th>NIIN</th>
                 <th>Sum of Qty</th>
             </tr>
         </thead>
@@ -115,7 +115,7 @@ $lastSubgroup = '';
                     <tr class="part-row">
                         <td></td>
                         <td></td>
-                        <td><?= htmlspecialchars($row['Part']) ?></td>
+                        <td><?= htmlspecialchars($row['NIIN']) ?></td>
                         <td class="number-cell"><?= number_format((float)$row['Qty']) ?></td>
                     </tr>
 
