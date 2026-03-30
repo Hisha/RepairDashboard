@@ -31,7 +31,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
             break;
             
         case 'repair_priority':
-            $rows = $repairsModel->getRepairPriority($fyRange['start_date'], $fyRange['end_date']);
+            $rows = $repairsModel->getRepairPriorityReport($fyRange['start_date'], $fyRange['end_date']);
             $filename = 'repair_priority_' . date('Y-m-d') . '.csv';
             break;
             
