@@ -8,8 +8,9 @@ class Batteries
     {
         $db = new db();
         
-        $startDate = helpers::getRollingQuarterStart(5);
-        $endDate   = helpers::getCurrentQuarterEnd();
+        $helperS = new helpers();
+        $startDate = $helperS->getRollingQuarterStart(5);
+        $endDate   = $helperS->getCurrentQuarterEnd();
         
         $sql = "
         SELECT
