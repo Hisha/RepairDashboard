@@ -24,7 +24,7 @@ use PhpOffice\PhpPresentation\Style\Color;
 use PhpOffice\PhpPresentation\Style\Font;
 
 $selectedTab = $_GET['tab'] ?? ($_POST['tab'] ?? 'overview');
-$allowedTabs = ['overview', 'shipment_data', 'program_niin', 'powerpoint_report'];
+$allowedTabs = ['overview', 'shipment_data', 'program_niin', 'drmo', 'powerpoint_report'];
 
 if (!in_array($selectedTab, $allowedTabs, true)) {
     $selectedTab = 'overview';
@@ -132,6 +132,37 @@ if (
         fclose($output);
         exit;
     }
+    
+    if (
+        $selectedTab === 'drmo'
+        && isset($_GET['export'])
+        && $_GET['export'] === 'csv'
+        ) {
+            require_once APP_ROOT . '/bin/Model/DRMO.php';
+            
+            $drmoModel = new DRMO();
+            $selectedDrmoMonth = $_GET['drmo_month'] ?? '';
+            
+            $drmoData = $selectedDrmoMonth !== ''
+                ? $drmoModel->getDRMOByMonth($selectedDrmoMonth)
+                : [];
+                
+                header('Content-Type: text/csv; charset=utf-8');
+                header('Content-Disposition: attachment; filename=drmo_' . ($selectedDrmoMonth !== '' ? $selectedDrmoMonth : date('Y-m')) . '.csv');
+                
+                $output = fopen('php://output', 'w');
+                
+                if (!empty($drmoData)) {
+                    fputcsv($output, array_keys($drmoData[0]));
+                    
+                    foreach ($drmoData as $row) {
+                        fputcsv($output, $row);
+                    }
+                }
+                
+                fclose($output);
+                exit;
+        }
     
 $shipmentsModel = new Shipments();
 $programMapping = new SYS_ProgramMapping();
@@ -1460,15 +1491,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 <input type="hidden" name="cog" value="<?= htmlspecialchars($_GET['cog']) ?>">
             <?php endif; ?>
 
-            <label for="fy">Fiscal Year:</label>
-            <select name="fy" id="fy" onchange="this.form.submit()">
-                <?php foreach ($availableFiscalYears as $fy): ?>
-                	<option value="<?= htmlspecialchars((string)$fy['fiscal_year']) ?>"
-                        <?= $fy['fiscal_year'] === $fyRange['fiscal_year'] ? 'selected' : '' ?>>
-                    	<?= htmlspecialchars($fy['label']) ?>
-                    </option>
-            	<?php endforeach; ?>
-            </select>
+			<?php if ($selectedTab !== 'drmo'): ?>
+                <label for="fy">Fiscal Year:</label>
+                <select name="fy" id="fy" onchange="this.form.submit()">
+                    <?php foreach ($availableFiscalYears as $fy): ?>
+                    	<option value="<?= htmlspecialchars((string)$fy['fiscal_year']) ?>"
+                            <?= $fy['fiscal_year'] === $fyRange['fiscal_year'] ? 'selected' : '' ?>>
+                        	<?= htmlspecialchars($fy['label']) ?>
+                        </option>
+                	<?php endforeach; ?>
+                </select>
+            <?php endif; ?>
 		</form>
     </div>
 
@@ -1481,6 +1514,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
 
     		<a class="tab-link <?= $selectedTab === 'program_niin' ? 'active' : '' ?>"
        			href="monthly_reqs.php?tab=program_niin&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Program / NIIN Analysis</a>
+       			
+       		<a class="tab-link <?= $selectedTab === 'drmo' ? 'active' : '' ?>"
+   				href="monthly_reqs.php?tab=drmo&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">DRMO</a>
 
     		<a class="tab-link <?= $selectedTab === 'powerpoint_report' ? 'active' : '' ?>"
        			href="monthly_reqs.php?tab=powerpoint_report&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">PowerPoint Report</a>
@@ -1497,6 +1533,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 break;
             case 'program_niin':
                 require_once APP_ROOT . '/bin/Tabs/monthly_reqs_program_niin.php';
+                break;
+            case 'drmo':
+                require_once APP_ROOT . '/bin/Tabs/monthly_reqs_drmo.php';
                 break;
             case 'powerpoint_report':
             default:
