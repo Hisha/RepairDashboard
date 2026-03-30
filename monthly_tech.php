@@ -18,7 +18,6 @@ $availableFiscalYears = $repairsModel->getAvailableFiscalYearsDetailed();
 $selectedFiscalYear = isset($_GET['fy']) ? (int)$_GET['fy'] : null;
 $fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
 
-<?php
 if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     
     switch ($selectedTab) {
