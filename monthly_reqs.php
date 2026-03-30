@@ -24,7 +24,7 @@ use PhpOffice\PhpPresentation\Style\Color;
 use PhpOffice\PhpPresentation\Style\Font;
 
 $selectedTab = $_GET['tab'] ?? ($_POST['tab'] ?? 'overview');
-$allowedTabs = ['overview', 'shipment_data', 'program_niin', 'drmo', 'powerpoint_report'];
+$allowedTabs = ['overview', 'shipment_data', 'program_niin', 'drmo', 'reportable_numbers', 'powerpoint_report'];
 
 if (!in_array($selectedTab, $allowedTabs, true)) {
     $selectedTab = 'overview';
@@ -133,36 +133,66 @@ if (
         exit;
     }
     
-    if (
-        $selectedTab === 'drmo'
-        && isset($_GET['export'])
-        && $_GET['export'] === 'csv'
-        ) {
-            require_once APP_ROOT . '/bin/Model/DRMO.php';
+if (
+    $selectedTab === 'drmo'
+    && isset($_GET['export'])
+    && $_GET['export'] === 'csv'
+    ) {
+        require_once APP_ROOT . '/bin/Model/DRMO.php';
+        
+        $drmoModel = new DRMO();
+        $selectedDrmoMonth = $_GET['drmo_month'] ?? '';
+        
+        $drmoData = $selectedDrmoMonth !== ''
+            ? $drmoModel->getDRMOByMonth($selectedDrmoMonth)
+            : [];
             
-            $drmoModel = new DRMO();
-            $selectedDrmoMonth = $_GET['drmo_month'] ?? '';
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename=drmo_' . ($selectedDrmoMonth !== '' ? $selectedDrmoMonth : date('Y-m')) . '.csv');
             
-            $drmoData = $selectedDrmoMonth !== ''
-                ? $drmoModel->getDRMOByMonth($selectedDrmoMonth)
-                : [];
+            $output = fopen('php://output', 'w');
+            
+            if (!empty($drmoData)) {
+                fputcsv($output, array_keys($drmoData[0]));
                 
-                header('Content-Type: text/csv; charset=utf-8');
-                header('Content-Disposition: attachment; filename=drmo_' . ($selectedDrmoMonth !== '' ? $selectedDrmoMonth : date('Y-m')) . '.csv');
-                
-                $output = fopen('php://output', 'w');
-                
-                if (!empty($drmoData)) {
-                    fputcsv($output, array_keys($drmoData[0]));
-                    
-                    foreach ($drmoData as $row) {
-                        fputcsv($output, $row);
-                    }
+                foreach ($drmoData as $row) {
+                    fputcsv($output, $row);
                 }
-                
-                fclose($output);
-                exit;
-        }
+            }
+            
+            fclose($output);
+            exit;
+    }
+
+if (
+    $selectedTab === 'reportable_numbers'
+    && isset($_GET['export'])
+    && $_GET['export'] === 'csv'
+    ) {
+        require_once APP_ROOT . '/bin/Model/MonthlyReportableNumbers.php';
+        
+        $model = new MonthlyReportableNumbers();
+        $selectedMonth = $_GET['report_month'] ?? '';
+        
+        $rows = $selectedMonth !== ''
+            ? $model->getMonthlyReportableNumbers($selectedMonth)
+            : [];
+            
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename=monthly_reportable_numbers_' . ($selectedMonth !== '' ? $selectedMonth : date('Y-m')) . '.csv');
+            
+            $output = fopen('php://output', 'w');
+            
+            if (!empty($rows)) {
+                fputcsv($output, array_keys($rows[0]));
+                foreach ($rows as $row) {
+                    fputcsv($output, $row);
+                }
+            }
+            
+            fclose($output);
+            exit;
+    }
     
 $shipmentsModel = new Shipments();
 $programMapping = new SYS_ProgramMapping();
@@ -1518,6 +1548,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
        		<a class="tab-link <?= $selectedTab === 'drmo' ? 'active' : '' ?>"
    				href="monthly_reqs.php?tab=drmo&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">DRMO</a>
 
+			<a class="tab-link <?= $selectedTab === 'reportable_numbers' ? 'active' : '' ?>"
+   				href="monthly_reqs.php?tab=reportable_numbers&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Monthly Reportable Numbers</a>
+   				
     		<a class="tab-link <?= $selectedTab === 'powerpoint_report' ? 'active' : '' ?>"
        			href="monthly_reqs.php?tab=powerpoint_report&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">PowerPoint Report</a>
 	</div>
@@ -1536,6 +1569,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 break;
             case 'drmo':
                 require_once APP_ROOT . '/bin/Tabs/monthly_reqs_drmo.php';
+                break;
+            case 'reportable_numbers':
+                require_once APP_ROOT . '/bin/Tabs/monthly_reqs_reportable_numbers.php';
                 break;
             case 'powerpoint_report':
             default:
