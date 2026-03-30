@@ -251,10 +251,12 @@ class Repairs
         SELECT
             DATE_FORMAT(transactiondate, '%M %Y') AS MonthYear,
             DATE_FORMAT(transactiondate, '%Y-%m') AS MonthSort,
-            subgrouptype AS SUBGROUPTYPE,
+            SYS_repair_program_mapping.normalized_program AS SUBGROUPTYPE,
             niin AS NIIN,
             COUNT(*) AS Qty
         FROM repairs
+        INNER JOIN SYS_repair_program_mapping
+            ON repairs.subgrouptype = SYS_repair_program_mapping.source_program
         WHERE transactiondate BETWEEN ? AND ?
         GROUP BY
             DATE_FORMAT(transactiondate, '%Y-%m'),
