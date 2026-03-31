@@ -1,33 +1,49 @@
 <?php
 require_once __DIR__ . "/bootstrap.php";
+require_once APP_ROOT . "/vendor/autoload.php";
+require_once APP_ROOT . "/bin/Utilities/xlsx_helper.php";
 require_once APP_ROOT . "/bin/Model/Procurements.php";
 
 $procure = new Procurements();
 $procurements = $procure->getProcurements();
 
 /*
- * Export CSV for Excel
+ * Export XLSX for Excel
  * Must run before ANY HTML output.
  */
-if (isset($_GET['export']) && $_GET['export'] === 'csv') {
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=procurements_' . date('Y-m-d') . '.csv');
-    
-    $output = fopen('php://output', 'w');
-    
-    if (!empty($procurements)) {
-        fputcsv($output, array_keys($procurements[0]));
-        
-        foreach ($procurements as $row) {
-            fputcsv($output, $row);
-        }
-    }
-    
-    fclose($output);
-    exit;
+if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
+    $headers = !empty($procurements) ? array_keys($procurements[0]) : [
+        'Program',
+        'Request Date',
+        'NIIN',
+        'Part',
+        'Nomen',
+        'Qty Requested',
+        'Requested By',
+        'Status',
+        'Purchase Vehicle',
+        'Item Cost (each)',
+        'Date Submitted',
+        'Contract Number',
+        'Quote Number',
+        'PO Number',
+        'Qty Ordered',
+        'Award Date',
+        'EDD Date',
+        'Receive Date',
+        'Comments'
+    ];
+
+    xlsx_helper::download(
+        'procurements_' . date('Y-m-d') . '.xlsx',
+        $headers,
+        $procurements,
+        ['NIIN', 'Part', 'Contract Number', 'Quote Number', 'PO Number'],
+        'Procurements'
+    );
 }
 
-$exportUrl = $_SERVER['PHP_SELF'] . '?export=csv';
+$exportUrl = $_SERVER['PHP_SELF'] . '?export=xlsx';
 
 include 'menu.php';
 ?>
