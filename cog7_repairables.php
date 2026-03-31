@@ -192,7 +192,7 @@ include 'menu.php';
     </div>
 
     <div class="control-group">
-        <button type="button" id="exportCsv">Export Visible Rows</button>
+        <button type="button" id="exportXlsx">Export Visible Rows</button>
     </div>
 </div>
 
