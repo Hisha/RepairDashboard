@@ -1,12 +1,78 @@
 <?php
 require_once __DIR__ . "/bootstrap.php";
-include 'menu.php';
+require_once APP_ROOT . "/vendor/autoload.php";
+require_once APP_ROOT . "/bin/Utilities/xlsx_helper.php";
 require_once APP_ROOT . "/bin/Model/Cog7Repairables.php";
 
 $model = new Cog7Repairables();
 $rows = $model->getReport();
 
 $preselectedNiin = trim($_GET['niin'] ?? '');
+
+if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
+    $search = trim((string)($_GET['search'] ?? ''));
+    $lrc = trim((string)($_GET['lrc'] ?? ''));
+    $min12 = (int)($_GET['min12'] ?? 0);
+    $minAll = (int)($_GET['minAll'] ?? 0);
+    
+    $filteredRows = array_filter($rows, function ($row) use ($search, $lrc, $min12, $minAll) {
+        $niin = strtolower(trim((string)($row['niin'] ?? '')));
+        $rowLrc = strtolower(trim((string)($row['lrc'] ?? '')));
+        $actions12 = (int)($row['repair_actions_12m'] ?? 0);
+        $actionsAll = (int)($row['repair_actions_all'] ?? 0);
+        
+        if ($search !== '' && !str_contains($niin, strtolower($search)) && !str_contains($rowLrc, strtolower($search))) {
+            return false;
+        }
+        
+        if ($lrc !== '' && $rowLrc !== strtolower($lrc)) {
+            return false;
+        }
+        
+        if ($actions12 < $min12) {
+            return false;
+        }
+        
+        if ($actionsAll < $minAll) {
+            return false;
+        }
+        
+        return true;
+    });
+        
+        $exportRows = [];
+        foreach ($filteredRows as $row) {
+            $exportRows[] = [
+                'NIIN' => $row['niin'] ?? '',
+                'LRC' => $row['lrc'] ?? '',
+                'Std Price' => isset($row['std_price']) ? (float)$row['std_price'] : '',
+                'Last Ship Date' => $row['last_ship_date'] ?? '',
+                '12M Repair Actions' => (int)($row['repair_actions_12m'] ?? 0),
+                '12M Survival %' => $row['survival_12m'] !== null ? round(((float)$row['survival_12m']) * 100, 1) : 'N/A',
+                'Lifetime Repair Actions' => (int)($row['repair_actions_all'] ?? 0),
+                'Lifetime Survival %' => $row['survival_all'] !== null ? round(((float)$row['survival_all']) * 100, 1) : 'N/A',
+            ];
+        }
+        
+        $headers = [
+            'NIIN',
+            'LRC',
+            'Std Price',
+            'Last Ship Date',
+            '12M Repair Actions',
+            '12M Survival %',
+            'Lifetime Repair Actions',
+            'Lifetime Survival %'
+        ];
+        
+        xlsx_helper::download(
+            'survival_report_filtered_' . date('Y-m-d') . '.xlsx',
+            $headers,
+            $exportRows,
+            ['NIIN'],
+            'Survival Report'
+            );
+}
 
 $lrcOptions = [];
 foreach ($rows as $row) {
@@ -17,6 +83,7 @@ foreach ($rows as $row) {
 $lrcOptions = array_keys($lrcOptions);
 sort($lrcOptions);
 
+include 'menu.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -203,7 +270,7 @@ sort($lrcOptions);
     const min12mActions = document.getElementById('min12mActions');
     const minLifetimeActions = document.getElementById('minLifetimeActions');
     const resetFilters = document.getElementById('resetFilters');
-    const exportCsv = document.getElementById('exportCsv');
+    const exportXlsx = document.getElementById('exportXlsx');
     const visibleCount = document.getElementById('visibleCount');
     const table = document.getElementById('survivalTable');
     const rows = Array.from(table.querySelectorAll('tbody tr'));
@@ -250,39 +317,16 @@ sort($lrcOptions);
         visibleCount.textContent = shown;
     }
 
-    function escapeCsv(value) {
-        const str = String(value ?? '');
-        if (str.includes('"') || str.includes(',') || str.includes('\n')) {
-            return '"' + str.replace(/"/g, '""') + '"';
-        }
-        return str;
-    }
-
-    function exportVisibleRowsToCsv() {
-        const visibleRows = rows.filter(row => !row.classList.contains('hidden-row'));
-        const headerCells = Array.from(table.querySelectorAll('thead th'));
-        const headers = headerCells.map(th => th.textContent.trim());
-
-        const csvLines = [];
-        csvLines.push(headers.map(escapeCsv).join(','));
-
-        visibleRows.forEach(row => {
-            const cells = Array.from(row.querySelectorAll('td'));
-            const values = cells.map(td => td.textContent.trim());
-            csvLines.push(values.map(escapeCsv).join(','));
-        });
-
-        const csvContent = csvLines.join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'survival_report_filtered.csv';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+    function exportVisibleRowsToXlsx() {
+        const params = new URLSearchParams();
+    
+        params.set('export', 'xlsx');
+        params.set('search', searchText.value.trim());
+        params.set('lrc', lrcFilter.value.trim());
+        params.set('min12', min12mActions.value || '0');
+        params.set('minAll', minLifetimeActions.value || '0');
+    
+        window.location.href = 'cog7_repairables.php?' + params.toString();
     }
 
     searchText.addEventListener('input', applyFilters);
@@ -298,7 +342,7 @@ sort($lrcOptions);
         applyFilters();
     });
 
-    exportCsv.addEventListener('click', exportVisibleRowsToCsv);
+    exportXlsx.addEventListener('click', exportVisibleRowsToXlsx);
 
     applyFilters();
 })();
