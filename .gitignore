@@ -1,0 +1,60 @@
+# =========================
+# OS / System Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE / Editor Files
+# =========================
+.vscode/
+.idea/
+*.code-workspace
+
+# Eclipse (since you're using it)
+.project
+.classpath
+.settings/
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Composer / Dependencies
+# =========================
+/vendor/
+
+# =========================
+# Environment / Config (IMPORTANT)
+# =========================
+# Your real database credentials file
+/config/database.php
+
+# Optional: ignore all config overrides if you add more later
+/config/*.local.php
+
+# =========================
+# Uploaded / Generated Files
+# =========================
+uploads/
+tmp/
+cache/
+
+# Generated reports (if applicable)
+*.csv
+*.xlsx
+*.pptx
+*.pdf
+
+# =========================
+# Node (for your chart renderer)
+# =========================
+node_modules/
+
+# =========================
+# Misc
+# =========================
+.env
+.env.local

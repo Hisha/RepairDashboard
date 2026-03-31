@@ -3,28 +3,49 @@
 // https://codeshack.io/super-fast-php-mysql-database-class/
 class db
 {
-
     protected $connection;
     protected $query;
     protected $show_errors = TRUE;
     protected $query_closed = TRUE;
-    protected $dbhost = 'localhost';
-    protected $dbuser = 'RepairDasher';
-    protected $dbpass = 'P@ssw0rdP@ssw0rd';
-    protected $dbname = 'RepairDashboard';
-    protected $charset = 'utf8';
+    
+    protected $dbhost;
+    protected $dbuser;
+    protected $dbpass;
+    protected $dbname;
+    protected $charset;
     
     public $query_count = 0;
-
+    
     public function __construct()
     {
-        $this->connection = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+        $configPath = APP_ROOT . '/config/database.php';
+        
+        if (!file_exists($configPath)) {
+            exit("Database configuration file not found: {$configPath}");
+        }
+        
+        $config = require $configPath;
+        
+        $this->dbhost  = $config['host'] ?? 'localhost';
+        $this->dbuser  = $config['user'] ?? '';
+        $this->dbpass  = $config['pass'] ?? '';
+        $this->dbname  = $config['name'] ?? '';
+        $this->charset = $config['charset'] ?? 'utf8';
+        
+        $this->connection = new mysqli(
+            $this->dbhost,
+            $this->dbuser,
+            $this->dbpass,
+            $this->dbname
+            );
+        
         if ($this->connection->connect_error) {
             $this->error('Failed to connect to MySQL - ' . $this->connection->connect_error);
         }
+        
         $this->connection->set_charset($this->charset);
     }
-
+    
     public function query($query)
     {
         if (! $this->query_closed) {
@@ -64,7 +85,7 @@ class db
         }
         return $this;
     }
-
+    
     public function fetchAll($callback = null)
     {
         $params = array();
@@ -95,7 +116,7 @@ class db
         $this->query_closed = TRUE;
         return $result;
     }
-
+    
     public function fetchArray()
     {
         $params = array();
@@ -118,69 +139,69 @@ class db
         $this->query_closed = TRUE;
         return $result;
     }
-
+    
     public function close()
     {
         return $this->connection->close();
     }
-
+    
     public function numRows()
     {
         $this->query->store_result();
         return $this->query->num_rows;
     }
-
+    
     public function affectedRows()
     {
         return $this->query->affected_rows;
     }
-
+    
     public function lastInsertID()
     {
         return $this->connection->insert_id;
     }
-
+    
     public function beginTransaction()
     {
         return $this->connection->begin_transaction();
     }
-
+    
     public function commit()
     {
         return $this->connection->commit();
     }
-
+    
     public function rollback()
     {
         return $this->connection->rollback();
     }
-
+    
     public function escape($value)
     {
         return $this->connection->real_escape_string($value);
     }
-
+    
     public function error($error)
     {
         if ($this->show_errors) {
             exit($error);
         }
     }
-
+    
     public function getInfoURL()
     {
         return "http://" . $_SERVER['SERVER_NAME'] . "/";
     }
-
+    
     private function _gettype($var)
     {
         if (is_string($var))
             return 's';
-        if (is_float($var))
-            return 'd';
-        if (is_int($var))
-            return 'i';
-        return 'b';
+            if (is_float($var))
+                return 'd';
+                if (is_int($var))
+                    return 'i';
+                    return 'b';
     }
 }
 ?>
