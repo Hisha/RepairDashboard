@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/bootstrap.php';
-
+require_once APP_ROOT . '/vendor/autoload.php';
+require_once APP_ROOT . '/bin/Utilities/xlsx_helper.php';
 require_once APP_ROOT . '/bin/Model/Repairs.php';
 require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
@@ -17,83 +18,136 @@ $availableFiscalYears = $repairsModel->getAvailableFiscalYearsDetailed();
 $selectedFiscalYear = isset($_GET['fy']) ? (int)$_GET['fy'] : null;
 $fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
 
-if (isset($_GET['export']) && $_GET['export'] === 'csv') {
+if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
     
     switch ($selectedTab) {
         case 'tech_numbers_expanded':
             $rows = $repairsModel->getTechsRepairValueExpanded($fyRange['start_date'], $fyRange['end_date']);
-            $filename = 'tech_numbers_expanded_' . date('Y-m-d') . '.csv';
+            $filename = 'tech_numbers_expanded_' . date('Y-m-d') . '.xlsx';
             break;
             
         case 'tech_repairs':
             $rows = $repairsModel->getRepairsByFiscalYear($fyRange['start_date'], $fyRange['end_date']);
-            $filename = 'tech_repairs_' . date('Y-m-d') . '.csv';
+            $filename = 'tech_repairs_' . date('Y-m-d') . '.xlsx';
             break;
             
         case 'repair_priority':
             $rows = $repairsModel->getRepairPriorityReport($fyRange['start_date'], $fyRange['end_date']);
-            $filename = 'repair_priority_' . date('Y-m-d') . '.csv';
+            $filename = 'repair_priority_' . date('Y-m-d') . '.xlsx';
             break;
             
         case 'battery_tracker':
             require_once APP_ROOT . '/bin/Model/Batteries.php';
             $batteryModel = new Batteries();
             $rows = $batteryModel->getBatteryTracker();
-            $filename = 'battery_tracker_' . date('Y-m-d') . '.csv';
+            $filename = 'battery_tracker_' . date('Y-m-d') . '.xlsx';
             break;
             
         case 'repairs_by_month':
             $rows = $repairsModel->getRepairsByMonthAndSubgroup($fyRange['start_date'], $fyRange['end_date']);
-            $filename = 'repairs_by_month_' . date('Y-m-d') . '.csv';
+            $filename = 'repairs_by_month_' . date('Y-m-d') . '.xlsx';
             break;
             
         default:
             $rows = [];
-            $filename = 'export_' . date('Y-m-d') . '.csv';
+            $filename = 'export_' . date('Y-m-d') . '.xlsx';
             break;
     }
     
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=' . $filename);
+    $headers = [];
+    $exportRows = [];
+    $textColumns = [];
+    $sheetTitle = 'Report';
     
-    $output = fopen('php://output', 'w');
-    
-    if ($selectedTab === 'repairs_by_month') {
-        fputcsv($output, ['MonthYear', 'SUBGROUPTYPE', 'NIIN', 'Sum of Qty']);
-        
-        $lastMonth = '';
-        $lastSubgroup = '';
-        
-        foreach ($rows as $row) {
-            if ($row['MonthYear'] !== $lastMonth) {
-                fputcsv($output, [$row['MonthYear'], '', '', '']);
-                $lastMonth = $row['MonthYear'];
-                $lastSubgroup = '';
-            }
+    switch ($selectedTab) {
+        case 'tech_numbers_expanded':
+            $headers = !empty($rows) ? array_keys($rows[0]) : [];
+            $exportRows = $rows;
+            $textColumns = ['NIIN', 'Part'];
+            $sheetTitle = 'Tech Numbers Expanded';
+            break;
             
-            if ($row['SUBGROUPTYPE'] !== $lastSubgroup) {
-                fputcsv($output, ['', $row['SUBGROUPTYPE'], '', '']);
-                $lastSubgroup = $row['SUBGROUPTYPE'];
-            }
+        case 'tech_repairs':
+            $headers = !empty($rows) ? array_keys($rows[0]) : [];
+            $exportRows = $rows;
+            $textColumns = ['NIIN', 'Part'];
+            $sheetTitle = 'Tech Repairs';
+            break;
             
-            fputcsv($output, ['', '', $row['NIIN'], $row['Qty']]);
-        }
-    } elseif (!empty($rows)) {
-        fputcsv($output, array_keys($rows[0]));
-        foreach ($rows as $row) {
-            fputcsv($output, $row);
-        }
+        case 'repair_priority':
+            $headers = !empty($rows) ? array_keys($rows[0]) : [];
+            $exportRows = $rows;
+            $textColumns = ['NIIN', 'Part'];
+            $sheetTitle = 'Repair Priority';
+            break;
+            
+        case 'battery_tracker':
+            $headers = !empty($rows) ? array_keys($rows[0]) : [];
+            $exportRows = $rows;
+            $textColumns = ['Part'];
+            $sheetTitle = 'Battery Tracker';
+            break;
+            
+        case 'repairs_by_month':
+            $headers = ['MonthYear', 'SUBGROUPTYPE', 'NIIN', 'Sum of Qty'];
+            $textColumns = ['NIIN'];
+            $sheetTitle = 'Repairs By Month';
+            
+            $lastMonth = '';
+            $lastSubgroup = '';
+            
+            foreach ($rows as $row) {
+                if ($row['MonthYear'] !== $lastMonth) {
+                    $exportRows[] = [
+                        'MonthYear' => $row['MonthYear'],
+                        'SUBGROUPTYPE' => '',
+                        'NIIN' => '',
+                        'Sum of Qty' => ''
+                    ];
+                    $lastMonth = $row['MonthYear'];
+                    $lastSubgroup = '';
+                }
+                
+                if ($row['SUBGROUPTYPE'] !== $lastSubgroup) {
+                    $exportRows[] = [
+                        'MonthYear' => '',
+                        'SUBGROUPTYPE' => $row['SUBGROUPTYPE'],
+                        'NIIN' => '',
+                        'Sum of Qty' => ''
+                    ];
+                    $lastSubgroup = $row['SUBGROUPTYPE'];
+                }
+                
+                $exportRows[] = [
+                    'MonthYear' => '',
+                    'SUBGROUPTYPE' => '',
+                    'NIIN' => $row['NIIN'],
+                    'Sum of Qty' => $row['Qty']
+                ];
+            }
+            break;
+            
+        default:
+            $headers = !empty($rows) ? array_keys($rows[0]) : [];
+            $exportRows = $rows;
+            $sheetTitle = 'Report';
+            break;
     }
     
-    fclose($output);
-    exit;
+    xlsx_helper::download(
+        $filename,
+        $headers,
+        $exportRows,
+        $textColumns,
+        $sheetTitle
+        );
 }
 
 include 'menu.php';
 
 $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
 . '&fy=' . urlencode((string)$fyRange['fiscal_year'])
-. '&export=csv';
+. '&export=xlsx';
 ?>
 
 <!DOCTYPE html>
@@ -242,7 +296,7 @@ $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
             </form>
 
             <?php if (in_array($selectedTab, ['tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'battery_tracker', 'repairs_by_month'], true)): ?>
-                <a class="export-link" href="<?= htmlspecialchars($exportUrl) ?>">Export CSV</a>
+                <a class="export-link" href="<?= htmlspecialchars($exportUrl) ?>">Export Excel</a>
             <?php endif; ?>
         </div>
     </div>
