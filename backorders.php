@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . "/bootstrap.php";
+require_once APP_ROOT . "/vendor/autoload.php";
+require_once APP_ROOT . "/bin/Utilities/xlsx_helper.php";
 require_once APP_ROOT . "/bin/Model/BackOrders.php";
 
 $selectedPriority = $_GET['priority'] ?? null;
@@ -8,25 +10,29 @@ $reqs = new BackOrders();
 $backorders = $reqs->getBackOrderList($selectedPriority);
 
 /*
- * Export CSV for Excel
+ * Export XLSX for Excel
  * Must run before ANY HTML output.
  */
-if (isset($_GET['export']) && $_GET['export'] === 'csv') {
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=backorders_' . date('Y-m-d') . '.csv');
-    
-    $output = fopen('php://output', 'w');
-    
-    if (!empty($backorders)) {
-        fputcsv($output, array_keys($backorders[0]));
-        
-        foreach ($backorders as $row) {
-            fputcsv($output, $row);
-        }
-    }
-    
-    fclose($output);
-    exit;
+if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
+    $headers = !empty($backorders) ? array_keys($backorders[0]) : [
+        'Date Received',
+        'Program',
+        'Priority',
+        'Command',
+        'Req Number',
+        'NIIN',
+        'Nomen',
+        'QTY',
+        'Notes'
+    ];
+
+    xlsx_helper::download(
+        'backorders_' . date('Y-m-d') . '.xlsx',
+        $headers,
+        $backorders,
+        ['Req Number', 'NIIN'],
+        'Backorders'
+    );
 }
 
 /*
@@ -45,7 +51,7 @@ function isHighPriority(string $priority): bool
     return in_array($priority, $highPriorityValues, true);
 }
 
-$exportUrl = $_SERVER['PHP_SELF'] . '?export=csv';
+$exportUrl = $_SERVER['PHP_SELF'] . '?export=xlsx';
 
 if (!empty($selectedPriority)) {
     $exportUrl .= '&priority=' . urlencode($selectedPriority);
