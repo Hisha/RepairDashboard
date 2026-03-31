@@ -26,10 +26,10 @@ class xlsx_helper
             /*
              * Header row
              */
-            $colNum = 1;
-            foreach ($headers as $header) {
-                $sheet->setCellValueByColumnAndRow($colNum, 1, $header);
-                $colNum++;
+            foreach ($headers as $index => $header) {
+                $colLetter = Coordinate::stringFromColumnIndex($index + 1);
+                $cell = $colLetter . '1';
+                $sheet->setCellValue($cell, $header);
             }
             
             /*
@@ -37,9 +37,10 @@ class xlsx_helper
              */
             $rowNum = 2;
             foreach ($rows as $row) {
-                $colNum = 1;
-                
-                foreach ($headers as $header) {
+                foreach ($headers as $index => $header) {
+                    $colLetter = Coordinate::stringFromColumnIndex($index + 1);
+                    $cell = $colLetter . $rowNum;
+                    
                     $value = $row[$header] ?? '';
                     
                     if ($value === null) {
@@ -47,17 +48,14 @@ class xlsx_helper
                     }
                     
                     if (in_array($header, $textColumns, true)) {
-                        $sheet->setCellValueExplicitByColumnAndRow(
-                            $colNum,
-                            $rowNum,
+                        $sheet->setCellValueExplicit(
+                            $cell,
                             (string)$value,
                             DataType::TYPE_STRING
                             );
                     } else {
-                        $sheet->setCellValueByColumnAndRow($colNum, $rowNum, $value);
+                        $sheet->setCellValue($cell, $value);
                     }
-                    
-                    $colNum++;
                 }
                 
                 $rowNum++;
