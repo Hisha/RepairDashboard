@@ -69,6 +69,8 @@ INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`
 INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_HYDRA','EFJ');
 INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_N94','JXA/N94');
 INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_CANES','EL1/CANES');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_Q70','AAL/Q70');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBW_Q70','AAL/Q70');
 
 -- Power Point Filler
 CREATE TABLE `SYS_powerpoint_filler` (
