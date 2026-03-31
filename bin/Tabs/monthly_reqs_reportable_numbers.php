@@ -97,8 +97,8 @@ $data = $selectedMonth !== ''
 </form>
 
 <a class="export-link"
-   href="monthly_reqs.php?tab=reportable_numbers&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>&report_month=<?= urlencode($selectedMonth) ?>&export=csv">
-    Export CSV
+   href="monthly_reqs.php?tab=reportable_numbers&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>&report_month=<?= urlencode($selectedMonth) ?>&export=xlsx">
+    Export Excel
 </a>
 
 <div class="filter-summary">

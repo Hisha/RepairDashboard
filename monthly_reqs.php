@@ -15,6 +15,7 @@ require_once APP_ROOT . '/bin/Model/SYS_PowerPointFiller.php';
 require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
 require_once APP_ROOT . '/bin/Utilities/ChartRenderer.php';
 require_once APP_ROOT . '/bin/Utilities/helpers.php';
+require_once APP_ROOT . '/bin/Utilities/xlsx_helper.php';
 
 use PhpOffice\PhpPresentation\IOFactory;
 use PhpOffice\PhpPresentation\Shape\Drawing\File;
@@ -38,7 +39,7 @@ $fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
 if (
     $selectedTab === 'shipment_data'
     && isset($_GET['export'])
-    && $_GET['export'] === 'csv'
+    && $_GET['export'] === 'xlsx'
     ) {
         $shipmentsModel = new Shipments();
         
@@ -52,12 +53,7 @@ if (
             $fyRange['end_date']
             );
         
-        header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename=shipment_data_' . $fyRange['label'] . '.csv');
-        
-        $output = fopen('php://output', 'w');
-        
-        fputcsv($output, [
+        $headers = [
             'Ship Date',
             'NIIN',
             'Part',
@@ -66,29 +62,35 @@ if (
             'Program',
             'Condition',
             'Issued To'
-        ]);
+        ];
         
+        $rows = [];
         foreach ($shipmentData as $row) {
-            fputcsv($output, [
-                $row['Ship Date'],
-                $row['NIIN'],
-                $row['Part'],
-                $row['Nomen'],
-                $row['Qty'],
-                $row['Program'],
-                $row['Condition'],
-                $row['Issued To']
-            ]);
+            $rows[] = [
+                'Ship Date' => $row['Ship Date'],
+                'NIIN' => $row['NIIN'],
+                'Part' => $row['Part'],
+                'Nomen' => $row['Nomen'],
+                'Qty' => $row['Qty'],
+                'Program' => $row['Program'],
+                'Condition' => $row['Condition'],
+                'Issued To' => $row['Issued To']
+            ];
         }
         
-        fclose($output);
-        exit;
+        xlsx_helper::download(
+            'shipment_data_' . $fyRange['label'] . '.xlsx',
+            $headers,
+            $rows,
+            ['NIIN', 'Part'],
+            'Shipment Data'
+            );
     }
 
 if (
     $selectedTab === 'program_niin'
     && isset($_GET['export'])
-    && $_GET['export'] === 'csv'
+    && $_GET['export'] === 'xlsx'
     ) {
         $shipmentsModel = new Shipments();
         
@@ -102,12 +104,7 @@ if (
             $fyRange['end_date']
             );
         
-        header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename=program_niin_analysis_' . $fyRange['label'] . '.csv');
-        
-        $output = fopen('php://output', 'w');
-        
-        fputcsv($output, [
+        $headers = [
             'NIIN',
             'Part',
             'Nomen',
@@ -115,28 +112,34 @@ if (
             'Total Qty',
             'Total Reqs',
             'Last Ship Date'
-        ]);
+        ];
         
+        $rows = [];
         foreach ($niinAnalysis as $row) {
-            fputcsv($output, [
-                $row['NIIN'],
-                $row['Part'],
-                $row['Nomen'],
-                $row['Program'],
-                $row['Total Qty'],
-                $row['Total Reqs'],
-                $row['Last Ship Date']
-            ]);
+            $rows[] = [
+                'NIIN' => $row['NIIN'],
+                'Part' => $row['Part'],
+                'Nomen' => $row['Nomen'],
+                'Program' => $row['Program'],
+                'Total Qty' => $row['Total Qty'],
+                'Total Reqs' => $row['Total Reqs'],
+                'Last Ship Date' => $row['Last Ship Date']
+            ];
         }
         
-        fclose($output);
-        exit;
+        xlsx_helper::download(
+            'program_niin_analysis_' . $fyRange['label'] . '.xlsx',
+            $headers,
+            $rows,
+            ['NIIN', 'Part'],
+            'Program NIIN'
+            );
     }
-    
+
 if (
     $selectedTab === 'drmo'
     && isset($_GET['export'])
-    && $_GET['export'] === 'csv'
+    && $_GET['export'] === 'xlsx'
     ) {
         require_once APP_ROOT . '/bin/Model/DRMO.php';
         
@@ -147,27 +150,30 @@ if (
             ? $drmoModel->getDRMOByMonth($selectedDrmoMonth)
             : [];
             
-            header('Content-Type: text/csv; charset=utf-8');
-            header('Content-Disposition: attachment; filename=drmo_' . ($selectedDrmoMonth !== '' ? $selectedDrmoMonth : date('Y-m')) . '.csv');
+            $headers = !empty($drmoData) ? array_keys($drmoData[0]) : [
+                'Transaction Date',
+                'NIIN',
+                'Part',
+                'Nomen',
+                'Program',
+                'Qty',
+                'Unit Price',
+                'Document Number'
+            ];
             
-            $output = fopen('php://output', 'w');
-            
-            if (!empty($drmoData)) {
-                fputcsv($output, array_keys($drmoData[0]));
-                
-                foreach ($drmoData as $row) {
-                    fputcsv($output, $row);
-                }
-            }
-            
-            fclose($output);
-            exit;
+            xlsx_helper::download(
+                'drmo_' . ($selectedDrmoMonth !== '' ? $selectedDrmoMonth : date('Y-m')) . '.xlsx',
+                $headers,
+                $drmoData,
+                ['NIIN', 'Part', 'Document Number'],
+                'DRMO'
+                );
     }
 
 if (
     $selectedTab === 'reportable_numbers'
     && isset($_GET['export'])
-    && $_GET['export'] === 'csv'
+    && $_GET['export'] === 'xlsx'
     ) {
         require_once APP_ROOT . '/bin/Model/MonthlyReportableNumbers.php';
         
@@ -178,20 +184,22 @@ if (
             ? $model->getMonthlyReportableNumbers($selectedMonth)
             : [];
             
-            header('Content-Type: text/csv; charset=utf-8');
-            header('Content-Disposition: attachment; filename=monthly_reportable_numbers_' . ($selectedMonth !== '' ? $selectedMonth : date('Y-m')) . '.csv');
+            $headers = !empty($rows) ? array_keys($rows[0]) : [
+                'Program',
+                'Shipment Count',
+                'Shipped Qty',
+                'Receipt Count',
+                'Receipt Qty',
+                'Canceled Reqs'
+            ];
             
-            $output = fopen('php://output', 'w');
-            
-            if (!empty($rows)) {
-                fputcsv($output, array_keys($rows[0]));
-                foreach ($rows as $row) {
-                    fputcsv($output, $row);
-                }
-            }
-            
-            fclose($output);
-            exit;
+            xlsx_helper::download(
+                'monthly_reportable_numbers_' . ($selectedMonth !== '' ? $selectedMonth : date('Y-m')) . '.xlsx',
+                $headers,
+                $rows,
+                [],
+                'Reportable Numbers'
+                );
     }
     
 $shipmentsModel = new Shipments();

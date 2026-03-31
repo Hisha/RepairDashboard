@@ -40,7 +40,7 @@ $exportUrl = 'monthly_reqs.php?tab=program_niin'
     . '&fy=' . urlencode((string)$fyRange['fiscal_year'])
     . ($selectedProgram !== '' ? '&program=' . urlencode($selectedProgram) : '')
     . ($selectedCog !== '' ? '&cog=' . urlencode($selectedCog) : '')
-    . '&export=csv';
+    . '&export=xlsx';
 ?>
 
 <style>
@@ -193,7 +193,7 @@ $exportUrl = 'monthly_reqs.php?tab=program_niin'
         </div>
 
         <div class="analysis-filter-group">
-            <a class="analysis-export-link" href="<?= htmlspecialchars($exportUrl) ?>">Export CSV</a>
+            <a class="analysis-export-link" href="<?= htmlspecialchars($exportUrl) ?>">Export Excel</a>
         </div>
     </form>
 </div>

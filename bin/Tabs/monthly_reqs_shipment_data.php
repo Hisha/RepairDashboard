@@ -99,7 +99,7 @@ $data = $shipmentsModel->getShipmentsListByFiscalYear(
     <?php endif; ?>
 </div>
 
-<a class="export-link" href="monthly_reqs.php?tab=shipment_data&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?><?= !empty($selectedCog) ? '&cog=' . urlencode($selectedCog) : '' ?><?= !empty($selectedNiin) ? '&niin=' . urlencode($selectedNiin) : '' ?>&export=csv">Export CSV</a>
+<a class="export-link" href="monthly_reqs.php?tab=shipment_data&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?><?= !empty($selectedCog) ? '&cog=' . urlencode($selectedCog) : '' ?><?= !empty($selectedNiin) ? '&niin=' . urlencode($selectedNiin) : '' ?>&export=xlsx">Export Excel</a>
 
 <?php if (empty($data)): ?>
     <p>No shipment data found.</p>
