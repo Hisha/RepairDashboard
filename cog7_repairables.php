@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/bootstrap.php";
 require_once APP_ROOT . "/vendor/autoload.php";
-require_once APP_ROOT . "/bin/Utilities/xlsx_helper.php";
+require_once APP_ROOT . "/bin/Utilities/xlsx_styled_helper.php";
 require_once APP_ROOT . "/bin/Model/Cog7Repairables.php";
 
 $model = new Cog7Repairables();
@@ -42,7 +42,31 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
         
         $exportRows = [];
         foreach ($filteredRows as $row) {
+            $cellStyles = [];
+            
+            if ($row['survival_12m'] !== null) {
+                if ($row['survival_12m'] < 0.50) {
+                    $cellStyles['12M Survival %'] = 'bad';
+                } elseif ($row['survival_12m'] < 0.75) {
+                    $cellStyles['12M Survival %'] = 'warn';
+                } else {
+                    $cellStyles['12M Survival %'] = 'good';
+                }
+            }
+            
+            if ($row['survival_all'] !== null) {
+                if ($row['survival_all'] < 0.50) {
+                    $cellStyles['Lifetime Survival %'] = 'bad';
+                } elseif ($row['survival_all'] < 0.75) {
+                    $cellStyles['Lifetime Survival %'] = 'warn';
+                } else {
+                    $cellStyles['Lifetime Survival %'] = 'good';
+                }
+            }
+            
             $exportRows[] = [
+                '_row_type' => 'normal',
+                '_cell_styles' => $cellStyles,
                 'NIIN' => $row['niin'] ?? '',
                 'LRC' => $row['lrc'] ?? '',
                 'Std Price' => isset($row['std_price']) ? (float)$row['std_price'] : '',
@@ -65,12 +89,21 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
             'Lifetime Survival %'
         ];
         
-        xlsx_helper::download(
+        xlsx_styled_helper::download(
             'survival_report_filtered_' . date('Y-m-d') . '.xlsx',
             $headers,
             $exportRows,
-            ['NIIN'],
-            'Survival Report'
+            [
+                'sheetTitle' => 'Survival Report',
+                'textColumns' => ['NIIN'],
+                'numberFormats' => [
+                    'Std Price' => '$#,##0.00',
+                    '12M Repair Actions' => '0',
+                    '12M Survival %' => '0.0',
+                    'Lifetime Repair Actions' => '0',
+                    'Lifetime Survival %' => '0.0'
+                ]
+            ]
             );
 }
 
