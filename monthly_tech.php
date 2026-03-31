@@ -197,8 +197,70 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
             break;
             
         case 'repair_priority':
-            $rows = $repairsModel->getRepairPriorityReport($fyRange['start_date'], $fyRange['end_date']);
+            $data = $repairsModel->getRepairPriorityReport($fyRange['start_date'], $fyRange['end_date']);
             $filename = 'repair_priority_' . date('Y-m-d') . '.xlsx';
+            
+            $headers = [
+                'NIIN',
+                'Quarterly Demand',
+                'A OnHand',
+                'D OnHand',
+                'G OnHand',
+                'F OnHand',
+                'F Awaiting Vendor',
+                'Last Ship Date',
+                'Program'
+            ];
+            
+            $exportRows = [];
+            
+            foreach ($data as $row) {
+                $aOnHand = (float)($row['A OnHand'] ?? 0);
+                $dOnHand = (float)($row['D OnHand'] ?? 0);
+                $gOnHand = (float)($row['G OnHand'] ?? 0);
+                $quarterlyDemand = (float)($row['Quarterly Demand'] ?? 0);
+                
+                if ($aOnHand > $quarterlyDemand) {
+                    $rowType = 'highlight_green';
+                } elseif ($aOnHand == $quarterlyDemand) {
+                    $rowType = 'highlight_yellow';
+                } elseif (($aOnHand + $dOnHand + $gOnHand) > $quarterlyDemand) {
+                    $rowType = 'highlight_purple';
+                } else {
+                    $rowType = 'highlight_red';
+                }
+                
+                $exportRows[] = [
+                    '_row_type' => $rowType,
+                    'NIIN' => $row['NIIN'] ?? '',
+                    'Quarterly Demand' => $quarterlyDemand,
+                    'A OnHand' => $aOnHand,
+                    'D OnHand' => $dOnHand,
+                    'G OnHand' => $gOnHand,
+                    'F OnHand' => (float)($row['F OnHand'] ?? 0),
+                    'F Awaiting Vendor' => (float)($row['F Awaiting Vendor'] ?? 0),
+                    'Last Ship Date' => $row['LastShipDate'] ?? '',
+                    'Program' => $row['Program'] ?? ''
+                ];
+            }
+            
+            xlsx_styled_helper::download(
+                $filename,
+                $headers,
+                $exportRows,
+                [
+                    'sheetTitle' => 'Repair Priority',
+                    'textColumns' => ['NIIN'],
+                    'numberFormats' => [
+                        'Quarterly Demand' => '0.00',
+                        'A OnHand' => '0',
+                        'D OnHand' => '0',
+                        'G OnHand' => '0',
+                        'F OnHand' => '0',
+                        'F Awaiting Vendor' => '0'
+                    ]
+                ]
+                );
             break;
             
         case 'battery_tracker':

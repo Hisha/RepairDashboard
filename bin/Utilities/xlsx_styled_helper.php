@@ -195,6 +195,12 @@ class xlsx_styled_helper
                 ->getStartColor()->setARGB('FFD9F2D9');
                 break;
             
+            case 'highlight_purple':
+                $sheet->getStyle($range)->getFill()
+                ->setFillType(Fill::FILL_SOLID)
+                ->getStartColor()->setARGB('FFE2D9F3');
+                break;
+                
             case 'highlight_blue':
                 $sheet->getStyle($range)->getFont()->setBold(true);
                 $sheet->getStyle($range)->getFill()
