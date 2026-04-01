@@ -208,6 +208,7 @@ if (
     && isset($_GET['export'])
     && $_GET['export'] === 'xlsx'
     ) {
+        $shipmentsModel = new Shipments();
         $data = $shipmentsModel->getLast5QuartersPriorityReport();
         
         $search = trim((string)($_GET['l5q_search'] ?? ''));
