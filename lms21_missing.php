@@ -186,11 +186,18 @@ include 'menu.php';
                 <?php if (!empty($missingNiins)): ?>
                     <?php foreach ($missingNiins as $row): ?>
                         <tr>
-                            <form method="post" action="lms21_missing.php">
-                                <td class="niin-cell"><?= htmlspecialchars($row['NIIN']) ?></td>
-                                    <td><?= htmlspecialchars($row['listed_subgroup']) ?></td>
-                                    <td><?= htmlspecialchars($row['normalized_program']) ?></td>
-                                    <td>
+                            <form method="post" action="lms21_missing.php" class="inline-form">
+                        
+                                <td class="niin-cell">
+                                    <?= htmlspecialchars($row['NIIN']) ?>
+                                    <input type="hidden" name="niin" value="<?= htmlspecialchars($row['NIIN']) ?>">
+                                </td>
+                        
+                                <td><?= htmlspecialchars($row['listed_subgroup']) ?></td>
+                        
+                                <td><?= htmlspecialchars($row['normalized_program']) ?></td>
+                        
+                                <td>
                                     <input
                                         type="text"
                                         name="cog"
@@ -199,6 +206,7 @@ include 'menu.php';
                                         required
                                     >
                                 </td>
+                        
                                 <td>
                                     <input
                                         type="number"
@@ -209,6 +217,7 @@ include 'menu.php';
                                         required
                                     >
                                 </td>
+                        
                                 <td>
                                     <select name="lrc" required>
                                         <option value="">Select LRC</option>
@@ -222,9 +231,11 @@ include 'menu.php';
                                         <?php endforeach; ?>
                                     </select>
                                 </td>
+                        
                                 <td>
                                     <button type="submit" name="btnInsert" class="insert-btn">Insert</button>
                                 </td>
+                        
                             </form>
                         </tr>
                     <?php endforeach; ?>
