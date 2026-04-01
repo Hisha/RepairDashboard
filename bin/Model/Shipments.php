@@ -222,4 +222,89 @@ class Shipments
         return $results;
     }
     
+    public function getLast5QuartersPriorityReport(): array
+    {
+        $db = new db();
+        
+        $sql = "
+    SELECT
+        sh.niin AS NIIN,
+        COALESCE(i.`A OnHand`, 0) AS `A OnHand`,
+        COALESCE(i.`D OnHand`, 0) AS `D OnHand`,
+        COALESCE(i.`G OnHand`, 0) AS `G OnHand`,
+        COALESCE(i.`F OnHand`, 0) AS `F OnHand`,
+        COALESCE(i.`F Awaiting Vendor`, 0) AS `F Awaiting Vendor`,
+        sh.LastShipDate,
+        COALESCE(sh.QuarterlyDemand, 0) AS `Quarterly Demand`,
+        sh.Program
+    FROM
+    (
+        SELECT
+            s.niin,
+            MAX(s.transactiondate) AS LastShipDate,
+            ROUND(
+                SUM(
+                    CASE
+                        WHEN s.transactiondate >= DATE_SUB(p.current_fq_start, INTERVAL 15 MONTH)
+                         AND s.transactiondate < p.current_fq_start
+                        THEN s.qty
+                        ELSE 0
+                    END
+                ) / 5,
+                2
+            ) AS QuarterlyDemand,
+            MAX(rpm.normalized_program) AS Program
+        FROM shipments s
+        INNER JOIN SYS_repair_program_mapping rpm
+            ON s.subgrouptype = rpm.source_program
+        CROSS JOIN (
+            SELECT
+                CASE
+                    WHEN MONTH(CURDATE()) BETWEEN 10 AND 12 THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-10-01'), '%Y-%m-%d')
+                    WHEN MONTH(CURDATE()) BETWEEN 1 AND 3  THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-01-01'), '%Y-%m-%d')
+                    WHEN MONTH(CURDATE()) BETWEEN 4 AND 6  THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-04-01'), '%Y-%m-%d')
+                    ELSE STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-07-01'), '%Y-%m-%d')
+                END AS current_fq_start
+        ) p
+        WHERE s.transactiondate >= DATE_SUB(p.current_fq_start, INTERVAL 15 MONTH)
+          AND s.transactiondate < p.current_fq_start
+        GROUP BY s.niin
+    ) sh
+    LEFT JOIN
+    (
+        SELECT
+            inventory.niin AS NIIN,
+            SUM(CASE
+                WHEN inventory.materialcode = 'A' THEN inventory.onhandqty
+                ELSE 0
+            END) AS `A OnHand`,
+            SUM(CASE
+                WHEN inventory.materialcode = 'D' THEN inventory.onhandqty
+                ELSE 0
+            END) AS `D OnHand`,
+            SUM(CASE
+                WHEN inventory.materialcode = 'G' THEN inventory.onhandqty
+                ELSE 0
+            END) AS `G OnHand`,
+            SUM(CASE
+                WHEN inventory.materialcode = 'F' AND inventory.purposecode <> 'Z' THEN inventory.onhandqty
+                ELSE 0
+            END) AS `F OnHand`,
+            SUM(CASE
+                WHEN inventory.materialcode = 'F' AND inventory.purposecode = 'Z' THEN inventory.onhandqty
+                ELSE 0
+            END) AS `F Awaiting Vendor`
+        FROM inventory
+        GROUP BY inventory.niin
+    ) i
+        ON sh.niin = i.NIIN
+    ORDER BY sh.LastShipDate DESC, sh.niin ASC
+    ";
+        
+        $results = $db->query($sql)->fetchAll();
+        $db->close();
+        
+        return $results;
+    }
+    
 }

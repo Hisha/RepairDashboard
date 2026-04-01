@@ -16,6 +16,7 @@ require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
 require_once APP_ROOT . '/bin/Utilities/ChartRenderer.php';
 require_once APP_ROOT . '/bin/Utilities/helpers.php';
 require_once APP_ROOT . '/bin/Utilities/xlsx_helper.php';
+require_once APP_ROOT . '/bin/Utilities/xlsx_styled_helper.php';
 
 use PhpOffice\PhpPresentation\IOFactory;
 use PhpOffice\PhpPresentation\Shape\Drawing\File;
@@ -25,7 +26,7 @@ use PhpOffice\PhpPresentation\Style\Color;
 use PhpOffice\PhpPresentation\Style\Font;
 
 $selectedTab = $_GET['tab'] ?? ($_POST['tab'] ?? 'overview');
-$allowedTabs = ['overview', 'shipment_data', 'program_niin', 'drmo', 'reportable_numbers', 'powerpoint_report'];
+$allowedTabs = ['overview', 'shipment_data', 'program_niin', 'last_5_quarters', 'drmo', 'reportable_numbers', 'powerpoint_report'];
 
 if (!in_array($selectedTab, $allowedTabs, true)) {
     $selectedTab = 'overview';
@@ -199,6 +200,119 @@ if (
                 $rows,
                 [],
                 'Reportable Numbers'
+                );
+    }
+    
+if (
+    $selectedTab === 'last_5_quarters'
+    && isset($_GET['export'])
+    && $_GET['export'] === 'xlsx'
+    ) {
+        $data = $shipmentsModel->getLast5QuartersPriorityReport();
+        
+        $search = trim((string)($_GET['l5q_search'] ?? ''));
+        $programFilter = trim((string)($_GET['l5q_program'] ?? ''));
+        $statusFilter = trim((string)($_GET['l5q_status'] ?? ''));
+        $minDemandFilter = (float)($_GET['l5q_min_demand'] ?? 0);
+        
+        $filteredData = array_filter($data, function ($row) use ($search, $programFilter, $statusFilter, $minDemandFilter) {
+            $niin = strtolower(trim((string)($row['NIIN'] ?? '')));
+            $program = strtolower(trim((string)($row['Program'] ?? '')));
+            
+            $aOnHand = (float)($row['A OnHand'] ?? 0);
+            $dOnHand = (float)($row['D OnHand'] ?? 0);
+            $gOnHand = (float)($row['G OnHand'] ?? 0);
+            $quarterlyDemand = (float)($row['Quarterly Demand'] ?? 0);
+            
+            if ($aOnHand > $quarterlyDemand) {
+                $rowStatus = 'status-green';
+            } elseif ($aOnHand == $quarterlyDemand) {
+                $rowStatus = 'status-yellow';
+            } elseif (($aOnHand + $dOnHand + $gOnHand) > $quarterlyDemand) {
+                $rowStatus = 'status-purple';
+            } else {
+                $rowStatus = 'status-red';
+            }
+            
+            if ($search !== '' && !str_contains($niin, strtolower($search)) && !str_contains($program, strtolower($search))) {
+                return false;
+            }
+            
+            if ($programFilter !== '' && $program !== strtolower($programFilter)) {
+                return false;
+            }
+            
+            if ($statusFilter !== '' && $rowStatus !== $statusFilter) {
+                return false;
+            }
+            
+            if ($quarterlyDemand < $minDemandFilter) {
+                return false;
+            }
+            
+            return true;
+        });
+            
+            $headers = [
+                'NIIN',
+                'Quarterly Demand',
+                'A OnHand',
+                'D OnHand',
+                'G OnHand',
+                'F OnHand',
+                'F Awaiting Vendor',
+                'Last Ship Date',
+                'Program'
+            ];
+            
+            $exportRows = [];
+            
+            foreach ($filteredData as $row) {
+                $aOnHand = (float)($row['A OnHand'] ?? 0);
+                $dOnHand = (float)($row['D OnHand'] ?? 0);
+                $gOnHand = (float)($row['G OnHand'] ?? 0);
+                $quarterlyDemand = (float)($row['Quarterly Demand'] ?? 0);
+                
+                if ($aOnHand > $quarterlyDemand) {
+                    $rowType = 'highlight_green';
+                } elseif ($aOnHand == $quarterlyDemand) {
+                    $rowType = 'highlight_yellow';
+                } elseif (($aOnHand + $dOnHand + $gOnHand) > $quarterlyDemand) {
+                    $rowType = 'highlight_purple';
+                } else {
+                    $rowType = 'highlight_red';
+                }
+                
+                $exportRows[] = [
+                    '_row_type' => $rowType,
+                    'NIIN' => $row['NIIN'] ?? '',
+                    'Quarterly Demand' => $quarterlyDemand,
+                    'A OnHand' => $aOnHand,
+                    'D OnHand' => $dOnHand,
+                    'G OnHand' => $gOnHand,
+                    'F OnHand' => (float)($row['F OnHand'] ?? 0),
+                    'F Awaiting Vendor' => (float)($row['F Awaiting Vendor'] ?? 0),
+                    'Last Ship Date' => $row['LastShipDate'] ?? '',
+                    'Program' => $row['Program'] ?? ''
+                ];
+            }
+            
+            xlsx_styled_helper::download(
+                'last_5_quarters_' . date('Y-m-d') . '.xlsx',
+                $headers,
+                $exportRows,
+                [
+                    'sheetTitle' => 'Last 5 Quarters',
+                    'textColumns' => ['NIIN'],
+                    'numberFormats' => [
+                        'Quarterly Demand' => '0.00',
+                        'A OnHand' => '0',
+                        'D OnHand' => '0',
+                        'G OnHand' => '0',
+                        'F OnHand' => '0',
+                        'F Awaiting Vendor' => '0'
+                    ]
+                ]
                 );
     }
     
@@ -1553,6 +1667,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
     		<a class="tab-link <?= $selectedTab === 'program_niin' ? 'active' : '' ?>"
        			href="monthly_reqs.php?tab=program_niin&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Program / NIIN Analysis</a>
        			
+       		<a class="tab-link <?= $selectedTab === 'last_5_quarters' ? 'active' : '' ?>"
+   				href="monthly_reqs.php?tab=last_5_quarters&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Last 5 Quarters</a>
+       			
        		<a class="tab-link <?= $selectedTab === 'drmo' ? 'active' : '' ?>"
    				href="monthly_reqs.php?tab=drmo&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">DRMO</a>
 
@@ -1574,6 +1691,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 break;
             case 'program_niin':
                 require_once APP_ROOT . '/bin/Tabs/monthly_reqs_program_niin.php';
+                break;
+            case 'last_5_quarters':
+                require_once APP_ROOT . '/bin/Tabs/monthly_reqs_last_5_quarters.php';
                 break;
             case 'drmo':
                 require_once APP_ROOT . '/bin/Tabs/monthly_reqs_drmo.php';
