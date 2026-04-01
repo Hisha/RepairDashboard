@@ -85,10 +85,21 @@ $initialMinDemand = $_GET['l5q_min_demand'] ?? '0';
     font-weight: bold;
 }
 
-.legend-red { background: #f8d7da; }
-.legend-yellow { background: #fff3cd; }
-.legend-green { background: #d1e7dd; }
-.legend-purple { background: #e2d9f3; }
+.legend-red {
+    background: #f8d7da;
+}
+
+.legend-yellow {
+    background: #fff3cd;
+}
+
+.legend-green {
+    background: #d1e7dd;
+}
+
+.legend-purple {
+    background: #e2d9f3;
+}
 
 .priority-legend {
     margin: 10px 0 15px 0;
@@ -147,6 +158,20 @@ $initialMinDemand = $_GET['l5q_min_demand'] ?? '0';
 
 .hidden-row {
     display: none;
+}
+
+.export-link {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 8px 12px;
+    text-decoration: none;
+    background: #0d6efd;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.export-link:hover {
+    background: #0b5ed7;
 }
 </style>
 
@@ -207,6 +232,11 @@ $initialMinDemand = $_GET['l5q_min_demand'] ?? '0';
         <button type="button" id="last5qReset">Reset Filters</button>
     </div>
 </div>
+
+<a class="export-link" id="last5qExportLink"
+   href="monthly_reqs.php?tab=last_5_quarters&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>&l5q_search=<?= urlencode((string)$initialSearch) ?>&l5q_program=<?= urlencode((string)$initialProgram) ?>&l5q_status=<?= urlencode((string)$initialStatus) ?>&l5q_min_demand=<?= urlencode((string)$initialMinDemand) ?>&export=xlsx">
+    Export Excel
+</a>
 
 <div class="results-count">
     Showing <span id="last5qVisibleCount">0</span> rows
@@ -281,6 +311,7 @@ $initialMinDemand = $_GET['l5q_min_demand'] ?? '0';
     const minDemandFilter = document.getElementById('last5qMinDemand');
     const resetButton = document.getElementById('last5qReset');
     const visibleCount = document.getElementById('last5qVisibleCount');
+    const exportLink = document.getElementById('last5qExportLink');
     const rows = Array.from(document.querySelectorAll('#last5qTable tbody tr'));
 
     function updateUrlAndExportLink() {
@@ -295,7 +326,6 @@ $initialMinDemand = $_GET['l5q_min_demand'] ?? '0';
 
         history.replaceState({}, '', url.toString());
 
-        const exportLink = document.querySelector('.page-controls .export-link');
         if (exportLink) {
             const exportUrl = new URL(url.toString());
             exportUrl.searchParams.set('export', 'xlsx');
