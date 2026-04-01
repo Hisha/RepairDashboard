@@ -156,7 +156,7 @@ class Repairs
         
         $sql = "
     SELECT
-        r.NIIN,
+        l.niin AS NIIN,
         COALESCE(i.`A OnHand`, 0) AS `A OnHand`,
         COALESCE(i.`D OnHand`, 0) AS `D OnHand`,
         COALESCE(i.`G OnHand`, 0) AS `G OnHand`,
@@ -164,18 +164,8 @@ class Repairs
         COALESCE(i.`F Awaiting Vendor`, 0) AS `F Awaiting Vendor`,
         sh.LastShipDate,
         COALESCE(sh.QuarterlyDemand, 0) AS `Quarterly Demand`,
-        r.Program
-    FROM
-    (
-        SELECT
-            repairs.niin AS NIIN,
-            SYS_repair_program_mapping.normalized_program AS Program
-        FROM repairs
-        INNER JOIN SYS_repair_program_mapping
-            ON repairs.subgrouptype = SYS_repair_program_mapping.source_program
-        WHERE repairs.transactiondate BETWEEN ? AND ?
-        GROUP BY repairs.niin, SYS_repair_program_mapping.normalized_program
-    ) r
+        l.lrc AS Program
+    FROM LMS21Data l
     LEFT JOIN
     (
         SELECT
@@ -203,8 +193,8 @@ class Repairs
         FROM inventory
         GROUP BY inventory.niin
     ) i
-        ON r.NIIN = i.NIIN
-    INNER JOIN
+        ON l.niin = i.NIIN
+    LEFT JOIN
     (
         SELECT
             s.niin,
@@ -232,11 +222,12 @@ class Repairs
         ) p
         GROUP BY s.niin
     ) sh
-        ON r.NIIN = sh.niin
-    ORDER BY sh.LastShipDate DESC, r.NIIN ASC
+        ON l.niin = sh.niin
+    WHERE l.cog LIKE '7%'
+    ORDER BY sh.LastShipDate DESC, l.niin ASC
     ";
         
-        $results = $db->query($sql, $startDate, $endDate)->fetchAll();
+        $results = $db->query($sql)->fetchAll();
         
         $db->close();
         
