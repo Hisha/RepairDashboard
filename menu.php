@@ -54,6 +54,7 @@ $lastProcurementUpdateFormatted = $lastProcurementUpdate
     <a href="monthly_reqs.php">Shipments</a>
     <a href="cog7_repairables.php">Survival Rates</a>
     <a href="upload_excel.php">Upload Link</a>
+    <a href="lms21_missing.php">COG/Price Data Insert</a>
   </div>
 
   <div class="menu-updates">
