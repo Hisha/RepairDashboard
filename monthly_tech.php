@@ -198,70 +198,114 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
             
         case 'repair_priority':
             $data = $repairsModel->getRepairPriorityReport($fyRange['start_date'], $fyRange['end_date']);
-            $filename = 'repair_priority_' . date('Y-m-d') . '.xlsx';
             
-            $headers = [
-                'NIIN',
-                'Quarterly Demand',
-                'A OnHand',
-                'D OnHand',
-                'G OnHand',
-                'F OnHand',
-                'F Awaiting Vendor',
-                'Last Ship Date',
-                'Program'
-            ];
+            $search = trim((string)($_GET['rp_search'] ?? ''));
+            $programFilter = trim((string)($_GET['rp_program'] ?? ''));
+            $statusFilter = trim((string)($_GET['rp_status'] ?? ''));
+            $minDemandFilter = (float)($_GET['rp_min_demand'] ?? 0);
             
-            $exportRows = [];
-            
-            foreach ($data as $row) {
+            $filteredData = array_filter($data, function ($row) use ($search, $programFilter, $statusFilter, $minDemandFilter) {
+                $niin = strtolower(trim((string)($row['NIIN'] ?? '')));
+                $program = strtolower(trim((string)($row['Program'] ?? '')));
+                
                 $aOnHand = (float)($row['A OnHand'] ?? 0);
                 $dOnHand = (float)($row['D OnHand'] ?? 0);
                 $gOnHand = (float)($row['G OnHand'] ?? 0);
                 $quarterlyDemand = (float)($row['Quarterly Demand'] ?? 0);
                 
                 if ($aOnHand > $quarterlyDemand) {
-                    $rowType = 'highlight_green';
+                    $rowStatus = 'status-green';
                 } elseif ($aOnHand == $quarterlyDemand) {
-                    $rowType = 'highlight_yellow';
+                    $rowStatus = 'status-yellow';
                 } elseif (($aOnHand + $dOnHand + $gOnHand) > $quarterlyDemand) {
-                    $rowType = 'highlight_purple';
+                    $rowStatus = 'status-purple';
                 } else {
-                    $rowType = 'highlight_red';
+                    $rowStatus = 'status-red';
                 }
                 
-                $exportRows[] = [
-                    '_row_type' => $rowType,
-                    'NIIN' => $row['NIIN'] ?? '',
-                    'Quarterly Demand' => $quarterlyDemand,
-                    'A OnHand' => $aOnHand,
-                    'D OnHand' => $dOnHand,
-                    'G OnHand' => $gOnHand,
-                    'F OnHand' => (float)($row['F OnHand'] ?? 0),
-                    'F Awaiting Vendor' => (float)($row['F Awaiting Vendor'] ?? 0),
-                    'Last Ship Date' => $row['LastShipDate'] ?? '',
-                    'Program' => $row['Program'] ?? ''
+                if ($search !== '' && !str_contains($niin, strtolower($search)) && !str_contains($program, strtolower($search))) {
+                    return false;
+                }
+                
+                if ($programFilter !== '' && $program !== strtolower($programFilter)) {
+                    return false;
+                }
+                
+                if ($statusFilter !== '' && $rowStatus !== $statusFilter) {
+                    return false;
+                }
+                
+                if ($quarterlyDemand < $minDemandFilter) {
+                    return false;
+                }
+                
+                return true;
+            });
+                
+                $filename = 'repair_priority_' . date('Y-m-d') . '.xlsx';
+                
+                $headers = [
+                    'NIIN',
+                    'Quarterly Demand',
+                    'A OnHand',
+                    'D OnHand',
+                    'G OnHand',
+                    'F OnHand',
+                    'F Awaiting Vendor',
+                    'Last Ship Date',
+                    'Program'
                 ];
-            }
-            
-            xlsx_styled_helper::download(
-                $filename,
-                $headers,
-                $exportRows,
-                [
-                    'sheetTitle' => 'Repair Priority',
-                    'textColumns' => ['NIIN'],
-                    'numberFormats' => [
-                        'Quarterly Demand' => '0.00',
-                        'A OnHand' => '0',
-                        'D OnHand' => '0',
-                        'G OnHand' => '0',
-                        'F OnHand' => '0',
-                        'F Awaiting Vendor' => '0'
+                
+                $exportRows = [];
+                
+                foreach ($filteredData as $row) {
+                    $aOnHand = (float)($row['A OnHand'] ?? 0);
+                    $dOnHand = (float)($row['D OnHand'] ?? 0);
+                    $gOnHand = (float)($row['G OnHand'] ?? 0);
+                    $quarterlyDemand = (float)($row['Quarterly Demand'] ?? 0);
+                    
+                    if ($aOnHand > $quarterlyDemand) {
+                        $rowType = 'highlight_green';
+                    } elseif ($aOnHand == $quarterlyDemand) {
+                        $rowType = 'highlight_yellow';
+                    } elseif (($aOnHand + $dOnHand + $gOnHand) > $quarterlyDemand) {
+                        $rowType = 'highlight_purple';
+                    } else {
+                        $rowType = 'highlight_red';
+                    }
+                    
+                    $exportRows[] = [
+                        '_row_type' => $rowType,
+                        'NIIN' => $row['NIIN'] ?? '',
+                        'Quarterly Demand' => $quarterlyDemand,
+                        'A OnHand' => $aOnHand,
+                        'D OnHand' => $dOnHand,
+                        'G OnHand' => $gOnHand,
+                        'F OnHand' => (float)($row['F OnHand'] ?? 0),
+                        'F Awaiting Vendor' => (float)($row['F Awaiting Vendor'] ?? 0),
+                        'Last Ship Date' => $row['LastShipDate'] ?? '',
+                        'Program' => $row['Program'] ?? ''
+                    ];
+                }
+                
+                xlsx_styled_helper::download(
+                    $filename,
+                    $headers,
+                    $exportRows,
+                    [
+                        'sheetTitle' => 'Repair Priority',
+                        'textColumns' => ['NIIN'],
+                        'numberFormats' => [
+                            'Quarterly Demand' => '0.00',
+                            'A OnHand' => '0',
+                            'D OnHand' => '0',
+                            'G OnHand' => '0',
+                            'F OnHand' => '0',
+                            'F Awaiting Vendor' => '0'
+                        ]
                     ]
-                ]
-                );
-            break;
+                    );
+                break;
             
         case 'battery_tracker':
             require_once APP_ROOT . '/bin/Model/Batteries.php';
@@ -375,6 +419,13 @@ include 'menu.php';
 $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
 . '&fy=' . urlencode((string)$fyRange['fiscal_year'])
 . '&export=xlsx';
+
+if ($selectedTab === 'repair_priority') {
+    $exportUrl .= '&rp_search=' . urlencode((string)($_GET['rp_search'] ?? ''));
+    $exportUrl .= '&rp_program=' . urlencode((string)($_GET['rp_program'] ?? ''));
+    $exportUrl .= '&rp_status=' . urlencode((string)($_GET['rp_status'] ?? ''));
+    $exportUrl .= '&rp_min_demand=' . urlencode((string)($_GET['rp_min_demand'] ?? '0'));
+}
 ?>
 
 <!DOCTYPE html>
