@@ -373,6 +373,7 @@ class CavRequisitions
         WHERE SYS_program_mapping.normalized_program = ?
           AND cav_requisitions.date_shipped BETWEEN ? AND ?
           AND cav_requisitions.on_time = 1
+          AND cav_requisitions.status IN ('SHIPPED','PICK UP')
     ";
         
         $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
@@ -395,6 +396,7 @@ class CavRequisitions
         WHERE SYS_program_mapping.normalized_program = ?
           AND cav_requisitions.date_shipped BETWEEN ? AND ?
           AND cav_requisitions.on_time = 0
+          AND cav_requisitions.status IN ('SHIPPED','PICK UP')
     ";
         
         $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
