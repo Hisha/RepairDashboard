@@ -610,7 +610,8 @@ class excelformat
                     'SIMINVADJ_SUBQTY',
                     'SIMINVADJ_SUBGROUPTYPE',
                     'SIMINVADJ_MATERIALCODE',
-                    'SIMINVADJ_ISSUELOCATION'
+                    'SIMINVADJ_ISSUELOCATION',
+                    'SIMINVADJ_DOCNO'
                 ],
                 
                 'db_columns' => [
@@ -621,7 +622,8 @@ class excelformat
                     'qty',
                     'subgrouptype',
                     'materialcode',
-                    'issuelocation'
+                    'issuelocation',
+                    'docno'
                 ],
                 
                 'required_columns' => [
@@ -630,7 +632,8 @@ class excelformat
                     'qty',
                     'subgrouptype',
                     'materialcode',
-                    'issuelocation'
+                    'issuelocation',
+                    'docno'
                 ],
                 
                 'column_types' => [
@@ -641,7 +644,8 @@ class excelformat
                     'qty'    => 'int',
                     'subgrouptype'   => 'string',
                     'materialcode'       => 'string',
-                    'issuelocation'      => 'string'
+                    'issuelocation'      => 'string',
+                    'docno'     => 'string'
                 ],
                 
                 'create_sql' => "
@@ -655,6 +659,7 @@ class excelformat
                         `subgrouptype` VARCHAR(50) NOT NULL,
                         `materialcode` VARCHAR(2) NOT NULL,
                         `issuelocation` VARCHAR(50) NOT NULL,
+                        `docno` VARCHAR(50) NOT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
