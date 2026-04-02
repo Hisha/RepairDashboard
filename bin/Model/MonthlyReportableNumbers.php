@@ -86,7 +86,7 @@ class MonthlyReportableNumbers
             LEFT JOIN (
                 SELECT
                     rpm.normalized_program,
-                    COUNT(*) AS shipment_count,
+                    COUNT(DISTINCT sh.docno) AS shipment_count,
                     SUM(sh.qty) AS shipped_qty
                 FROM shipments sh
                 INNER JOIN SYS_repair_program_mapping rpm
