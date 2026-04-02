@@ -240,10 +240,10 @@ class Repairs
         
         $sql = "
         SELECT
-            DATE_FORMAT(transactiondate, '%M %Y') AS MonthYear,
-            DATE_FORMAT(transactiondate, '%Y-%m') AS MonthSort,
+            DATE_FORMAT(repairs.transactiondate, '%M %Y') AS MonthYear,
+            DATE_FORMAT(repairs.transactiondate, '%Y-%m') AS MonthSort,
             SYS_repair_program_mapping.normalized_program AS SUBGROUPTYPE,
-            repairs.materialcode AS Condition,
+            repairs.materialcode AS ConditionCode,
             repairs.niin AS NIIN,
             COUNT(*) AS Qty
         FROM repairs

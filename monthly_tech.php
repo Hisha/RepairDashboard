@@ -394,15 +394,15 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
                     $lastCondition = '';
                 }
                 
-                if ($row['Condition'] !== $lastCondition) {
+                if ($row['ConditionCode'] !== $lastCondition) {
                     $exportRows[] = [
                         'MonthYear' => '',
                         'SUBGROUPTYPE' => '',
-                        'Condition' => $row['Condition'],
+                        'Condition' => $row['ConditionCode'],
                         'NIIN' => '',
                         'Sum of Qty' => ''
                     ];
-                    $lastCondition = $row['Condition'];
+                    $lastCondition = $row['ConditionCode'];
                 }
                 
                 $exportRows[] = [

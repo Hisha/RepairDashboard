@@ -125,15 +125,15 @@ $lastCondition = '';
                         ?>
                     <?php endif; ?>
 
-                    <?php if ($row['Condition'] !== $lastCondition): ?>
+                    <?php if ($row['ConditionCode'] !== $lastCondition): ?>
                         <tr class="condition-row">
                             <td></td>
                             <td></td>
-                            <td><?= htmlspecialchars($row['Condition']) ?></td>
+                            <td><?= htmlspecialchars($row['ConditionCode']) ?></td>
                             <td></td>
                             <td></td>
                         </tr>
-                        <?php $lastCondition = $row['Condition']; ?>
+                        <?php $lastCondition = $row['ConditionCode']; ?>
                     <?php endif; ?>
 
                     <tr class="part-row">
