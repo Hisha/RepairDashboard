@@ -6,6 +6,7 @@ $rows = $repairsModel->getRepairsByMonthAndSubgroup($fyRange['start_date'], $fyR
 
 $lastMonth = '';
 $lastSubgroup = '';
+$lastCondition = '';
 ?>
 
 <style>
@@ -20,7 +21,7 @@ $lastSubgroup = '';
 
 .repairs-by-month-table {
     width: 100%;
-    min-width: 900px;
+    min-width: 1000px;
     border-collapse: collapse;
 }
 
@@ -57,8 +58,13 @@ $lastSubgroup = '';
     font-weight: bold;
 }
 
-.part-row td:nth-child(3) {
+.condition-row td:nth-child(3) {
     padding-left: 40px;
+    font-weight: bold;
+}
+
+.part-row td:nth-child(4) {
+    padding-left: 60px;
 }
 
 .filter-summary {
@@ -81,6 +87,7 @@ $lastSubgroup = '';
             <tr>
                 <th>MonthYear</th>
                 <th>SUBGROUPTYPE</th>
+                <th>Condition</th>
                 <th>NIIN</th>
                 <th>Sum of Qty</th>
             </tr>
@@ -95,10 +102,12 @@ $lastSubgroup = '';
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
                         <?php
                         $lastMonth = $row['MonthYear'];
                         $lastSubgroup = '';
+                        $lastCondition = '';
                         ?>
                     <?php endif; ?>
 
@@ -108,11 +117,27 @@ $lastSubgroup = '';
                             <td><?= htmlspecialchars($row['SUBGROUPTYPE']) ?></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
-                        <?php $lastSubgroup = $row['SUBGROUPTYPE']; ?>
+                        <?php
+                        $lastSubgroup = $row['SUBGROUPTYPE'];
+                        $lastCondition = '';
+                        ?>
+                    <?php endif; ?>
+
+                    <?php if ($row['Condition'] !== $lastCondition): ?>
+                        <tr class="condition-row">
+                            <td></td>
+                            <td></td>
+                            <td><?= htmlspecialchars($row['Condition']) ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <?php $lastCondition = $row['Condition']; ?>
                     <?php endif; ?>
 
                     <tr class="part-row">
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td><?= htmlspecialchars($row['NIIN']) ?></td>
@@ -122,7 +147,7 @@ $lastSubgroup = '';
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="4">No data found.</td>
+                    <td colspan="5">No data found.</td>
                 </tr>
             <?php endif; ?>
         </tbody>

@@ -360,38 +360,55 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
             break;
             
         case 'repairs_by_month':
-            $headers = ['MonthYear', 'SUBGROUPTYPE', 'NIIN', 'Sum of Qty'];
-            $textColumns = ['NIIN'];
+            $headers = ['MonthYear', 'SUBGROUPTYPE', 'Condition', 'NIIN', 'Sum of Qty'];
+            $textColumns = ['NIIN', 'Condition'];
             $sheetTitle = 'Repairs By Month';
             
             $lastMonth = '';
             $lastSubgroup = '';
+            $lastCondition = '';
             
             foreach ($rows as $row) {
                 if ($row['MonthYear'] !== $lastMonth) {
                     $exportRows[] = [
                         'MonthYear' => $row['MonthYear'],
                         'SUBGROUPTYPE' => '',
+                        'Condition' => '',
                         'NIIN' => '',
                         'Sum of Qty' => ''
                     ];
                     $lastMonth = $row['MonthYear'];
                     $lastSubgroup = '';
+                    $lastCondition = '';
                 }
                 
                 if ($row['SUBGROUPTYPE'] !== $lastSubgroup) {
                     $exportRows[] = [
                         'MonthYear' => '',
                         'SUBGROUPTYPE' => $row['SUBGROUPTYPE'],
+                        'Condition' => '',
                         'NIIN' => '',
                         'Sum of Qty' => ''
                     ];
                     $lastSubgroup = $row['SUBGROUPTYPE'];
+                    $lastCondition = '';
+                }
+                
+                if ($row['Condition'] !== $lastCondition) {
+                    $exportRows[] = [
+                        'MonthYear' => '',
+                        'SUBGROUPTYPE' => '',
+                        'Condition' => $row['Condition'],
+                        'NIIN' => '',
+                        'Sum of Qty' => ''
+                    ];
+                    $lastCondition = $row['Condition'];
                 }
                 
                 $exportRows[] = [
                     'MonthYear' => '',
                     'SUBGROUPTYPE' => '',
+                    'Condition' => '',
                     'NIIN' => $row['NIIN'],
                     'Sum of Qty' => $row['Qty']
                 ];

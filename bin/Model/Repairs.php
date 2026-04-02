@@ -243,21 +243,24 @@ class Repairs
             DATE_FORMAT(transactiondate, '%M %Y') AS MonthYear,
             DATE_FORMAT(transactiondate, '%Y-%m') AS MonthSort,
             SYS_repair_program_mapping.normalized_program AS SUBGROUPTYPE,
-            niin AS NIIN,
+            repairs.materialcode AS Condition,
+            repairs.niin AS NIIN,
             COUNT(*) AS Qty
         FROM repairs
         INNER JOIN SYS_repair_program_mapping
             ON repairs.subgrouptype = SYS_repair_program_mapping.source_program
-        WHERE transactiondate BETWEEN ? AND ?
+        WHERE repairs.transactiondate BETWEEN ? AND ?
         GROUP BY
-            DATE_FORMAT(transactiondate, '%Y-%m'),
-            DATE_FORMAT(transactiondate, '%M %Y'),
-            subgrouptype,
-            niin
+            DATE_FORMAT(repairs.transactiondate, '%Y-%m'),
+            DATE_FORMAT(repairs.transactiondate, '%M %Y'),
+            SYS_repair_program_mapping.normalized_program,
+            repairs.materialcode,
+            repairs.niin
         ORDER BY
             MonthSort DESC,
-            subgrouptype ASC,
-            niin ASC
+            SYS_repair_program_mapping.normalized_program ASC,
+            repairs.materialcode ASC,
+            repairs.niin ASC
     ";
         
         $results = $db->query($sql, $startDate, $endDate)->fetchAll();
