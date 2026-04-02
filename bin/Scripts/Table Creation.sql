@@ -83,7 +83,7 @@ CREATE TABLE `SYS_powerpoint_filler` (
 	UNIQUE KEY `uq_program` (`program`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('AAL/Q70','C4I PBL-O METRICS','--','--');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('AAL/Q70','C4I PBL-O METRICS','Mike Patterson','Q70');
 INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('AJ5','C4I PBL-O METRICS','Kyle Youtz','AJ5');
 INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('BC5','C4I PBL-O METRICS','Dan Miller','BC5');
 INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('EFJ','C4I PBL-O METRICS','Melissa Trusch','EFJ');
