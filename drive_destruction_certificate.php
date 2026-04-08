@@ -53,8 +53,7 @@ $isVoided = ($record['status'] === 'Voided');
             margin-bottom: 20px;
         }
 
-        .print-btn,
-        .back-btn {
+        .print-btn{
             display: inline-block;
             padding: 10px 16px;
             border: 1px solid #333;
@@ -215,7 +214,6 @@ $isVoided = ($record['status'] === 'Voided');
 <body>
     <div class="certificate-wrap">
         <div class="top-bar">
-            <a href="drive_destruction.php" class="back-btn">Back to Log</a>
             <button class="print-btn" onclick="window.print()">Print Certificate</button>
         </div>
 
@@ -262,7 +260,17 @@ $isVoided = ($record['status'] === 'Voided');
         <table class="detail-table">
             <tr>
                 <th>Destruction Method</th>
-                <td><?php echo h($record['destruction_method']); ?></td>
+                <?php
+                $methodMap = [
+                    'Both' => 'Degaussed and Punched',
+                    'Degauss' => 'Degaussed',
+                    'Punch' => 'Punched',
+                    'Shredded' => 'Shredded'
+                ];
+                
+                $methodDisplay = $methodMap[$record['destruction_method']] ?? $record['destruction_method'];
+                ?>
+                <td><?php echo h($methodDisplay); ?></td>
             </tr>
             <tr>
                 <th>Date of Destruction</th>

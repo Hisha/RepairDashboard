@@ -49,6 +49,7 @@ $lastProcurementUpdateFormatted = $lastProcurementUpdate
   <div class="menu-links">
     <a href="index.php">Home</a>
     <a href="backorders.php">Back Orders</a>
+    <a href="drive_destruction.php">Drive Destruction</a>
     <a href="procurements.php">Procurements</a>
     <a href="monthly_tech.php">Repairs</a>
     <a href="monthly_reqs.php">Shipments</a>
