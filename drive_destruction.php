@@ -97,6 +97,113 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
     exit;
 }
 
+$message = '';
+$error = '';
+
+function h($value): string
+{
+    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+}
+
+function buildQueryString(array $overrides = []): string
+{
+    $params = $_GET;
+    foreach ($overrides as $key => $value) {
+        if ($value === null) {
+            unset($params[$key]);
+        } else {
+            $params[$key] = $value;
+        }
+    }
+    return http_build_query($params);
+}
+
+function sortLink(string $column): string
+{
+    $currentSort = $_GET['sort'] ?? 'destruction_date';
+    $currentDir  = strtoupper($_GET['dir'] ?? 'DESC');
+    
+    $nextDir = 'ASC';
+    if ($currentSort === $column && $currentDir === 'ASC') {
+        $nextDir = 'DESC';
+    }
+    
+    return '?' . buildQueryString([
+        'sort' => $column,
+        'dir'  => $nextDir
+    ]);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        $action = $_POST['action'] ?? '';
+        
+        if ($action === 'add_record') {
+            $partNumber = trim($_POST['part_number'] ?? '');
+            $serialNumber = trim($_POST['serial_number'] ?? '');
+            $destructionMethod = trim($_POST['destruction_method'] ?? '');
+            $destructionDate = trim($_POST['destruction_date'] ?? '');
+            
+            if ($partNumber === '' || $serialNumber === '' || $destructionMethod === '' || $destructionDate === '') {
+                throw new Exception('Part number, serial number, destruction method, and destruction date are required.');
+            }
+            
+            $drive->createRecord([
+                'part_number' => $partNumber,
+                'serial_number' => $serialNumber,
+                'niin' => $_POST['niin'] ?? '',
+                'description' => $_POST['description'] ?? '',
+                'quantity' => 1,
+                'destruction_method' => $destructionMethod,
+                'destruction_date' => $destructionDate,
+                'notes' => $_POST['notes'] ?? '',
+                'created_by' => $_POST['created_by'] ?? '',
+            ]);
+            
+            $message = 'Drive destruction record created successfully.';
+        }
+        
+        if ($action === 'sign_destroyer') {
+            $id = intval($_POST['record_id'] ?? 0);
+            $fullName = trim($_POST['destroyer_name'] ?? '');
+            
+            if ($id <= 0 || $fullName === '') {
+                throw new Exception('Destroyer signoff requires a valid record and full name.');
+            }
+            
+            $drive->signDestroyer($id, $fullName);
+            $message = 'Destroyer signature added successfully.';
+        }
+        
+        if ($action === 'sign_witness') {
+            $id = intval($_POST['record_id'] ?? 0);
+            $fullName = trim($_POST['witness_name'] ?? '');
+            
+            if ($id <= 0 || $fullName === '') {
+                throw new Exception('Witness signoff requires a valid record and full name.');
+            }
+            
+            $drive->signWitness($id, $fullName);
+            $message = 'Witness signature added successfully.';
+        }
+        
+        if ($action === 'void_record') {
+            $id = intval($_POST['record_id'] ?? 0);
+            
+            if ($id <= 0) {
+                throw new Exception('Invalid record selected.');
+            }
+            
+            $drive->voidRecord($id, $_POST['performed_by'] ?? '');
+            $message = 'Record voided successfully.';
+        }
+    } catch (Throwable $e) {
+        $error = $e->getMessage();
+    }
+}
+
+$records = $drive->getRecords($filters);
+
 require_once APP_ROOT . '/menu.php';
 
 ?>
