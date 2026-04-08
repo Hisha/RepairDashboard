@@ -130,11 +130,15 @@ CREATE TABLE drive_destruction_log (
     status ENUM('Pending', 'Partially Signed', 'Completed', 'Voided') DEFAULT 'Pending',
     notes TEXT NULL,
 
+    -- Void Tracking (Audit Critical)
+    void_reason TEXT NULL,
+    voided_by VARCHAR(100) NULL,
+    voided_at DATETIME NULL,
+
     -- Tracking
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    created_by VARCHAR(100) NULL,
+    created_by VARCHAR(100) NOT NULL DEFAULT '',
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-
 );
 
 -- Drive Destruction Audit Table --

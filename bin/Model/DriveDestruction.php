@@ -29,6 +29,9 @@ class DriveDestruction
                 witness_signed_at,
                 status,
                 notes,
+                void_reason,
+                voided_by,
+                voided_at,
                 created_at,
                 created_by,
                 updated_at
@@ -255,23 +258,38 @@ class DriveDestruction
             );
     }
     
-    public function voidRecord(int $id, ?string $performedBy = null): void
+    public function voidRecord(int $id, string $reason, ?string $performedBy = null): void
     {
         $record = $this->getRecordById($id);
         if (!$record) {
             throw new Exception('Record not found.');
         }
         
+        $reason = trim($reason);
+        if ($reason === '') {
+            throw new Exception('A void reason is required.');
+        }
+        
+        $performedBy = trim((string)($performedBy ?? ''));
+        
         $db = new db();
-        $sql = "UPDATE {$this->_tableName} SET status = 'Voided' WHERE id = ?";
-        $db->query($sql, $id);
+        $sql = "
+        UPDATE {$this->_tableName}
+        SET
+            status = 'Voided',
+            void_reason = ?,
+            voided_by = ?,
+            voided_at = NOW()
+        WHERE id = ?
+    ";
+        $db->query($sql, $reason, $performedBy, $id);
         $db->close();
         
         $this->addAuditEntry(
             $id,
             'Record Voided',
             $performedBy,
-            'Record marked as voided.'
+            'Record marked as voided. Reason: ' . $reason
             );
     }
     

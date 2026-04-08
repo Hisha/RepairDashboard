@@ -45,6 +45,9 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
         'Witness Signed At',
         'Status',
         'Notes',
+        'Void Reason',
+        'Voided By',
+        'Voided At',
         'Created At',
         'Created By',
         'Updated At'
@@ -73,18 +76,21 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
         $sheet->setCellValue("L{$rowNum}", $row['witness_signed_at'] ?? '');
         $sheet->setCellValue("M{$rowNum}", $row['status'] ?? '');
         $sheet->setCellValue("N{$rowNum}", $row['notes'] ?? '');
-        $sheet->setCellValue("O{$rowNum}", $row['created_at'] ?? '');
-        $sheet->setCellValue("P{$rowNum}", $row['created_by'] ?? '');
-        $sheet->setCellValue("Q{$rowNum}", $row['updated_at'] ?? '');
+        $sheet->setCellValue("O{$rowNum}", $row['void_reason'] ?? '');
+        $sheet->setCellValue("P{$rowNum}", $row['voided_by'] ?? '');
+        $sheet->setCellValue("Q{$rowNum}", $row['voided_at'] ?? '');
+        $sheet->setCellValue("R{$rowNum}", $row['created_at'] ?? '');
+        $sheet->setCellValue("S{$rowNum}", $row['created_by'] ?? '');
+        $sheet->setCellValue("T{$rowNum}", $row['updated_at'] ?? '');
         $rowNum++;
     }
     
-    foreach (range('A', 'Q') as $columnID) {
+    foreach (range('A', 'T') as $columnID) {
         $sheet->getColumnDimension($columnID)->setAutoSize(true);
     }
     
     $sheet->freezePane('A2');
-    $sheet->setAutoFilter("A1:Q1");
+    $sheet->setAutoFilter("A1:T1");
     
     $filename = 'drive_destruction_log_' . date('Y-m-d_His') . '.xlsx';
     
@@ -189,12 +195,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($action === 'void_record') {
             $id = intval($_POST['record_id'] ?? 0);
+            $voidReason = trim($_POST['void_reason'] ?? '');
+            $performedBy = trim($_POST['performed_by'] ?? '');
             
             if ($id <= 0) {
                 throw new Exception('Invalid record selected.');
             }
             
-            $drive->voidRecord($id, $_POST['performed_by'] ?? '');
+            if ($voidReason === '') {
+                throw new Exception('Void reason is required.');
+            }
+            
+            $drive->voidRecord($id, $voidReason, $performedBy);
             $message = 'Record voided successfully.';
         }
     } catch (Throwable $e) {
@@ -543,13 +555,14 @@ require_once APP_ROOT . '/menu.php';
                     <th>Witness</th>
                     <th><a href="<?php echo h(sortLink('status')); ?>">Status</a></th>
                     <th>Notes</th>
+                    <th>Void Reason</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php if (empty($records)): ?>
                     <tr>
-                        <td colspan="13">No records found.</td>
+                        <td colspan="14">No records found.</td>
                     </tr>
                 <?php else: ?>
                     <?php foreach ($records as $row): ?>
@@ -627,12 +640,25 @@ require_once APP_ROOT . '/menu.php';
 
                             <td><?php echo nl2br(h($row['notes'])); ?></td>
 
+                            <td>
+                                <?php if (!empty($row['void_reason'])): ?>
+                                    <?php echo nl2br(h($row['void_reason'])); ?><br>
+                                    <span class="small-note">
+                                        <?php echo h($row['voided_by']); ?>
+                                        <?php if (!empty($row['voided_at'])): ?>
+                                            <br><?php echo h($row['voided_at']); ?>
+                                        <?php endif; ?>
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+                            
                             <td class="action-stack">
                                 <?php if ($row['status'] !== 'Voided'): ?>
-                                    <form method="post" onsubmit="return confirm('Void this record?');">
+                                    <form method="post" onsubmit="return promptVoidReason(this);">
                                         <input type="hidden" name="action" value="void_record">
                                         <input type="hidden" name="record_id" value="<?php echo h($row['id']); ?>">
                                         <input type="hidden" name="performed_by" value="">
+                                        <input type="hidden" name="void_reason" value="">
                                         <button type="submit" class="btn btn-danger">Void</button>
                                     </form>
                                 <?php else: ?>
@@ -647,5 +673,24 @@ require_once APP_ROOT . '/menu.php';
         </div>
     </div>
 </div>
+
+<script>
+function promptVoidReason(form) {
+    const reason = prompt('Enter reason for voiding this record:');
+    if (reason === null) {
+        return false;
+    }
+
+    const trimmed = reason.trim();
+    if (trimmed === '') {
+        alert('Void reason is required.');
+        return false;
+    }
+
+    form.querySelector('input[name="void_reason"]').value = trimmed;
+    return confirm('Void this record with the entered reason?');
+}
+</script>
+
 </body>
 </html>
