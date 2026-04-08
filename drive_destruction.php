@@ -6,6 +6,7 @@ require_once APP_ROOT . '/vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 $drive = new DriveDestruction();
 
@@ -55,14 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $serialNumber = trim($_POST['serial_number'] ?? '');
             $destructionMethod = trim($_POST['destruction_method'] ?? '');
             $destructionDate = trim($_POST['destruction_date'] ?? '');
-            $quantity = intval($_POST['quantity'] ?? 1);
-            
             if ($partNumber === '' || $serialNumber === '' || $destructionMethod === '' || $destructionDate === '') {
                 throw new Exception('Part number, serial number, destruction method, and destruction date are required.');
-            }
-            
-            if ($quantity < 1) {
-                throw new Exception('Quantity must be at least 1.');
             }
             
             $drive->createRecord([
@@ -70,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'serial_number' => $serialNumber,
                 'niin' => $_POST['niin'] ?? null,
                 'description' => $_POST['description'] ?? null,
-                'quantity' => $quantity,
+                'quantity' => 1,
                 'destruction_method' => $destructionMethod,
                 'destruction_date' => $destructionDate,
                 'notes' => $_POST['notes'] ?? null,
@@ -158,7 +153,8 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
     
     $col = 1;
     foreach ($headers as $header) {
-        $sheet->setCellValueByColumnAndRow($col, 1, $header);
+        $columnLetter = Coordinate::stringFromColumnIndex($col);
+        $sheet->setCellValue($columnLetter . '1', $header);
         $col++;
     }
     
@@ -418,11 +414,6 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
                 <div>
                     <label for="niin">NIIN</label>
                     <input type="text" id="niin" name="niin">
-                </div>
-
-                <div>
-                    <label for="quantity">Quantity</label>
-                    <input type="number" id="quantity" name="quantity" min="1" value="1" required>
                 </div>
 
                 <div class="full-width">
