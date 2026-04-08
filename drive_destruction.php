@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/bootstrap.php';
-require_once APP_ROOT . '/menu.php';
 require_once APP_ROOT . '/bin/Model/DriveDestruction.php';
 require_once APP_ROOT . '/vendor/autoload.php';
 
@@ -9,110 +8,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 $drive = new DriveDestruction();
-
-$message = '';
-$error = '';
-
-function h($value): string
-{
-    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
-}
-
-function buildQueryString(array $overrides = []): string
-{
-    $params = $_GET;
-    foreach ($overrides as $key => $value) {
-        if ($value === null) {
-            unset($params[$key]);
-        } else {
-            $params[$key] = $value;
-        }
-    }
-    return http_build_query($params);
-}
-
-function sortLink(string $column): string
-{
-    $currentSort = $_GET['sort'] ?? 'destruction_date';
-    $currentDir  = strtoupper($_GET['dir'] ?? 'DESC');
-    
-    $nextDir = 'ASC';
-    if ($currentSort === $column && $currentDir === 'ASC') {
-        $nextDir = 'DESC';
-    }
-    
-    return '?' . buildQueryString([
-        'sort' => $column,
-        'dir'  => $nextDir
-    ]);
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        $action = $_POST['action'] ?? '';
-        
-        if ($action === 'add_record') {
-            $partNumber = trim($_POST['part_number'] ?? '');
-            $serialNumber = trim($_POST['serial_number'] ?? '');
-            $destructionMethod = trim($_POST['destruction_method'] ?? '');
-            $destructionDate = trim($_POST['destruction_date'] ?? '');
-            if ($partNumber === '' || $serialNumber === '' || $destructionMethod === '' || $destructionDate === '') {
-                throw new Exception('Part number, serial number, destruction method, and destruction date are required.');
-            }
-            
-            $drive->createRecord([
-                'part_number' => $partNumber,
-                'serial_number' => $serialNumber,
-                'niin' => $_POST['niin'] ?? null,
-                'description' => $_POST['description'] ?? null,
-                'quantity' => 1,
-                'destruction_method' => $destructionMethod,
-                'destruction_date' => $destructionDate,
-                'notes' => $_POST['notes'] ?? null,
-                'created_by' => $_POST['created_by'] ?? null,
-            ]);
-            
-            $message = 'Drive destruction record created successfully.';
-        }
-        
-        if ($action === 'sign_destroyer') {
-            $id = intval($_POST['record_id'] ?? 0);
-            $fullName = trim($_POST['destroyer_name'] ?? '');
-            
-            if ($id <= 0 || $fullName === '') {
-                throw new Exception('Destroyer signoff requires a valid record and full name.');
-            }
-            
-            $drive->signDestroyer($id, $fullName);
-            $message = 'Destroyer signature added successfully.';
-        }
-        
-        if ($action === 'sign_witness') {
-            $id = intval($_POST['record_id'] ?? 0);
-            $fullName = trim($_POST['witness_name'] ?? '');
-            
-            if ($id <= 0 || $fullName === '') {
-                throw new Exception('Witness signoff requires a valid record and full name.');
-            }
-            
-            $drive->signWitness($id, $fullName);
-            $message = 'Witness signature added successfully.';
-        }
-        
-        if ($action === 'void_record') {
-            $id = intval($_POST['record_id'] ?? 0);
-            
-            if ($id <= 0) {
-                throw new Exception('Invalid record selected.');
-            }
-            
-            $drive->voidRecord($id, $_POST['performed_by'] ?? null);
-            $message = 'Record voided successfully.';
-        }
-    } catch (Throwable $e) {
-        $error = $e->getMessage();
-    }
-}
 
 $filters = [
     'search'    => trim($_GET['search'] ?? ''),
@@ -124,9 +19,13 @@ $filters = [
     'dir'       => trim($_GET['dir'] ?? 'DESC'),
 ];
 
-$records = $drive->getRecords($filters);
-
 if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
+    $records = $drive->getRecords($filters);
+    
+    if (ob_get_length()) {
+        ob_end_clean();
+    }
+    
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
     $sheet->setTitle('Drive Destruction Log');
@@ -160,23 +59,23 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
     
     $rowNum = 2;
     foreach ($records as $row) {
-        $sheet->setCellValueExplicit("A{$rowNum}", $row['id'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
-        $sheet->setCellValueExplicit("B{$rowNum}", $row['part_number'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-        $sheet->setCellValueExplicit("C{$rowNum}", $row['serial_number'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-        $sheet->setCellValueExplicit("D{$rowNum}", $row['niin'] ?? '', \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit("A{$rowNum}", (string)$row['id'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit("B{$rowNum}", (string)$row['part_number'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit("C{$rowNum}", (string)$row['serial_number'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit("D{$rowNum}", (string)($row['niin'] ?? ''), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
         $sheet->setCellValue("E{$rowNum}", $row['description'] ?? '');
-        $sheet->setCellValue("F{$rowNum}", $row['quantity']);
-        $sheet->setCellValue("G{$rowNum}", $row['destruction_method']);
-        $sheet->setCellValue("H{$rowNum}", $row['destruction_date']);
+        $sheet->setCellValue("F{$rowNum}", $row['quantity'] ?? 1);
+        $sheet->setCellValue("G{$rowNum}", $row['destruction_method'] ?? '');
+        $sheet->setCellValue("H{$rowNum}", $row['destruction_date'] ?? '');
         $sheet->setCellValue("I{$rowNum}", $row['destroyer_name'] ?? '');
         $sheet->setCellValue("J{$rowNum}", $row['destroyer_signed_at'] ?? '');
         $sheet->setCellValue("K{$rowNum}", $row['witness_name'] ?? '');
         $sheet->setCellValue("L{$rowNum}", $row['witness_signed_at'] ?? '');
-        $sheet->setCellValue("M{$rowNum}", $row['status']);
+        $sheet->setCellValue("M{$rowNum}", $row['status'] ?? '');
         $sheet->setCellValue("N{$rowNum}", $row['notes'] ?? '');
-        $sheet->setCellValue("O{$rowNum}", $row['created_at']);
+        $sheet->setCellValue("O{$rowNum}", $row['created_at'] ?? '');
         $sheet->setCellValue("P{$rowNum}", $row['created_by'] ?? '');
-        $sheet->setCellValue("Q{$rowNum}", $row['updated_at']);
+        $sheet->setCellValue("Q{$rowNum}", $row['updated_at'] ?? '');
         $rowNum++;
     }
     
@@ -197,6 +96,9 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
     $writer->save('php://output');
     exit;
 }
+
+require_once APP_ROOT . '/menu.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
