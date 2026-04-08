@@ -7,7 +7,11 @@ class SignatureHelper
      * Change this to a script/cursive TTF font that exists on your server.
      * Do NOT commit commercial font files to Git if you do not own redistribution rights.
      */
-    public const DEFAULT_FONT = APP_ROOT . '/assets/fonts/YourScriptFont.ttf';
+    public const FONTS = [
+        APP_ROOT . '/assets/fonts/GreatVibes-Regular.ttf',
+        APP_ROOT . '/assets/fonts/Allura-Regular.ttf',
+        APP_ROOT . '/assets/fonts/DancingScript-Regular.ttf',
+    ];
     
     /**
      * Output folder for generated signature PNGs.
@@ -47,7 +51,7 @@ class SignatureHelper
             throw new Exception('PHP GD extension is required for signature generation.');
         }
         
-        $fontPath = self::DEFAULT_FONT;
+        $fontPath = self::FONTS[array_rand(self::FONTS)];
         if (!file_exists($fontPath)) {
             throw new Exception('Signature font file not found: ' . $fontPath);
         }
@@ -55,6 +59,12 @@ class SignatureHelper
         $width  = 500;
         $height = 120;
         $fontSize = 30;
+        
+        if (strpos($fontPath, 'DancingScript') !== false) {
+            $fontSize = 26;
+        } elseif (strpos($fontPath, 'Allura') !== false) {
+            $fontSize = 28;
+        }
         $angle = 0;
         
         $image = imagecreatetruecolor($width, $height);
