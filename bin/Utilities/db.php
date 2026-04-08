@@ -195,13 +195,11 @@ class db
     
     private function _gettype($var)
     {
-        if (is_string($var))
-            return 's';
-            if (is_float($var))
-                return 'd';
-                if (is_int($var))
-                    return 'i';
-                    return 'b';
+        if (is_string($var)) return 's';
+        if (is_float($var)) return 'd';
+        if (is_int($var)) return 'i';
+        if (is_null($var)) return 's';
+        return 'b';
     }
 }
 ?>

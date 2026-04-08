@@ -100,3 +100,60 @@ CREATE TABLE SYS_last_update (
     UNIQUE KEY uniq_updatefield (updatefield)
 );
 
+-- Drive Destruction Log Table --
+
+CREATE TABLE drive_destruction_log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    -- Item Info
+    part_number VARCHAR(100) NOT NULL,
+    serial_number VARCHAR(100) NOT NULL,
+    niin VARCHAR(20) NULL,
+    description VARCHAR(255) NULL,
+    quantity INT DEFAULT 1,
+
+    -- Destruction Info
+    destruction_method ENUM('Degauss', 'Punch', 'Both', 'Other') NOT NULL,
+    destruction_date DATE NOT NULL,
+
+    -- Destroyer Signoff
+    destroyer_name VARCHAR(100) NULL,
+    destroyer_signature_path VARCHAR(255) NULL,
+    destroyer_signed_at DATETIME NULL,
+
+    -- Witness / Approver Signoff
+    witness_name VARCHAR(100) NULL,
+    witness_signature_path VARCHAR(255) NULL,
+    witness_signed_at DATETIME NULL,
+
+    -- Status / Notes
+    status ENUM('Pending', 'Partially Signed', 'Completed', 'Voided') DEFAULT 'Pending',
+    notes TEXT NULL,
+
+    -- Tracking
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100) NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+);
+
+-- Drive Destruction Audit Table --
+
+CREATE TABLE drive_destruction_audit (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    record_id INT NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    performed_by VARCHAR(100) NULL,
+    action_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    details TEXT NULL,
+
+    FOREIGN KEY (record_id) REFERENCES drive_destruction_log(id)
+);
+
+-- Add indexes--
+
+CREATE INDEX idx_destruction_date ON drive_destruction_log(destruction_date);
+CREATE INDEX idx_destroyer_name ON drive_destruction_log(destroyer_name);
+CREATE INDEX idx_witness_name ON drive_destruction_log(witness_name);
+CREATE INDEX idx_status ON drive_destruction_log(status);
+
