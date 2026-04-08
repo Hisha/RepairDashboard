@@ -504,7 +504,7 @@ require_once APP_ROOT . '/menu.php';
                         <option value="Degauss" <?php echo $filters['method'] === 'Degauss' ? 'selected' : ''; ?>>Degauss</option>
                         <option value="Punch" <?php echo $filters['method'] === 'Punch' ? 'selected' : ''; ?>>Punch</option>
                         <option value="Both" <?php echo $filters['method'] === 'Both' ? 'selected' : ''; ?>>Both</option>
-                        <option value="Other" <?php echo $filters['method'] === 'Other' ? 'selected' : ''; ?>>Other</option>
+                        <option value="Shredded" <?php echo $filters['method'] === 'Shredded' ? 'selected' : ''; ?>>Shredded</option>
                     </select>
                 </div>
 
