@@ -652,6 +652,14 @@ require_once APP_ROOT . '/menu.php';
                             </td>
                             
                             <td class="action-stack">
+                                <div style="margin-bottom: 8px;">
+                                    <a
+                                        href="drive_destruction_certificate.php?id=<?php echo h($row['id']); ?>"
+                                        class="btn"
+                                        target="_blank"
+                                    >Certificate</a>
+                                </div>
+                            
                                 <?php if ($row['status'] !== 'Voided'): ?>
                                     <form method="post" onsubmit="return promptVoidReason(this);">
                                         <input type="hidden" name="action" value="void_record">
@@ -661,7 +669,7 @@ require_once APP_ROOT . '/menu.php';
                                         <button type="submit" class="btn btn-danger">Void</button>
                                     </form>
                                 <?php else: ?>
-                                    <span class="small-note">No actions</span>
+                                    <span class="small-note">Record voided</span>
                                 <?php endif; ?>
                             </td>
                         </tr>
