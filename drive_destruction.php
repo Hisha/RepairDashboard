@@ -445,11 +445,10 @@ require_once APP_ROOT . '/menu.php';
                 <div>
                     <label for="destruction_method">Destruction Method</label>
                     <select id="destruction_method" name="destruction_method" required>
-                        <option value="">-- Select --</option>
                         <option value="Degauss">Degauss</option>
                         <option value="Punch">Punch</option>
-                        <option value="Both">Both</option>
-                        <option value="Other">Other</option>
+                        <option value="Both" selected>Both</option>
+                        <option value="Shredded">Shredded</option>
                     </select>
                 </div>
 

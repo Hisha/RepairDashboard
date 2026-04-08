@@ -113,7 +113,7 @@ CREATE TABLE drive_destruction_log (
     quantity INT DEFAULT 1,
 
     -- Destruction Info
-    destruction_method ENUM('Degauss', 'Punch', 'Both', 'Other') NOT NULL,
+    destruction_method ENUM('Degauss', 'Punch', 'Both', 'Shredded') NOT NULL,
     destruction_date DATE NOT NULL,
 
     -- Destroyer Signoff
