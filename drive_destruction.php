@@ -6,6 +6,7 @@ require_once APP_ROOT . '/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
 $drive = new DriveDestruction();
 
@@ -62,10 +63,10 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
     
     $rowNum = 2;
     foreach ($records as $row) {
-        $sheet->setCellValueExplicit("A{$rowNum}", (string)$row['id'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-        $sheet->setCellValueExplicit("B{$rowNum}", (string)$row['part_number'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-        $sheet->setCellValueExplicit("C{$rowNum}", (string)$row['serial_number'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-        $sheet->setCellValueExplicit("D{$rowNum}", (string)($row['niin'] ?? ''), \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit("A{$rowNum}", (string)($row['id'] ?? ''), DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit("B{$rowNum}", (string)($row['part_number'] ?? ''), DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit("C{$rowNum}", (string)($row['serial_number'] ?? ''), DataType::TYPE_STRING);
+        $sheet->setCellValueExplicit("D{$rowNum}", (string)($row['niin'] ?? ''), DataType::TYPE_STRING);
         $sheet->setCellValue("E{$rowNum}", $row['description'] ?? '');
         $sheet->setCellValue("F{$rowNum}", $row['quantity'] ?? 1);
         $sheet->setCellValue("G{$rowNum}", $row['destruction_method'] ?? '');
@@ -90,7 +91,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
     }
     
     $sheet->freezePane('A2');
-    $sheet->setAutoFilter("A1:T1");
+    $sheet->setAutoFilter('A1:T1');
     
     $filename = 'drive_destruction_log_' . date('Y-m-d_His') . '.xlsx';
     
@@ -114,6 +115,7 @@ function h($value): string
 function buildQueryString(array $overrides = []): string
 {
     $params = $_GET;
+    
     foreach ($overrides as $key => $value) {
         if ($value === null) {
             unset($params[$key]);
@@ -121,6 +123,7 @@ function buildQueryString(array $overrides = []): string
             $params[$key] = $value;
         }
     }
+    
     return http_build_query($params);
 }
 
@@ -169,6 +172,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = 'Drive destruction record created successfully.';
         }
         
+        if ($action === 'add_batch_records') {
+            $partNumber = trim($_POST['batch_part_number'] ?? '');
+            $destructionMethod = trim($_POST['batch_destruction_method'] ?? '');
+            $destructionDate = trim($_POST['batch_destruction_date'] ?? '');
+            $serialNumbers = trim($_POST['serial_numbers'] ?? '');
+            
+            if ($partNumber === '' || $destructionMethod === '' || $destructionDate === '' || $serialNumbers === '') {
+                throw new Exception('Part number, destruction method, destruction date, and serial numbers are required for batch entry.');
+            }
+            
+            $result = $drive->createBatchRecords([
+                'part_number' => $partNumber,
+                'niin' => $_POST['batch_niin'] ?? '',
+                'description' => $_POST['batch_description'] ?? '',
+                'destruction_method' => $destructionMethod,
+                'destruction_date' => $destructionDate,
+                'notes' => $_POST['batch_notes'] ?? '',
+                'created_by' => $_POST['batch_created_by'] ?? '',
+                'serial_numbers' => $serialNumbers,
+            ]);
+            
+            $insertedCount = count($result['inserted']);
+            $skippedCount = count($result['skipped']);
+            
+            $message = "Batch add complete. Inserted {$insertedCount} record(s).";
+            if ($skippedCount > 0) {
+                $message .= ' Skipped ' . $skippedCount . ' duplicate serial(s): ' . implode(', ', $result['skipped']);
+            }
+        }
+        
         if ($action === 'sign_destroyer') {
             $id = intval($_POST['record_id'] ?? 0);
             $fullName = trim($_POST['destroyer_name'] ?? '');
@@ -209,36 +242,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $drive->voidRecord($id, $voidReason, $performedBy);
             $message = 'Record voided successfully.';
         }
-        
-        if ($action === 'add_batch_records') {
-            $partNumber = trim($_POST['batch_part_number'] ?? '');
-            $destructionMethod = trim($_POST['batch_destruction_method'] ?? '');
-            $destructionDate = trim($_POST['batch_destruction_date'] ?? '');
-            $serialNumbers = trim($_POST['serial_numbers'] ?? '');
-            
-            if ($partNumber === '' || $destructionMethod === '' || $destructionDate === '' || $serialNumbers === '') {
-                throw new Exception('Part number, destruction method, destruction date, and serial numbers are required for batch entry.');
-            }
-            
-            $result = $drive->createBatchRecords([
-                'part_number' => $partNumber,
-                'niin' => $_POST['batch_niin'] ?? '',
-                'description' => $_POST['batch_description'] ?? '',
-                'destruction_method' => $destructionMethod,
-                'destruction_date' => $destructionDate,
-                'notes' => $_POST['batch_notes'] ?? '',
-                'created_by' => $_POST['batch_created_by'] ?? '',
-                'serial_numbers' => $serialNumbers,
-            ]);
-            
-            $insertedCount = count($result['inserted']);
-            $skippedCount = count($result['skipped']);
-            
-            $message = "Batch add complete. Inserted {$insertedCount} record(s).";
-            if ($skippedCount > 0) {
-                $message .= " Skipped {$skippedCount} duplicate serial(s): " . implode(', ', $result['skipped']);
-            }
-        }
     } catch (Throwable $e) {
         $error = $e->getMessage();
     }
@@ -247,7 +250,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $records = $drive->getRecords($filters);
 
 require_once APP_ROOT . '/menu.php';
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -305,7 +307,6 @@ require_once APP_ROOT . '/menu.php';
 
         input[type="text"],
         input[type="date"],
-        input[type="number"],
         select,
         textarea {
             width: 100%;
@@ -351,7 +352,7 @@ require_once APP_ROOT . '/menu.php';
         table.destruction-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1600px;
+            min-width: 1750px;
         }
 
         table.destruction-table th,
@@ -409,7 +410,8 @@ require_once APP_ROOT . '/menu.php';
             margin-bottom: 6px;
         }
 
-        .action-stack form {
+        .action-stack form,
+        .action-stack div {
             margin-bottom: 8px;
         }
 
@@ -505,29 +507,29 @@ require_once APP_ROOT . '/menu.php';
             </div>
         </form>
     </div>
-	
-	<div class="section-box">
+
+    <div class="section-box">
         <h2>Batch Add Same Part / Multiple Serials</h2>
-    
+
         <form method="post">
             <input type="hidden" name="action" value="add_batch_records">
-    
+
             <div class="form-grid">
                 <div>
                     <label for="batch_part_number">Part Number</label>
                     <input type="text" id="batch_part_number" name="batch_part_number" required>
                 </div>
-    
+
                 <div>
                     <label for="batch_niin">NIIN</label>
                     <input type="text" id="batch_niin" name="batch_niin">
                 </div>
-    
+
                 <div class="full-width">
                     <label for="batch_description">Description</label>
                     <input type="text" id="batch_description" name="batch_description">
                 </div>
-    
+
                 <div>
                     <label for="batch_destruction_method">Destruction Method</label>
                     <select id="batch_destruction_method" name="batch_destruction_method" required>
@@ -537,36 +539,36 @@ require_once APP_ROOT . '/menu.php';
                         <option value="Shredded">Shredded</option>
                     </select>
                 </div>
-    
+
                 <div>
                     <label for="batch_destruction_date">Destruction Date</label>
                     <input type="date" id="batch_destruction_date" name="batch_destruction_date" value="<?php echo date('Y-m-d'); ?>" required>
                 </div>
-    
+
                 <div>
                     <label for="batch_created_by">Entered By</label>
                     <input type="text" id="batch_created_by" name="batch_created_by">
                 </div>
-    
+
                 <div></div>
-    
+
                 <div class="full-width">
                     <label for="serial_numbers">Serial Numbers (one per line)</label>
                     <textarea id="serial_numbers" name="serial_numbers" style="min-height: 180px;" required></textarea>
                 </div>
-    
+
                 <div class="full-width">
                     <label for="batch_notes">Notes</label>
                     <textarea id="batch_notes" name="batch_notes"></textarea>
                 </div>
-    
+
                 <div class="full-width">
                     <button type="submit" class="btn">Batch Add Records</button>
                 </div>
             </div>
         </form>
     </div>
-	
+
     <div class="section-box">
         <h2>Filters</h2>
 
@@ -658,15 +660,15 @@ require_once APP_ROOT . '/menu.php';
                     <?php foreach ($records as $row): ?>
                         <?php
                         $statusClass = 'status-pending';
-                        if ($row['status'] === 'Partially Signed') {
+                        if (($row['status'] ?? '') === 'Partially Signed') {
                             $statusClass = 'status-partially-signed';
-                        } elseif ($row['status'] === 'Completed') {
+                        } elseif (($row['status'] ?? '') === 'Completed') {
                             $statusClass = 'status-completed';
-                        } elseif ($row['status'] === 'Voided') {
+                        } elseif (($row['status'] ?? '') === 'Voided') {
                             $statusClass = 'status-voided';
                         }
                         ?>
-                        <tr>
+                        <tr id="record-row-<?php echo h($row['id']); ?>" data-record-id="<?php echo h($row['id']); ?>">
                             <td class="nowrap"><?php echo h($row['id']); ?></td>
                             <td><?php echo h($row['part_number']); ?></td>
                             <td><?php echo h($row['serial_number']); ?></td>
@@ -676,7 +678,7 @@ require_once APP_ROOT . '/menu.php';
                             <td><?php echo h($row['destruction_method']); ?></td>
                             <td class="nowrap"><?php echo h($row['destruction_date']); ?></td>
 
-                            <td>
+                            <td id="destroyer-cell-<?php echo h($row['id']); ?>">
                                 <?php if (!empty($row['destroyer_name'])): ?>
                                     <strong><?php echo h($row['destroyer_name']); ?></strong><br>
                                     <span class="small-note"><?php echo h($row['destroyer_signed_at']); ?></span>
@@ -687,8 +689,8 @@ require_once APP_ROOT . '/menu.php';
                                             class="signature-preview"
                                         >
                                     <?php endif; ?>
-                                <?php elseif ($row['status'] !== 'Voided'): ?>
-                                    <form method="post" class="mini-form">
+                                <?php elseif (($row['status'] ?? '') !== 'Voided'): ?>
+                                    <form method="post" class="mini-form ajax-sign-form" data-role="destroyer" onsubmit="return submitAjaxSignForm(this, event);">
                                         <input type="hidden" name="action" value="sign_destroyer">
                                         <input type="hidden" name="record_id" value="<?php echo h($row['id']); ?>">
                                         <input type="text" name="destroyer_name" placeholder="First Last" required>
@@ -699,7 +701,7 @@ require_once APP_ROOT . '/menu.php';
                                 <?php endif; ?>
                             </td>
 
-                            <td>
+                            <td id="witness-cell-<?php echo h($row['id']); ?>">
                                 <?php if (!empty($row['witness_name'])): ?>
                                     <strong><?php echo h($row['witness_name']); ?></strong><br>
                                     <span class="small-note"><?php echo h($row['witness_signed_at']); ?></span>
@@ -710,8 +712,8 @@ require_once APP_ROOT . '/menu.php';
                                             class="signature-preview"
                                         >
                                     <?php endif; ?>
-                                <?php elseif ($row['status'] !== 'Voided'): ?>
-                                    <form method="post" class="mini-form">
+                                <?php elseif (($row['status'] ?? '') !== 'Voided'): ?>
+                                    <form method="post" class="mini-form ajax-sign-form" data-role="witness" onsubmit="return submitAjaxSignForm(this, event);">
                                         <input type="hidden" name="action" value="sign_witness">
                                         <input type="hidden" name="record_id" value="<?php echo h($row['id']); ?>">
                                         <input type="text" name="witness_name" placeholder="First Last" required>
@@ -722,8 +724,8 @@ require_once APP_ROOT . '/menu.php';
                                 <?php endif; ?>
                             </td>
 
-                            <td>
-                                <span class="status-badge <?php echo h($statusClass); ?>">
+                            <td id="status-cell-<?php echo h($row['id']); ?>">
+                                <span class="status-badge <?php echo h($statusClass); ?>" id="status-badge-<?php echo h($row['id']); ?>">
                                     <?php echo h($row['status']); ?>
                                 </span>
                             </td>
@@ -741,17 +743,17 @@ require_once APP_ROOT . '/menu.php';
                                     </span>
                                 <?php endif; ?>
                             </td>
-                            
+
                             <td class="action-stack">
-                                <div style="margin-bottom: 8px;">
+                                <div>
                                     <a
                                         href="drive_destruction_certificate.php?id=<?php echo h($row['id']); ?>"
                                         class="btn"
                                         target="_blank"
                                     >Certificate</a>
                                 </div>
-                            
-                                <?php if ($row['status'] !== 'Voided'): ?>
+
+                                <?php if (($row['status'] ?? '') !== 'Voided'): ?>
                                     <form method="post" onsubmit="return promptVoidReason(this);">
                                         <input type="hidden" name="action" value="void_record">
                                         <input type="hidden" name="record_id" value="<?php echo h($row['id']); ?>">
@@ -787,6 +789,105 @@ function promptVoidReason(form) {
 
     form.querySelector('input[name="void_reason"]').value = trimmed;
     return confirm('Void this record with the entered reason?');
+}
+
+function getStatusBadgeClass(status) {
+    if (status === 'Completed') return 'status-completed';
+    if (status === 'Partially Signed') return 'status-partially-signed';
+    if (status === 'Voided') return 'status-voided';
+    return 'status-pending';
+}
+
+function escapeHtml(value) {
+    const div = document.createElement('div');
+    div.textContent = value ?? '';
+    return div.innerHTML;
+}
+
+function buildSignatureCell(record, role) {
+    const nameKey = role + '_name';
+    const signedAtKey = role + '_signed_at';
+    const pathKey = role + '_signature_path';
+
+    const name = record[nameKey] || '';
+    const signedAt = record[signedAtKey] || '';
+    const path = record[pathKey] || '';
+
+    if (name !== '') {
+        let html = '<strong>' + escapeHtml(name) + '</strong><br>';
+        html += '<span class="small-note">' + escapeHtml(signedAt) + '</span>';
+
+        if (path !== '') {
+            html += '<img src="' + escapeHtml(path) + '" alt="' + escapeHtml(role) + ' Signature" class="signature-preview">';
+        }
+
+        return html;
+    }
+
+    if (record.status === 'Voided') {
+        return '<span class="small-note">Voided</span>';
+    }
+
+    const fieldName = role === 'destroyer' ? 'destroyer_name' : 'witness_name';
+    const actionName = role === 'destroyer' ? 'sign_destroyer' : 'sign_witness';
+
+    return `
+        <form method="post" class="mini-form ajax-sign-form" data-role="${role}" onsubmit="return submitAjaxSignForm(this, event);">
+            <input type="hidden" name="action" value="${actionName}">
+            <input type="hidden" name="record_id" value="${escapeHtml(record.id)}">
+            <input type="text" name="${fieldName}" placeholder="First Last" required>
+            <button type="submit" class="btn">Sign</button>
+        </form>
+    `;
+}
+
+async function submitAjaxSignForm(form, event) {
+    if (event) {
+        event.preventDefault();
+    }
+
+    const formData = new FormData(form);
+    const recordId = formData.get('record_id');
+
+    try {
+        const response = await fetch('drive_destruction_actions.php', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || 'Unable to sign record.');
+        }
+
+        const record = data.record;
+
+        const destroyerCell = document.getElementById('destroyer-cell-' + recordId);
+        const witnessCell = document.getElementById('witness-cell-' + recordId);
+        const statusBadge = document.getElementById('status-badge-' + recordId);
+
+        if (destroyerCell) {
+            destroyerCell.innerHTML = buildSignatureCell(record, 'destroyer');
+        }
+
+        if (witnessCell) {
+            witnessCell.innerHTML = buildSignatureCell(record, 'witness');
+        }
+
+        if (statusBadge) {
+            statusBadge.textContent = record.status || '';
+            statusBadge.className = 'status-badge ' + getStatusBadgeClass(record.status || '');
+        }
+
+        return false;
+    } catch (err) {
+        alert(err.message);
+        return false;
+    }
 }
 </script>
 
