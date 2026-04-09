@@ -445,5 +445,5 @@ class DriveDestruction
         $db->close();
         
         return !empty($row) ? $row : null;
-    
+    }
 }
