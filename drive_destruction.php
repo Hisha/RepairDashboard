@@ -209,6 +209,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $drive->voidRecord($id, $voidReason, $performedBy);
             $message = 'Record voided successfully.';
         }
+        
+        if ($action === 'add_batch_records') {
+            $partNumber = trim($_POST['batch_part_number'] ?? '');
+            $destructionMethod = trim($_POST['batch_destruction_method'] ?? '');
+            $destructionDate = trim($_POST['batch_destruction_date'] ?? '');
+            $serialNumbers = trim($_POST['serial_numbers'] ?? '');
+            
+            if ($partNumber === '' || $destructionMethod === '' || $destructionDate === '' || $serialNumbers === '') {
+                throw new Exception('Part number, destruction method, destruction date, and serial numbers are required for batch entry.');
+            }
+            
+            $result = $drive->createBatchRecords([
+                'part_number' => $partNumber,
+                'niin' => $_POST['batch_niin'] ?? '',
+                'description' => $_POST['batch_description'] ?? '',
+                'destruction_method' => $destructionMethod,
+                'destruction_date' => $destructionDate,
+                'notes' => $_POST['batch_notes'] ?? '',
+                'created_by' => $_POST['batch_created_by'] ?? '',
+                'serial_numbers' => $serialNumbers,
+            ]);
+            
+            $insertedCount = count($result['inserted']);
+            $skippedCount = count($result['skipped']);
+            
+            $message = "Batch add complete. Inserted {$insertedCount} record(s).";
+            if ($skippedCount > 0) {
+                $message .= " Skipped {$skippedCount} duplicate serial(s): " . implode(', ', $result['skipped']);
+            }
+        }
     } catch (Throwable $e) {
         $error = $e->getMessage();
     }
@@ -475,7 +505,68 @@ require_once APP_ROOT . '/menu.php';
             </div>
         </form>
     </div>
-
+	
+	<div class="section-box">
+        <h2>Batch Add Same Part / Multiple Serials</h2>
+    
+        <form method="post">
+            <input type="hidden" name="action" value="add_batch_records">
+    
+            <div class="form-grid">
+                <div>
+                    <label for="batch_part_number">Part Number</label>
+                    <input type="text" id="batch_part_number" name="batch_part_number" required>
+                </div>
+    
+                <div>
+                    <label for="batch_niin">NIIN</label>
+                    <input type="text" id="batch_niin" name="batch_niin">
+                </div>
+    
+                <div class="full-width">
+                    <label for="batch_description">Description</label>
+                    <input type="text" id="batch_description" name="batch_description">
+                </div>
+    
+                <div>
+                    <label for="batch_destruction_method">Destruction Method</label>
+                    <select id="batch_destruction_method" name="batch_destruction_method" required>
+                        <option value="Degauss">Degauss</option>
+                        <option value="Punch">Punch</option>
+                        <option value="Both" selected>Both</option>
+                        <option value="Shredded">Shredded</option>
+                    </select>
+                </div>
+    
+                <div>
+                    <label for="batch_destruction_date">Destruction Date</label>
+                    <input type="date" id="batch_destruction_date" name="batch_destruction_date" value="<?php echo date('Y-m-d'); ?>" required>
+                </div>
+    
+                <div>
+                    <label for="batch_created_by">Entered By</label>
+                    <input type="text" id="batch_created_by" name="batch_created_by">
+                </div>
+    
+                <div></div>
+    
+                <div class="full-width">
+                    <label for="serial_numbers">Serial Numbers (one per line)</label>
+                    <textarea id="serial_numbers" name="serial_numbers" style="min-height: 180px;" required></textarea>
+                </div>
+    
+                <div class="full-width">
+                    <label for="batch_notes">Notes</label>
+                    <textarea id="batch_notes" name="batch_notes"></textarea>
+                </div>
+    
+                <div class="full-width">
+                    <button type="submit" class="btn">Batch Add Records</button>
+                </div>
+            </div>
+        </form>
+    </div>
+	
     <div class="section-box">
         <h2>Filters</h2>
 

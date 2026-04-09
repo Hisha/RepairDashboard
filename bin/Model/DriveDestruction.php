@@ -336,4 +336,114 @@ class DriveDestruction
         $value = trim((string)$value);
         return $value === '' ? null : $value;
     }
+    
+    public function createBatchRecords(array $data): array
+    {
+        $partNumber = trim($data['part_number'] ?? '');
+        $niin = trim($data['niin'] ?? '');
+        $description = trim($data['description'] ?? '');
+        $method = trim($data['destruction_method'] ?? '');
+        $date = trim($data['destruction_date'] ?? '');
+        $notes = trim($data['notes'] ?? '');
+        $createdBy = trim($data['created_by'] ?? '');
+        $serialBlock = trim($data['serial_numbers'] ?? '');
+        
+        if ($partNumber === '' || $method === '' || $date === '' || $serialBlock === '') {
+            throw new Exception('Part number, destruction method, destruction date, and serial numbers are required.');
+        }
+        
+        $lines = preg_split('/\r\n|\r|\n/', $serialBlock);
+        $cleanSerials = [];
+        $seen = [];
+        
+        foreach ($lines as $line) {
+            $serial = trim($line);
+            if ($serial === '') {
+                continue;
+            }
+            
+            if (!isset($seen[$serial])) {
+                $seen[$serial] = true;
+                $cleanSerials[] = $serial;
+            }
+        }
+        
+        if (empty($cleanSerials)) {
+            throw new Exception('No valid serial numbers were provided.');
+        }
+        
+        $inserted = [];
+        $skipped = [];
+        
+        foreach ($cleanSerials as $serialNumber) {
+            if ($this->serialExists($serialNumber)) {
+                $skipped[] = $serialNumber;
+                continue;
+            }
+            
+            $recordId = $this->createRecord([
+                'part_number' => $partNumber,
+                'serial_number' => $serialNumber,
+                'niin' => $niin,
+                'description' => $description,
+                'quantity' => 1,
+                'destruction_method' => $method,
+                'destruction_date' => $date,
+                'notes' => $notes,
+                'created_by' => $createdBy,
+            ]);
+            
+            $inserted[] = [
+                'id' => $recordId,
+                'serial_number' => $serialNumber
+            ];
+        }
+        
+        return [
+            'inserted' => $inserted,
+            'skipped' => $skipped
+        ];
+    }
+    
+    public function serialExists(string $serialNumber): bool
+    {
+        $serialNumber = trim($serialNumber);
+        if ($serialNumber === '') {
+            return false;
+        }
+        
+        $db = new db();
+        $sql = "SELECT id FROM {$this->_tableName} WHERE serial_number = ? LIMIT 1";
+        $row = $db->query($sql, $serialNumber)->fetchArray();
+        $db->close();
+        
+        return !empty($row);
+    }
+    
+    public function getRecordSummaryById(int $id): ?array
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            id,
+            destroyer_name,
+            destroyer_signature_path,
+            destroyer_signed_at,
+            witness_name,
+            witness_signature_path,
+            witness_signed_at,
+            status,
+            void_reason,
+            voided_by,
+            voided_at
+        FROM {$this->_tableName}
+        WHERE id = ?
+    ";
+        
+        $row = $db->query($sql, $id)->fetchArray();
+        $db->close();
+        
+        return !empty($row) ? $row : null;
+    
 }
