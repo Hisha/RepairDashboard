@@ -13,6 +13,7 @@ $procurements = $procure->getProcurements();
  */
 if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
     $headers = !empty($procurements) ? array_keys($procurements[0]) : [
+        'Folder',
         'Program',
         'Request Date',
         'NIIN',
@@ -210,31 +211,33 @@ include 'menu.php';
         <table id="procurementTable">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">Program<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(1)">Request Date<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(2)">NIIN<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(3)">Part<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(4)">Nomen<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(5)">Qty Requested<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(6)">Requested By<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(9)">Status<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(7)">Purchase Vehicle<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(8)">Item Cost (each)<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(10)">Date Submitted<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(11)">Contract Number<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(12)">Quote Number<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(13)">PO Number<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(14)">Qty Ordered<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(15)">Award Date<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(16)">EDD Date<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(17)">Receive Date<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(18)">Comments<span class="sort-indicator"></span></th>
+                	<th onclick="sortTable(0)">Folder<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(1)">Program<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(2)">Request Date<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(3)">NIIN<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(4)">Part<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(5)">Nomen<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(6)">Qty Requested<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(7)">Requested By<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(8)">Status<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(9)">Purchase Vehicle<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(10)">Item Cost (each)<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(11)">Date Submitted<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(12)">Contract Number<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(13)">Quote Number<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(14)">PO Number<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(15)">Qty Ordered<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(16)">Award Date<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(17)">EDD Date<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(18)">Receive Date<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(19)">Comments<span class="sort-indicator"></span></th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (!empty($procurements)): ?>
                     <?php foreach ($procurements as $row): ?>
                         <tr>
+                        	<td><?= htmlspecialchars((string)($row['Folder'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Program'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Request Date'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['NIIN'] ?? '')) ?></td>

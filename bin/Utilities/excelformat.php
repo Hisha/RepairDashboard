@@ -357,6 +357,7 @@ class excelformat
                 'updatefield' => 'Procurement',
                 
                 'headers' => [
+                    'FOLDER#',
                     'Program',
                     'REQUEST DATE',
                     'NIIN',
@@ -379,6 +380,7 @@ class excelformat
                 ],
                 
                 'db_columns' => [
+                    'folder',
                     'program',
                     'request_date',
                     'niin',
@@ -412,6 +414,7 @@ class excelformat
                 ],
                 
                 'column_types' => [
+                    'folder'    => 'string',
                     'program'   => 'string',
                     'request_date'   => 'date',
                     'niin'   => 'string',
@@ -436,6 +439,7 @@ class excelformat
                 'create_sql' => "
                     CREATE TABLE `procurements` (
                         `id` INT NOT NULL AUTO_INCREMENT,
+                        `folder` VARCHAR(50) NULL,
                         `program` VARCHAR(12) NOT NULL,
                         `request_date` DATE NOT NULL,
                         `niin` VARCHAR(12) NOT NULL,

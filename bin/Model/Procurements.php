@@ -9,7 +9,8 @@ class Procurements
         
         $sql = "
         SELECT 
-	       procurements.program AS 'Program',
+            procurements.folder AS 'Folder',
+	        procurements.program AS 'Program',
             procurements.request_date AS 'Request Date',
             procurements.niin AS 'NIIN',
             procurements.part AS 'Part',
