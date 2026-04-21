@@ -15,6 +15,7 @@ class Procurements
             procurements.niin AS 'NIIN',
             procurements.part AS 'Part',
             procurements.nomen AS 'Nomen',
+            procurements.purchase_type AS 'Purchase Type',
             procurements.qty_requested AS 'Qty Requested',
             procurements.requested_by AS 'Requested By',
             procurements.purchase_vehicle AS 'Purchase Vehicle',

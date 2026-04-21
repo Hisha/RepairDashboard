@@ -19,6 +19,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
         'NIIN',
         'Part',
         'Nomen',
+        'Purchase Type',
         'Qty Requested',
         'Requested By',
         'Status',
@@ -217,20 +218,21 @@ include 'menu.php';
                     <th onclick="sortTable(3)">NIIN<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(4)">Part<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(5)">Nomen<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(6)">Qty Requested<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(7)">Requested By<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(8)">Status<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(9)">Purchase Vehicle<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(10)">Item Cost (each)<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(11)">Date Submitted<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(12)">Contract Number<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(13)">Quote Number<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(14)">PO Number<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(15)">Qty Ordered<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(16)">Award Date<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(17)">EDD Date<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(18)">Receive Date<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(19)">Comments<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(6)">Purchase Type<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(7)">Qty Requested<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(8)">Requested By<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(9)">Status<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(10)">Purchase Vehicle<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(11)">Item Cost (each)<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(12)">Date Submitted<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(13)">Contract Number<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(14)">Quote Number<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(15)">PO Number<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(16)">Qty Ordered<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(17)">Award Date<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(18)">EDD Date<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(19)">Receive Date<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(20)">Comments<span class="sort-indicator"></span></th>
                 </tr>
             </thead>
             <tbody>
@@ -243,6 +245,7 @@ include 'menu.php';
                             <td><?= htmlspecialchars((string)($row['NIIN'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Part'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Nomen'] ?? '')) ?></td>
+                            <td><?= htmlspecialchars((string)($row['Purchase Type'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Qty Requested'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Requested By'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Status'] ?? '')) ?></td>
