@@ -351,9 +351,9 @@ class excelformat
                 "
             ],
             
-            'Procurement Tracker2026' => [
+            'Procurement Tracker_updated' => [
                 'table_name' => 'procurements',
-                'sheet_name' => 'DATA Sheet',
+                'sheet_name' => 'PROCUREMENT LIST',
                 'updatefield' => 'Procurement',
                 
                 'headers' => [
@@ -363,6 +363,7 @@ class excelformat
                     'NIIN',
                     'PART #',
                     'NOMEN',
+                    'Purchase Type',
                     'QTY REQUESTED',
                     'REQUESTED BY',
                     'STATUS',
@@ -386,6 +387,7 @@ class excelformat
                     'niin',
                     'part',
                     'nomen',
+                    'purchase_type',
                     'qty_requested',
                     'requested_by',
                     'status',
@@ -408,6 +410,7 @@ class excelformat
                     'niin',
                     'part',
                     'nomen',
+                    'purchase_type',
                     'qty_requested',
                     'requested_by',
                     'status'
@@ -420,6 +423,7 @@ class excelformat
                     'niin'   => 'string',
                     'part'   => 'string',
                     'nomen'   => 'string',
+                    'purchase_type' => 'string',
                     'qty_requested'   => 'int',
                     'requested_by'   => 'string',
                     'status'   => 'string',
@@ -445,6 +449,7 @@ class excelformat
                         `niin` VARCHAR(12) NOT NULL,
                         `part` VARCHAR(100) NOT NULL,
                         `nomen` VARCHAR(255) NOT NULL,
+                        `purchase_type` VARCHAR(50) NOT NULL,
                         `qty_requested` INT(11) NOT NULL,
                         `requested_by` VARCHAR(100) NOT NULL,
                         `status` VARCHAR(50) NULL,
