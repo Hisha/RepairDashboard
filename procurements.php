@@ -25,6 +25,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
         'Status',
         'Purchase Vehicle',
         'Item Cost (each)',
+        'Extended Cost',
         'Date Submitted',
         'Contract Number',
         'Quote Number',
@@ -224,15 +225,16 @@ include 'menu.php';
                     <th onclick="sortTable(9)">Status<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(10)">Purchase Vehicle<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(11)">Item Cost (each)<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(12)">Date Submitted<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(13)">Contract Number<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(14)">Quote Number<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(15)">PO Number<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(16)">Qty Ordered<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(17)">Award Date<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(18)">EDD Date<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(19)">Receive Date<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(20)">Comments<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(12)">Extended Cost<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(13)">Date Submitted<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(14)">Contract Number<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(15)">Quote Number<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(16)">PO Number<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(17)">Qty Ordered<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(18)">Award Date<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(19)">EDD Date<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(20)">Receive Date<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(21)">Comments<span class="sort-indicator"></span></th>
                 </tr>
             </thead>
             <tbody>
@@ -251,6 +253,7 @@ include 'menu.php';
                             <td><?= htmlspecialchars((string)($row['Status'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Purchase Vehicle'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Item Cost (each)'] ?? '')) ?></td>
+                            <td><?= htmlspecialchars((string)($row['Extended Cost'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Date Submitted'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Contract Number'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Quote Number'] ?? '')) ?></td>
