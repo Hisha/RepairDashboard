@@ -20,6 +20,7 @@ class Procurements
             procurements.requested_by AS 'Requested By',
             procurements.purchase_vehicle AS 'Purchase Vehicle',
             procurements.item_cost AS 'Item Cost (each)',
+            procurements.extended_cost AS 'Extended Cost',
             procurements.status AS 'Status',
             procurements.date_submitted AS 'Date Submitted',
             procurements.contract_num AS 'Contract Number',
