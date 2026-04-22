@@ -335,7 +335,7 @@ class CavRequisitions
         
         $db->close();
         
-        return isset($row['niinChangeReqs']) ? (int)$row['niinChangeReqs'] : 0;
+        return isset($row['eSRSReqs']) ? (int)$row['eSRSReqs'] : 0;
     }
     
     public function getBackorderReqs(string $selectedProgram, string $startDate, string $endDate): int
