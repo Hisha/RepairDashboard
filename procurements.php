@@ -183,6 +183,14 @@ include 'menu.php';
             display: none;
             font-style: italic;
         }
+        
+        .completed-row {
+            background-color: #A6A6A6 !important;
+        }
+        
+        tr.completed-row:hover {
+            background-color: #999999;
+        }
     </style>
 </head>
 <body>
@@ -242,7 +250,7 @@ include 'menu.php';
             <tbody>
                 <?php if (!empty($procurements)): ?>
                     <?php foreach ($procurements as $row): ?>
-                        <tr>
+                        <tr class="<?= (isset($row['Status']) && strtoupper(trim($row['Status'])) === 'COMPLETED') ? 'completed-row' : '' ?>">
                         	<td><?= htmlspecialchars((string)($row['Folder'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Program'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Request Date'] ?? '')) ?></td>
