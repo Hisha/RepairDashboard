@@ -223,7 +223,7 @@ include 'menu.php';
 
 	<p class="procurement-legend">
         <strong>Legend:</strong>
-        <span class="legend-item legend-grey">Grey</span> = Procurement Completed. |
+        <span class="legend-item legend-grey">Grey</span> = Procurement Completed.
     </p>
 
     <div class="toolbar">
