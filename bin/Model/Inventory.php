@@ -20,6 +20,7 @@ class Inventory
             inventory.storagebin AS 'Location',
             inventory.averageprice AS 'Unit Price'
         FROM inventory
+        WHERE inventory.onhandqty <> '0'
         ORDER BY inventory.primarypartno ASC, inventory.subgrouptype ASC, inventory.materialcode ASC
     ";
         
