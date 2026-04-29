@@ -191,6 +191,28 @@ include 'menu.php';
         tr.completed-row:hover {
             background-color: #999999;
         }
+        
+        .legend-item {
+            display: inline-block;
+            padding: 3px 8px;
+            margin: 0 4px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .legend-grey { background: #A6A6A6; }
+        .legend-yellow { background: #fff3cd; }
+        .legend-green { background: #d1e7dd; }
+        .legend-purple { background: #e2d9f3; }
+        
+        .procurement-legend {
+            margin: 10px 0 15px 0;
+            font-size: 14px;
+            padding: 8px 10px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+        }
     </style>
 </head>
 <body>
@@ -198,6 +220,11 @@ include 'menu.php';
 <div class="page-wrap">
 
     <h1>Procurements</h1>
+
+	<p class="procurement-legend">
+        <strong>Legend:</strong>
+        <span class="legend-item legend-grey">Grey</span> = Procurement Completed. |
+    </p>
 
     <div class="toolbar">
         <div class="search-box">
