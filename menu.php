@@ -1,8 +1,11 @@
 <?php
 require_once APP_ROOT . '/bin/Model/SYS_LastUpdate.php';
+require_once APP_ROOT . '/bin/Model/LMS21Data.php';
 
 $lastUpdateModel = new SYS_LastUpdate();
+$lms21Model = new LMS21Data();
 
+$missingNiinCount = $lms21Model->getMissingNiinsCount();
 $lastCavsUpdate = $lastUpdateModel->getLastUpdate('CAVS');
 $lastCMProUpdate = $lastUpdateModel->getLastUpdate('CMPro');
 $lastProcurementUpdate = $lastUpdateModel->getLastUpdate('Procurement');
@@ -56,7 +59,9 @@ $lastProcurementUpdateFormatted = $lastProcurementUpdate
     <a href="monthly_reqs.php">Shipments</a>
     <a href="cog7_repairables.php">Survival Rates</a>
     <a href="upload_excel.php">Upload Link</a>
-    <a href="lms21_missing.php">COG/Price Data Insert</a>
+    <?php if ($missingNiinCount > 0): ?>
+        <a href="lms21_missing.php">COG/Price Data Insert</a>
+    <?php endif; ?>
   </div>
 
   <div class="menu-updates">

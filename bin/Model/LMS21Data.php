@@ -3,6 +3,29 @@ include_once APP_ROOT . '/bin/Utilities/db.php';
 
 class LMS21Data
 {
+    
+    public function getMissingNiinsCount(): int
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT COUNT(DISTINCT i.niin) AS missing_count
+        FROM inventory i
+        INNER JOIN SYS_repair_program_mapping s
+            ON i.subgrouptype = s.source_program
+        LEFT JOIN LMS21Data l
+            ON i.niin = l.niin
+        WHERE l.niin IS NULL
+          AND i.niin IS NOT NULL
+          AND i.niin <> ''
+    ";
+        
+        $row = $db->query($sql)->fetchArray();
+        $db->close();
+        
+        return (int)($row['missing_count'] ?? 0);
+    }
+    
     public function getMissingNiins(): array
     {
         $db = new db();
