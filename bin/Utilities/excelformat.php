@@ -70,7 +70,7 @@ class excelformat
             ],
             
             'CAV REQUISITIONS' => [
-                'table_name' => 'cav_requisitions',
+                'table_name' => 'cav_requisitions_north',
                 'sheet_name' => 'DATA Sheet',
                 'updatefield' => 'CAVS',
                 
@@ -143,7 +143,104 @@ class excelformat
                 ],
                 
                 'create_sql' => "
-                    CREATE TABLE `cav_requisitions` (
+                    CREATE TABLE `cav_requisitions_north` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `program` VARCHAR(100) NOT NULL,
+                        `date_recv` DATE NOT NULL,
+                        `date_shipped` DATE NULL,
+                        `command` VARCHAR(100) NULL,
+                        `req_number` VARCHAR(100) NOT NULL,
+                        `priority` VARCHAR(50) NOT NULL,
+                        `niin` VARCHAR(12) NOT NULL,
+                        `part_number` VARCHAR(100) NOT NULL,
+                        `nomen` VARCHAR(150) NULL,
+                        `qty` INT(11) NOT NULL,
+                        `item_cost` DECIMAL(12,2) NULL,
+                        `status` VARCHAR(100) NOT NULL,
+                        `notes` VARCHAR(255) NULL,
+                        `rt` INT(11) NULL,
+                        `goal` INT(11) NULL,
+                        `on_time` INT(11) NULL,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                "
+            ],
+            
+            'CAV REQUISITIONS SOUTH' => [
+                'table_name' => 'cav_requisitions_south',
+                'sheet_name' => 'DATA Sheet',
+                'updatefield' => 'CAVS',
+                
+                'headers' => [
+                    'Program',
+                    'DATE RECVD',
+                    'DATE SHIPPED',
+                    'COMMAND',
+                    'REQ #',
+                    'PRIORITY',
+                    'NIIN',
+                    'PART #',
+                    'NOMEN',
+                    'QTY',
+                    'ITEM COST',
+                    'STATUS',
+                    'NOTES',
+                    'RT',
+                    'Goal',
+                    'On Time'
+                ],
+                
+                'db_columns' => [
+                    'program',
+                    'date_recv',
+                    'date_shipped',
+                    'command',
+                    'req_number',
+                    'priority',
+                    'niin',
+                    'part_number',
+                    'nomen',
+                    'qty',
+                    'item_cost',
+                    'status',
+                    'notes',
+                    'rt',
+                    'goal',
+                    'on_time'
+                ],
+                
+                'required_columns' => [
+                    'program',
+                    'date_recv',
+                    'req_number',
+                    'priority',
+                    'niin',
+                    'part_number',
+                    'qty',
+                    'status'
+                ],
+                
+                'column_types' => [
+                    'program'    => 'string',
+                    'date_recv'    => 'date',
+                    'date_shipped'    => 'date',
+                    'command'    => 'string',
+                    'req_number'    => 'string',
+                    'priority'    => 'string',
+                    'niin'    => 'string',
+                    'part_number'    => 'string',
+                    'nomen'    => 'string',
+                    'qty'    => 'int',
+                    'item_cost'    => 'decimal',
+                    'status'    => 'string',
+                    'notes'    => 'string',
+                    'rt'    => 'int',
+                    'goal'    => 'int',
+                    'on_time'    => 'int'
+                ],
+                
+                'create_sql' => "
+                    CREATE TABLE `cav_requisitions_south` (
                         `id` INT NOT NULL AUTO_INCREMENT,
                         `program` VARCHAR(100) NOT NULL,
                         `date_recv` DATE NOT NULL,
