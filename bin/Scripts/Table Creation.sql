@@ -22,7 +22,7 @@ CREATE TABLE `SYS_excellist` (
 
 INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Batteries', 'batteries', 3, 1);
 INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('CAV REQUISITIONS', 'cav_requisitions_north', 1, 1);
-INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('DRMO', 'drmo', 4, 1);
+INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('DRMO', 'drmo_inventory', 4, 1);
 INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Installed', 'installed', 3, 1);
 INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Inventory', 'inventory', 3, 1);
 INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Receipts', 'receipts', 4, 1);
@@ -30,6 +30,7 @@ INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_activ
 INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Shipments', 'shipments', 3, 1);
 INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('Procurement Tracker2026', 'procurements', 1, 1);
 INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('CAV REQUISITIONS SOUTH', 'cav_requisitions_south', 1, 1);
+INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_active`) VALUES ('DRMO NONInventory', 'drmo_noninventory', 4, 1);
 
 -- Program Mapping
 

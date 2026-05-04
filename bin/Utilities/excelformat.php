@@ -264,7 +264,7 @@ class excelformat
             ],
             
             'DRMO' => [
-                'table_name' => 'drmo',
+                'table_name' => 'drmo_inventory',
                 'sheet_name' => 'Report',
                 'updatefield' => 'CMPro',
                 
@@ -309,7 +309,7 @@ class excelformat
                 ],
                 
                 'create_sql' => "
-                    CREATE TABLE `drmo` (
+                    CREATE TABLE `drmo_inventory` (
                         `id` INT NOT NULL AUTO_INCREMENT,
                         `date` DATE NOT NULL,
                         `document_number` VARCHAR(255) NOT NULL,
@@ -319,6 +319,74 @@ class excelformat
                         `qty` INT(11) NULL,
                         `unit_price` DECIMAL(12,2) NULL,
                         `program` VARCHAR(50) NOT NULL,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                "
+            ],
+            
+            'DRMO NONInventory' => [
+                'table_name' => 'drmo_noninventory',
+                'sheet_name' => 'Report',
+                'updatefield' => 'CMPro',
+                
+                'headers' => [
+                    'REQUISITDate',
+                    'SUPPLYREQNO',
+                    'NSN',
+                    'PARTNO',
+                    'DESCRIPTION',
+                    'SHIPQTY',
+                    'PRICE'
+                ],
+                
+                'db_columns' => [
+                    'date',
+                    'document_number',
+                    'nsn',
+                    'niin',
+                    'part',
+                    'nomenclature',
+                    'qty',
+                    'unit_price',
+                    'program'
+                ],
+                
+                'required_columns' => [
+                    'date',
+                    'document_number',
+                    'part'
+                ],
+                
+                'column_types' => [
+                    'date'   => 'date',
+                    'document_number' => 'string',
+                    'nsn'   => 'string',
+                    'niin'   => 'string',
+                    'part'       => 'string',
+                    'nomenclature'    => 'string',
+                    'qty'   => 'int',
+                    'unit_price'       => 'decimal',
+                    'program'    => 'string'
+                ],
+                
+                'create_sql' => "
+                    CREATE TABLE `drmo_noninventory` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `date` DATE NOT NULL,
+                        `document_number` VARCHAR(255) NOT NULL,
+                        `nsn` VARCHAR(50) NULL,
+                        `niin` VARCHAR(12)
+                            GENERATED ALWAYS AS (
+                                CASE
+                                    WHEN LENGTH(nsn) >= 9 THEN RIGHT(nsn, 9)
+                                    ELSE nsn
+                                END
+                            ) STORED,
+                        `part` VARCHAR(100) NOT NULL,
+                        `nomenclature` VARCHAR(255) NULL,
+                        `qty` INT(11) NULL,
+                        `unit_price` DECIMAL(12,2) NULL,
+                        `program` VARCHAR(50) NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
