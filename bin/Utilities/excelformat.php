@@ -347,8 +347,7 @@ class excelformat
                     'part',
                     'nomenclature',
                     'qty',
-                    'unit_price',
-                    'program'
+                    'unit_price'
                 ],
                 
                 'required_columns' => [
@@ -365,8 +364,7 @@ class excelformat
                     'part'       => 'string',
                     'nomenclature'    => 'string',
                     'qty'   => 'int',
-                    'unit_price'       => 'decimal',
-                    'program'    => 'string'
+                    'unit_price'       => 'decimal'
                 ],
                 
                 'create_sql' => "
