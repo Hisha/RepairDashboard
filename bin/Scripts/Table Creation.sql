@@ -163,3 +163,50 @@ CREATE INDEX idx_destroyer_name ON drive_destruction_log(destroyer_name);
 CREATE INDEX idx_witness_name ON drive_destruction_log(witness_name);
 CREATE INDEX idx_status ON drive_destruction_log(status);
 
+
+-------Views !!!!Make sure tables exist before trying to make!!!!!----------
+
+CREATE VIEW cav_requisitions AS
+SELECT * FROM cav_requisitions_north
+UNION ALL
+SELECT * FROM cav_requisitions_south;
+
+
+
+CREATE OR REPLACE VIEW drmo AS
+SELECT
+    di.date,
+    di.document_number,
+    di.niin,
+    di.part,
+    di.nomenclature,
+    di.qty,
+    di.unit_price,
+    COALESCE(l.lrc, di.program) AS program
+FROM drmo_inventory di
+LEFT JOIN LMS21Data l
+    ON di.niin = l.niin
+
+UNION ALL
+
+SELECT
+    ni.date,
+    ni.document_number,
+    ni.niin,
+    ni.part,
+    ni.nomenclature,
+    ni.qty,
+    ni.unit_price,
+    COALESCE(l.lrc, ni.program) AS program
+FROM drmo_noninventory ni
+LEFT JOIN LMS21Data l
+    ON ni.niin = l.niin
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM drmo_inventory di2
+    WHERE di2.document_number = ni.document_number
+);
+
+CREATE INDEX idx_lms21data_niin ON LMS21Data(niin);
+CREATE INDEX idx_drmo_inventory_docno ON drmo_inventory(document_number);
+CREATE INDEX idx_drmo_noninventory_docno ON drmo_noninventory(document_number);
