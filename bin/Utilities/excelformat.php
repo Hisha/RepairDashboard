@@ -330,7 +330,7 @@ class excelformat
                 'updatefield' => 'CMPro',
                 
                 'headers' => [
-                    'REQUISITDate',
+                    'REQUISITDATE',
                     'SUPPLYREQNO',
                     'NSN',
                     'PARTNO',
