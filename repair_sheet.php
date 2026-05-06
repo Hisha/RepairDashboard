@@ -36,8 +36,14 @@ $needed = max(0, ceil($quarterlyDemand - $aOnHand));
 $qtyToRepair = min($needed, $repairableQty);
 
 $description = '';
-if (!empty($inventoryRows)) {
-    $description = $inventoryRows[0]['primarypartno'] ?? '';
+
+foreach ($inventoryRows as $row) {
+    $candidateDescription = trim((string)($row['description'] ?? ''));
+    
+    if ($candidateDescription !== '') {
+        $description = $candidateDescription;
+        break;
+    }
 }
 ?>
 <!DOCTYPE html>

@@ -31,25 +31,26 @@ class Inventory
         return $results;
     }
     
-    public function getRepairableInventoryByNIIN(string $niin):array
+    public function getRepairableInventoryByNIIN(string $niin): array
     {
         $db = new db();
         
         $sql = "
         SELECT
-        	primarypartno,
+            primarypartno,
+            description,
             subgrouptype,
             storagebin,
             materialcode,
             onhandqty
         FROM inventory
         WHERE niin = ?
-        AND materialcode NOT IN ('A', 'H')
-        AND onhandqty <> '0'
-        AND NOT (
-            materialcode = 'F'
-            AND purposecode = 'Z'
-        )
+          AND materialcode NOT IN ('A', 'H')
+          AND NOT (
+              materialcode = 'F'
+              AND purposecode = 'Z'
+          )
+        ORDER BY onhandqty DESC, primarypartno ASC
     ";
         
         $results = $db->query($sql, $niin)->fetchAll();
