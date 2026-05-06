@@ -345,4 +345,68 @@ class Repairs
         
         return $this->getRepairedDollarValue($range['start_date'], $range['end_date']);
     }
+    
+    public function getRepairSheetCandidates(): array
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            l.niin AS NIIN,
+            COALESCE(i.`A OnHand`, 0) AS `A OnHand`,
+            COALESCE(i.`Repairable Qty`, 0) AS `Repairable Qty`,
+            sh.LastShipDate,
+            COALESCE(sh.QuarterlyDemand, 0) AS `Quarterly Demand`,
+            l.lrc AS Program
+        FROM LMS21Data l
+        LEFT JOIN (
+            SELECT
+                inventory.niin AS NIIN,
+                SUM(CASE WHEN inventory.materialcode = 'A' THEN inventory.onhandqty ELSE 0 END) AS `A OnHand`,
+                SUM(CASE
+                    WHEN inventory.materialcode IN ('D', 'G') THEN inventory.onhandqty
+                    WHEN inventory.materialcode = 'F' AND inventory.purposecode <> 'Z' THEN inventory.onhandqty
+                    ELSE 0
+                END) AS `Repairable Qty`
+            FROM inventory
+            GROUP BY inventory.niin
+        ) i ON l.niin = i.NIIN
+        LEFT JOIN (
+            SELECT
+                s.niin,
+                MAX(s.transactiondate) AS LastShipDate,
+                ROUND(
+                    SUM(
+                        CASE
+                            WHEN s.transactiondate >= DATE_SUB(p.current_fq_start, INTERVAL 15 MONTH)
+                             AND s.transactiondate < p.current_fq_start
+                            THEN s.qty
+                            ELSE 0
+                        END
+                    ) / 5,
+                    2
+                ) AS QuarterlyDemand
+            FROM shipments s
+            CROSS JOIN (
+                SELECT
+                    CASE
+                        WHEN MONTH(CURDATE()) BETWEEN 10 AND 12 THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-10-01'), '%Y-%m-%d')
+                        WHEN MONTH(CURDATE()) BETWEEN 1 AND 3  THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-01-01'), '%Y-%m-%d')
+                        WHEN MONTH(CURDATE()) BETWEEN 4 AND 6  THEN STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-04-01'), '%Y-%m-%d')
+                        ELSE STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-07-01'), '%Y-%m-%d')
+                    END AS current_fq_start
+            ) p
+            GROUP BY s.niin
+        ) sh ON l.niin = sh.niin
+        WHERE l.cog LIKE '7%'
+          AND COALESCE(i.`A OnHand`, 0) < COALESCE(sh.QuarterlyDemand, 0)
+          AND COALESCE(i.`Repairable Qty`, 0) > 0
+        ORDER BY sh.LastShipDate DESC, l.niin ASC
+    ";
+        
+        $results = $db->query($sql)->fetchAll();
+        $db->close();
+        
+        return $results;
+    }
 }
