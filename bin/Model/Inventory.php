@@ -46,6 +46,7 @@ class Inventory
         FROM inventory
         WHERE niin = ?
           AND materialcode NOT IN ('A', 'H')
+          AND onhandqty <> '0'
           AND NOT (
               materialcode = 'F'
               AND purposecode = 'Z'
