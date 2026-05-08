@@ -5,6 +5,11 @@ class CavRequisitions
 {
     protected $_tableName = 'cav_requisitions';
     
+    protected function getLocationFilter(): array
+    {
+        return helpers::getNorthSouthSql('SYS_program_mapping');
+    }
+    
     public function getDistinctRecvMonths()
     {
         $db = new db();
@@ -752,6 +757,8 @@ class CavRequisitions
     {
         $db = new db();
         
+        $locationFilter = $this->getLocationFilter();
+        
         $sql = "
     SELECT
         b.NIIN,
@@ -783,6 +790,7 @@ class CavRequisitions
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE cav_requisitions.status = 'BACKORDERED'
+        {$locationFilter['sql']}
         GROUP BY cav_requisitions.niin
     ) b
     LEFT JOIN
@@ -825,7 +833,7 @@ class CavRequisitions
         b.NIIN ASC
     ";
         
-        $results = $db->query($sql)->fetchAll();
+        $results = $db->query($sql, $locationFilter['params'])->fetchAll();
         
         $db->close();
         
