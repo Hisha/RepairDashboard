@@ -4,6 +4,33 @@ include_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 class Repairs
 {
+    
+    private function getRepairLocationFilter(): array
+    {
+        return helpers::getNorthSouthSql('SYS_repair_program_mapping');
+    }
+    
+    private function getLrcLocationFilter(): array
+    {
+        $filter = helpers::getNorthSouthFilter();
+        
+        if ($filter === 'all') {
+            return ['sql' => '', 'params' => []];
+        }
+        
+        return [
+            'sql' => "
+            AND EXISTS (
+                SELECT 1
+                FROM SYS_repair_program_mapping rpm_filter
+                WHERE rpm_filter.normalized_program = l.lrc
+                  AND rpm_filter.north_south = ?
+            )
+        ",
+            'params' => [$filter]
+        ];
+    }
+    
     public function getTechsRepairValue(string $startDate, string $endDate):array
     {
         $db = new db();
@@ -57,6 +84,8 @@ class Repairs
     public function getRepairsByFiscalYear(string $startDate, string $endDate): array
     {
         $db = new db();
+        
+        $locationFilter = $this->getRepairLocationFilter();
         
         $sql = "
     SELECT
@@ -113,11 +142,12 @@ class Repairs
     INNER JOIN SYS_repair_program_mapping
         ON repairs.subgrouptype = SYS_repair_program_mapping.source_program
     WHERE repairs.transactiondate BETWEEN ? AND ?
+    {$locationFilter['sql']}
     GROUP BY repairs.niin, SYS_repair_program_mapping.normalized_program, LMS21Data.std_price
     ORDER BY SYS_repair_program_mapping.normalized_program, repairs.niin
     ";
         
-        $results = $db->query($sql, $startDate, $endDate)->fetchAll();
+    $results = $db->query($sql, $startDate, $endDate, $locationFilter['params'])->fetchAll();
         
         $db->close();
         
@@ -127,6 +157,8 @@ class Repairs
     public function getRepairedDollarValue(string $startDate, string $endDate):array
     {
         $db = new db();
+        
+        $locationFilter = $this->getRepairLocationFilter();
         
         $sql = "
         SELECT
@@ -139,11 +171,12 @@ class Repairs
             ON repairs.subgrouptype = SYS_repair_program_mapping.source_program
         WHERE repairs.materialcode = 'A'
             AND repairs.transactiondate BETWEEN ? AND ?
+            {$locationFilter['sql']}
         GROUP BY SYS_repair_program_mapping.normalized_program
         ORDER BY SYS_repair_program_mapping.normalized_program
     ";
         
-        $results = $db->query($sql, $startDate, $endDate)->fetchAll();
+            $results = $db->query($sql, $startDate, $endDate, $locationFilter['params'])->fetchAll();
         
         $db->close();
         
@@ -153,6 +186,8 @@ class Repairs
     public function getRepairPriorityReport(string $startDate, string $endDate): array
     {
         $db = new db();
+        
+        $locationFilter = $this->getLrcLocationFilter();
         
         $sql = "
     SELECT
@@ -224,10 +259,11 @@ class Repairs
     ) sh
         ON l.niin = sh.niin
     WHERE l.cog LIKE '7%'
+    {$locationFilter['sql']}
     ORDER BY sh.LastShipDate DESC, l.niin ASC
     ";
         
-        $results = $db->query($sql)->fetchAll();
+        $results = $db->query($sql, ...$locationFilter['params'])->fetchAll();
         
         $db->close();
         
@@ -237,6 +273,8 @@ class Repairs
     public function getRepairsByMonthAndSubgroup(string $startDate, string $endDate): array
     {
         $db = new db();
+        
+        $locationFilter = $this->getRepairLocationFilter();
         
         $sql = "
         SELECT
@@ -250,6 +288,7 @@ class Repairs
         INNER JOIN SYS_repair_program_mapping
             ON repairs.subgrouptype = SYS_repair_program_mapping.source_program
         WHERE repairs.transactiondate BETWEEN ? AND ?
+            {$locationFilter['sql']}
         GROUP BY
             DATE_FORMAT(repairs.transactiondate, '%Y-%m'),
             DATE_FORMAT(repairs.transactiondate, '%M %Y'),
@@ -263,7 +302,7 @@ class Repairs
             repairs.niin ASC
     ";
         
-        $results = $db->query($sql, $startDate, $endDate)->fetchAll();
+            $results = $db->query($sql, $startDate, $endDate, $locationFilter['params'])->fetchAll();
         $db->close();
         
         return $results;
@@ -350,6 +389,8 @@ class Repairs
     {
         $db = new db();
         
+        $locationFilter = $this->getLrcLocationFilter();
+        
         $sql = "
         SELECT
             l.niin AS NIIN,
@@ -399,12 +440,13 @@ class Repairs
             GROUP BY s.niin
         ) sh ON l.niin = sh.niin
         WHERE l.cog LIKE '7%'
+          {$locationFilter['sql']}
           AND COALESCE(i.`A OnHand`, 0) < COALESCE(sh.QuarterlyDemand, 0)
           AND COALESCE(i.`Repairable Qty`, 0) > 0
         ORDER BY sh.LastShipDate DESC, l.niin ASC
     ";
         
-        $results = $db->query($sql)->fetchAll();
+        $results = $db->query($sql, ...$locationFilter['params'])->fetchAll();
         $db->close();
         
         return $results;
