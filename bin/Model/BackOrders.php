@@ -1,12 +1,14 @@
 <?php
 include_once APP_ROOT . '/bin/Utilities/db.php';
+include_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 class BackOrders
 {
-    
     public function getBackOrderList(?string $priority = null): array
     {
         $db = new db();
+        
+        $locationFilter = helpers::getNorthSouthSql('SYS_program_mapping');
         
         $sql = "
         SELECT
@@ -23,9 +25,10 @@ class BackOrders
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE cav_requisitions.status = 'BACKORDERED'
+        {$locationFilter['sql']}
     ";
         
-        $params = [];
+        $params = $locationFilter['params'];
         
         if (!empty($priority)) {
             $sql .= " AND cav_requisitions.priority = ?";
@@ -45,6 +48,8 @@ class BackOrders
     {
         $db = new db();
         
+        $locationFilter = helpers::getNorthSouthSql('SYS_program_mapping');
+        
         $sql = "
         SELECT
             cav_requisitions.priority AS 'Priority',
@@ -53,15 +58,15 @@ class BackOrders
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE cav_requisitions.status = 'BACKORDERED'
+        {$locationFilter['sql']}
         GROUP BY cav_requisitions.priority
         ORDER BY cav_requisitions.priority
     ";
         
-        $results = $db->query($sql)->fetchAll();
+        $results = $db->query($sql, ...$locationFilter['params'])->fetchAll();
         
         $db->close();
         
         return $results;
     }
-    
 }
