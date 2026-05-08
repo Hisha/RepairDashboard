@@ -79,7 +79,37 @@ INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`
 INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_N94','JXA/N94','north');
 INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_CANES','EL1/CANES','north');
 INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_Q70','AAL/Q70','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_ICOP','ICOP','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_NIAPS','NIAPS','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_BMRPR','Repair','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_ADNS','ADNS','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_HYDRR','Repair','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_SIWCR','Repair','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_RC109','URC109','south');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_SEINC','SSEE INC E/F','south');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_SEE_F','SSEE INC E/F','south');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_SCCTV','SCCTV','south');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_ODVD','NAVMACS','south');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_DVDBM','EL1/CANES','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_DVDKW','BC5','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_NTCSS','AJ5','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_SIWCS','EFJ','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_HYDRA','EFJ','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_N94','JXA/N94','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_CANES','EL1/CANES','north');
 INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_Q70','AAL/Q70','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_ICOP','ICOP','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_NIAPS','NIAPS','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_BMRPR','Repair','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_ADNS','ADNS','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_HYDRR','Repair','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_SIWCR','Repair','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_RC109','URC109','south');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_SEINC','SSEE INC E/F','south');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_SEE_F','SSEE INC E/F','south');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_SCCTV','SCCTV','south');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_ODVD','NAVMACS','south');
+
 
 -- Power Point Filler
 CREATE TABLE `SYS_powerpoint_filler` (

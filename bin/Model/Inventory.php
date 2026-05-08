@@ -1,12 +1,20 @@
 <?php
 include_once APP_ROOT . '/bin/Utilities/db.php';
+include_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 class Inventory
 {
     
+    private function getRepairLocationFilter(): array
+    {
+        return helpers::getNorthSouthSql('SYS_repair_program_mapping');
+    }
+    
     public function getInventory():array
     {
         $db = new db();
+        
+        $locationFilter = $this->getRepairLocationFilter();
         
         $sql = "
         SELECT
@@ -20,11 +28,14 @@ class Inventory
             inventory.storagebin AS 'Location',
             inventory.averageprice AS 'Unit Price'
         FROM inventory
+        INNER JOIN SYS_repair_program_mapping
+                ON inventory.subgrouptype = SYS_repair_program_mapping.source_program
         WHERE inventory.onhandqty <> '0'
+           {$locationFilter['sql']}
         ORDER BY inventory.primarypartno ASC, inventory.subgrouptype ASC, inventory.materialcode ASC
     ";
         
-        $results = $db->query($sql)->fetchAll();
+           $results = $db->query($sql, ...$locationFilter['params'])->fetchAll();
         
         $db->close();
         
@@ -34,6 +45,8 @@ class Inventory
     public function getRepairableInventoryByNIIN(string $niin): array
     {
         $db = new db();
+        
+        $locationFilter = $this->getRepairLocationFilter();
         
         $sql = "
         SELECT
@@ -45,6 +58,7 @@ class Inventory
             onhandqty
         FROM inventory
         WHERE niin = ?
+          {$locationFilter['sql']}
           AND materialcode NOT IN ('A', 'H')
           AND onhandqty <> '0'
           AND NOT (
@@ -54,7 +68,7 @@ class Inventory
         ORDER BY onhandqty DESC, primarypartno ASC
     ";
         
-        $results = $db->query($sql, $niin)->fetchAll();
+          $results = $db->query($sql, $niin, $locationFilter['params'])->fetchAll();
         
         $db->close();
         
