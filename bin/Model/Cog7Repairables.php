@@ -1,11 +1,39 @@
 <?php
 require_once APP_ROOT . '/bin/Utilities/db.php';
+require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 class Cog7Repairables
 {
+    
+    private function getLrcLocationFilter(): array
+    {
+        $filter = helpers::getNorthSouthFilter();
+        
+        if ($filter === 'all') {
+            return [
+                'sql' => '',
+                'params' => []
+            ];
+        }
+        
+        return [
+            'sql' => "
+            AND EXISTS (
+                SELECT 1
+                FROM SYS_repair_program_mapping rpm_filter
+                WHERE rpm_filter.normalized_program = l.lrc
+                  AND rpm_filter.north_south = ?
+            )
+        ",
+            'params' => [$filter]
+        ];
+    }
+    
     public function getReport()
     {
         $db = new db();
+        
+        $locationFilter = $this->getLrcLocationFilter();
         
         $sql = "
         SELECT
@@ -62,6 +90,7 @@ class Cog7Repairables
             ON l.niin = repall.niin
             
         WHERE l.cog LIKE '7%'
+          {$locationFilter['sql']}
           AND (
                 COALESCE(rep12.repair_actions_12m, 0) > 0
                 OR COALESCE(repall.repair_actions_all, 0) > 0
@@ -70,7 +99,7 @@ class Cog7Repairables
         ORDER BY s.last_ship_date DESC, l.niin ASC
         ";
         
-        $result = $db->query($sql)->fetchAll();
+        $result = $db->query($sql, ...$locationFilter['params'])->fetchAll();
         $db->close();
         
         return $result;
@@ -80,6 +109,8 @@ class Cog7Repairables
     {
         $db = new db();
         
+        $locationFilter = $this->getLrcLocationFilter();
+        
         $sql = "
         SELECT
             l.niin,
@@ -135,6 +166,7 @@ class Cog7Repairables
             ON l.niin = repall.niin
             
         WHERE l.cog LIKE '7%'
+          {$locationFilter['sql']}
           AND (
                 COALESCE(rep12.repair_actions_12m, 0) > 0
                 OR COALESCE(repall.repair_actions_all, 0) > 0
@@ -160,7 +192,7 @@ class Cog7Repairables
         LIMIT 10
         ";
         
-        $result = $db->query($sql)->fetchAll();
+        $result = $db->query($sql, ...$locationFilter['params'])->fetchAll();
         $db->close();
         
         return $result;
@@ -169,6 +201,8 @@ class Cog7Repairables
     public function getTop10Highest12MActions()
     {
         $db = new db();
+        
+        $locationFilter = $this->getLrcLocationFilter();
         
         $sql = "
     SELECT
@@ -225,6 +259,7 @@ class Cog7Repairables
         ON l.niin = repall.niin
             
     WHERE l.cog LIKE '7%'
+      {$locationFilter['sql']}
       AND COALESCE(rep12.repair_actions_12m, 0) > 0
             
     ORDER BY
@@ -234,7 +269,7 @@ class Cog7Repairables
     LIMIT 10
     ";
         
-        $result = $db->query($sql)->fetchAll();
+        $result = $db->query($sql, ...$locationFilter['params'])->fetchAll();
         $db->close();
         
         return $result;
@@ -243,6 +278,8 @@ class Cog7Repairables
     public function getTop10TrendingWorse()
     {
         $db = new db();
+        
+        $locationFilter = $this->getLrcLocationFilter();
         
         $sql = "
     SELECT
@@ -313,6 +350,7 @@ class Cog7Repairables
         ON l.niin = repall.niin
             
     WHERE l.cog LIKE '7%'
+      {$locationFilter['sql']}
       AND COALESCE(rep12.repair_actions_12m, 0) > 0
       AND COALESCE(repall.repair_actions_all, 0) > 0
             
@@ -320,7 +358,7 @@ class Cog7Repairables
     LIMIT 10
     ";
         
-        $result = $db->query($sql)->fetchAll();
+        $result = $db->query($sql, ...$locationFilter['params'])->fetchAll();
         $db->close();
         
         return $result;
