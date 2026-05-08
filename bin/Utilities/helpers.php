@@ -71,4 +71,33 @@ class helpers
         return $start->format('Y-m-d');
     }
     
+    public static function getNorthSouthFilter(): string
+    {
+        $value = $_SESSION['north_south_filter'] ?? 'all';
+        
+        return in_array($value, ['all', 'north', 'south'], true)
+        ? $value
+        : 'all';
+    }
+    
+    public static function getNorthSouthSql(string $alias = ''): array
+    {
+        $filter = self::getNorthSouthFilter();
+        
+        if ($filter === 'all') {
+            return [
+                'sql' => '',
+                'params' => []
+            ];
+        }
+        
+        $prefix = $alias !== '' ? $alias . '.' : '';
+        
+        return [
+            'sql' => " AND {$prefix}north_south = ? ",
+            'params' => [$filter]
+            ];
+    }
+    
+    
 }

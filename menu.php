@@ -63,6 +63,21 @@ $lastProcurementUpdateFormatted = $lastProcurementUpdate
         <a href="lms21_missing.php">COG/Price Data Insert</a>
     <?php endif; ?>
   </div>
+  
+  <?php
+    $currentNorthSouthFilter = $_SESSION['north_south_filter'] ?? 'all';
+    ?>
+    
+    <form method="post" action="set_location_filter.php" style="display:inline-block; margin-left:12px;">
+        <input type="hidden" name="redirect" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
+    
+        <label for="north_south_filter"><strong>Location:</strong></label>
+        <select name="north_south_filter" id="north_south_filter" onchange="this.form.submit()">
+            <option value="all" <?= $currentNorthSouthFilter === 'all' ? 'selected' : '' ?>>All</option>
+            <option value="north" <?= $currentNorthSouthFilter === 'north' ? 'selected' : '' ?>>Chesapeake</option>
+            <option value="south" <?= $currentNorthSouthFilter === 'south' ? 'selected' : '' ?>>Charleston</option>
+        </select>
+    </form>
 
   <div class="menu-updates">
     Last CAVs Update: <?= htmlspecialchars($lastCavsUpdateFormatted ?? 'N/A') ?><br>

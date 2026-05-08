@@ -36,43 +36,50 @@ INSERT INTO `SYS_excellist` (`excel_name`, `table_name`, `header_row`, `is_activ
 
 CREATE TABLE SYS_program_mapping (
    source_program VARCHAR(50) PRIMARY KEY,
-   normalized_program VARCHAR(50) NOT NULL
+   normalized_program VARCHAR(50) NOT NULL,
+   north_south VARCHAR(5) NOT NULL DEFAULT 'north',
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EDL','EL1/CANES');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EL1','EL1/CANES');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EL1/CANES','EL1/CANES');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('ATFP','EFJ');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EFJ','EFJ');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('SIWCS','EFJ');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('SIWCS/EFJ','EFJ');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('SIWCS/ATFP','EFJ');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('ANM','EFJ');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('ANQ','EFJ');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('HYDRA','EFJ');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EGY','EFJ');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('EGH','EFJ');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('AJ5','AJ5');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('JXA/N94','JXA/N94');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('AAL/Q70','AAL/Q70');
-INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`) VALUES('BC5','BC5');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('EDL','EL1/CANES','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('EL1','EL1/CANES','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('EL1/CANES','EL1/CANES','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('ATFP','EFJ','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('EFJ','EFJ','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('SIWCS','EFJ','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('SIWCS/EFJ','EFJ','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('SIWCS/ATFP','EFJ','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('ANM','EFJ','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('ANQ','EFJ','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('HYDRA','EFJ','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('EGY','EFJ','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('EGH','EFJ','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('AJ5','AJ5','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('JXA/N94','JXA/N94','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('AAL/Q70','AAL/Q70','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('BC5','BC5','north');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('CNBW','SSEE INC E/F','south');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('CNVV','SCCTV','south');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('CPBQ','NAVMACS','south');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('CPFW','URC109','south');
+INSERT INTO `SYS_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('CPYG','DEPOT','south');
 
 -- Repair Program Mapping
 
 CREATE TABLE SYS_repair_program_mapping (
    source_program VARCHAR(50) PRIMARY KEY,
    normalized_program VARCHAR(50) NOT NULL
+   north_south VARCHAR(5) NOT NULL DEFAULT 'north'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_DVDBM','EL1/CANES');
-INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_DVDKW','BC5');
-INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_NTCSS','AJ5');
-INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_SIWCS','EFJ');
-INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_HYDRA','EFJ');
-INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_N94','JXA/N94');
-INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_CANES','EL1/CANES');
-INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBL_Q70','AAL/Q70');
-INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`) VALUES('LIPTM00252_PBW_Q70','AAL/Q70');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_DVDBM','EL1/CANES','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_DVDKW','BC5','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_NTCSS','AJ5','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_SIWCS','EFJ','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_HYDRA','EFJ','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_N94','JXA/N94','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_CANES','EL1/CANES','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBL_Q70','AAL/Q70','north');
+INSERT INTO `SYS_repair_program_mapping` (`source_program`, `normalized_program`, `north_south`) VALUES('LIPTM00252_PBW_Q70','AAL/Q70','north');
 
 -- Power Point Filler
 CREATE TABLE `SYS_powerpoint_filler` (
@@ -91,6 +98,11 @@ INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VA
 INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('EFJ','C4I PBL-O METRICS','Melissa Trusch','EFJ');
 INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('EL1/CANES','C4I PBL-O METRICS','Dane Nearhoof','EL1/EDL');
 INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('JXA/N94','C4I PBL-O METRICS','Jenna Pickings','N94');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('DEPOT','PBL-O METRICS','- -','DEPOT');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('SSEE INC E/F','PBL-O METRICS','- -','SSEE INC E/F');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('SCCTV','PBL-O METRICS','- -','SCCTV');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('NAVMACS','PBL-O METRICS','- -','NAVMACS');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('URC109','PBL-O METRICS','- -','URC109');
 
 -- Last Update Table --
 
