@@ -1,6 +1,7 @@
 <?php
 require_once APP_ROOT . '/bin/Model/SYS_LastUpdate.php';
 require_once APP_ROOT . '/bin/Model/LMS21Data.php';
+require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 $lastUpdateModel = new SYS_LastUpdate();
 $lms21Model = new LMS21Data();
@@ -104,15 +105,27 @@ $lastProcurementUpdateFormatted = $lastProcurementUpdate
     <?php endif; ?>
   </div>
   
-  <form method="post" action="set_location_filter.php" class="location-filter">
+  <?php
+    $currentNorthSouthFilter = helpers::getNorthSouthFilter();
+    ?>
+    
+    <form method="post" action="set_location_filter.php" class="location-filter">
         <input type="hidden" name="redirect" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
     
         <label for="north_south_filter">Location</label>
     
         <select name="north_south_filter" id="north_south_filter" onchange="this.form.submit()">
-            <option value="all" <?= $currentNorthSouthFilter === 'all' ? 'selected' : '' ?>>All</option>
-            <option value="north" <?= $currentNorthSouthFilter === 'north' ? 'selected' : '' ?>>Chesapeake</option>
-            <option value="south" <?= $currentNorthSouthFilter === 'south' ? 'selected' : '' ?>>Charleston</option>
+            <option value="all" <?= $currentNorthSouthFilter === 'all' ? 'selected' : '' ?>>
+                All
+            </option>
+    
+            <option value="north" <?= $currentNorthSouthFilter === 'north' ? 'selected' : '' ?>>
+                Chesapeake
+            </option>
+    
+            <option value="south" <?= $currentNorthSouthFilter === 'south' ? 'selected' : '' ?>>
+                Charleston
+            </option>
         </select>
     </form>
 

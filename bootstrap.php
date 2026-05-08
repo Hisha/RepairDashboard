@@ -10,5 +10,3 @@ define('MODEL_PATH', APP_ROOT . '/bin/Model');
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-?>
