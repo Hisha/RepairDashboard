@@ -27,10 +27,10 @@ $lastProcurementUpdateFormatted = $lastProcurementUpdate
 .menu-bar {
     background-color: #808080;
     padding: 10px 14px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
     gap: 18px;
-    flex-wrap: wrap;
 }
 
 .menu-links {
@@ -54,40 +54,35 @@ $lastProcurementUpdateFormatted = $lastProcurementUpdate
 .location-filter {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 10px;
-    background: rgba(255,255,255,0.35);
-    border: 1px solid rgba(0,0,0,0.15);
+    gap: 6px;
+    padding: 5px 8px;
+    background: #f1f3f5;
+    border: 1px solid #666;
     border-radius: 6px;
+    white-space: nowrap;
 }
 
 .location-filter label {
     font-size: 13px;
     font-weight: bold;
     margin: 0;
-    white-space: nowrap;
 }
 
 .location-filter select {
-    padding: 4px 8px;
-    border: 1px solid #666;
+    min-width: 120px;
+    padding: 4px 6px;
+    border: 1px solid #555;
     border-radius: 4px;
     background: #fff;
     font-size: 13px;
-    cursor: pointer;
-}
-
-.location-filter select:hover {
-    border-color: #0d6efd;
 }
 
 .menu-updates {
-    margin-left: auto;
     text-align: right;
     font-size: 12px;
     font-weight: bold;
     color: black;
-    line-height: 1.4;
+    line-height: 1.35;
     white-space: nowrap;
 }
 </style>
@@ -109,39 +104,15 @@ $lastProcurementUpdateFormatted = $lastProcurementUpdate
     <?php endif; ?>
   </div>
   
-  <?php
-    $currentNorthSouthFilter = $_SESSION['north_south_filter'] ?? 'all';
-    ?>
-    
-    <form method="post"
-          action="set_location_filter.php"
-          class="location-filter">
-    
-        <input type="hidden"
-               name="redirect"
-               value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
+  <form method="post" action="set_location_filter.php" class="location-filter">
+        <input type="hidden" name="redirect" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
     
         <label for="north_south_filter">Location</label>
     
-        <select name="north_south_filter"
-                id="north_south_filter"
-                onchange="this.form.submit()">
-    
-            <option value="all"
-                <?= $currentNorthSouthFilter === 'all' ? 'selected' : '' ?>>
-                All
-            </option>
-    
-            <option value="north"
-                <?= $currentNorthSouthFilter === 'north' ? 'selected' : '' ?>>
-                Chesapeake
-            </option>
-    
-            <option value="south"
-                <?= $currentNorthSouthFilter === 'south' ? 'selected' : '' ?>>
-                Charleston
-            </option>
-    
+        <select name="north_south_filter" id="north_south_filter" onchange="this.form.submit()">
+            <option value="all" <?= $currentNorthSouthFilter === 'all' ? 'selected' : '' ?>>All</option>
+            <option value="north" <?= $currentNorthSouthFilter === 'north' ? 'selected' : '' ?>>Chesapeake</option>
+            <option value="south" <?= $currentNorthSouthFilter === 'south' ? 'selected' : '' ?>>Charleston</option>
         </select>
     </form>
 
