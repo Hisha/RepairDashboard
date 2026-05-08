@@ -46,8 +46,6 @@ class Inventory
     {
         $db = new db();
         
-        $locationFilter = $this->getRepairLocationFilter();
-        
         $sql = "
         SELECT
             primarypartno,
@@ -58,7 +56,6 @@ class Inventory
             onhandqty
         FROM inventory
         WHERE niin = ?
-          {$locationFilter['sql']}
           AND materialcode NOT IN ('A', 'H')
           AND onhandqty <> '0'
           AND NOT (
@@ -68,7 +65,7 @@ class Inventory
         ORDER BY onhandqty DESC, primarypartno ASC
     ";
         
-          $results = $db->query($sql, $niin, $locationFilter['params'])->fetchAll();
+          $results = $db->query($sql, $niin)->fetchAll();
         
         $db->close();
         
