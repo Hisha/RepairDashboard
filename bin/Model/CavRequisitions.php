@@ -1,5 +1,6 @@
 <?php
 include_once APP_ROOT . '/bin/Utilities/db.php';
+include_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 class CavRequisitions
 {
@@ -833,7 +834,7 @@ class CavRequisitions
         b.NIIN ASC
     ";
         
-        $results = $db->query($sql, $locationFilter['params'])->fetchAll();
+        $results = $db->query($sql, ...$locationFilter['params'])->fetchAll();
         
         $db->close();
         
