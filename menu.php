@@ -25,25 +25,70 @@ $lastProcurementUpdateFormatted = $lastProcurementUpdate
 
 <style>
 .menu-bar {
-  background-color: #808080;
-  padding: 10px;
-  display: flex;
-  align-items: center;
+    background-color: #808080;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.menu-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
 }
 
 .menu-links a {
-  margin-right: 30px;
-  color: black;
-  text-decoration: none;
-  font-weight: bold;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.menu-links a:hover {
+    text-decoration: underline;
+}
+
+.location-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.35);
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 6px;
+}
+
+.location-filter label {
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.location-filter select {
+    padding: 4px 8px;
+    border: 1px solid #666;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.location-filter select:hover {
+    border-color: #0d6efd;
 }
 
 .menu-updates {
-  margin-left: auto;
-  text-align: right;
-  font-size: 12px;
-  font-weight: bold;
-  color: black;
+    margin-left: auto;
+    text-align: right;
+    font-size: 12px;
+    font-weight: bold;
+    color: black;
+    line-height: 1.4;
+    white-space: nowrap;
 }
 </style>
 
@@ -68,14 +113,35 @@ $lastProcurementUpdateFormatted = $lastProcurementUpdate
     $currentNorthSouthFilter = $_SESSION['north_south_filter'] ?? 'all';
     ?>
     
-    <form method="post" action="set_location_filter.php" style="display:inline-block; margin-left:12px;">
-        <input type="hidden" name="redirect" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
+    <form method="post"
+          action="set_location_filter.php"
+          class="location-filter">
     
-        <label for="north_south_filter"><strong>Location:</strong></label>
-        <select name="north_south_filter" id="north_south_filter" onchange="this.form.submit()">
-            <option value="all" <?= $currentNorthSouthFilter === 'all' ? 'selected' : '' ?>>All</option>
-            <option value="north" <?= $currentNorthSouthFilter === 'north' ? 'selected' : '' ?>>Chesapeake</option>
-            <option value="south" <?= $currentNorthSouthFilter === 'south' ? 'selected' : '' ?>>Charleston</option>
+        <input type="hidden"
+               name="redirect"
+               value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
+    
+        <label for="north_south_filter">Location</label>
+    
+        <select name="north_south_filter"
+                id="north_south_filter"
+                onchange="this.form.submit()">
+    
+            <option value="all"
+                <?= $currentNorthSouthFilter === 'all' ? 'selected' : '' ?>>
+                All
+            </option>
+    
+            <option value="north"
+                <?= $currentNorthSouthFilter === 'north' ? 'selected' : '' ?>>
+                Chesapeake
+            </option>
+    
+            <option value="south"
+                <?= $currentNorthSouthFilter === 'south' ? 'selected' : '' ?>>
+                Charleston
+            </option>
+    
         </select>
     </form>
 
