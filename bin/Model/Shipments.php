@@ -236,6 +236,7 @@ class Shipments
                 ON shipments.subgrouptype = SYS_repair_program_mapping.source_program
             WHERE shipments.transactiondate BETWEEN ? AND ?
               {$locationFilter['sql']}
+              AND SYS_repair_program_mapping.source_program <> 'LIPTM00252_PBL_BMRPR'
             ORDER BY SYS_repair_program_mapping.normalized_program ASC
         ";
               
