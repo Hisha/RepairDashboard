@@ -149,6 +149,7 @@ class Shipments
                 ON shipments.niin = LMS21Data.niin
             WHERE shipments.transactiondate BETWEEN ? AND ?
               {$locationFilter['sql']}
+              AND SYS_repair_program_mapping.source_program <> 'LIPTM00252_PBL_BMRPR'
         ";
               
               $params = array_merge([$startDate, $endDate], $locationFilter['params']);
@@ -192,6 +193,7 @@ class Shipments
                 ON shipments.niin = LMS21Data.niin
             WHERE shipments.transactiondate BETWEEN ? AND ?
               {$locationFilter['sql']}
+              AND SYS_repair_program_mapping.source_program <> 'LIPTM00252_PBL_BMRPR'
         ";
               
               $params = array_merge([$startDate, $endDate], $locationFilter['params']);
