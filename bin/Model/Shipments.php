@@ -212,7 +212,7 @@ class Shipments
                 shipments.primarypartno,
                 shipments.description,
                 SYS_repair_program_mapping.normalized_program
-            ORDER BY `Total Qty` DESC, shipments.niin ASC
+            ORDER BY `Total Reqs` DESC, shipments.niin ASC
         ";
               
               $results = $db->query($sql, ...$params)->fetchAll();
