@@ -43,17 +43,127 @@ $records = array_values(array_filter($records, function ($row) {
         return date('m/d/Y');
     }
     
-    $pages = array_chunk($records, 4);
-    
-    ob_start();
-    ?>
+    function renderCert(array $row): void
+    {
+        ?>
+    <div class="cert">
+        <div class="cert-header">
+            CERTIFICATION OF<br>
+            INFORMATION TECHNOLOGY DISPOSITION
+        </div>
+
+        <div class="checkbox-row">
+            <span class="box"></span>
+            Check box if hard drive/data storage components have been removed.
+        </div>
+
+        <div class="certifies">This certifies this hard drive:</div>
+
+        <div class="row">
+            <span class="label">Serial No.</span>
+            <span class="line serial-line"><?= h($row['serial_number'] ?? '') ?></span>
+            <span class="label">Barcode No.</span>
+            <span class="line barcode-line">&nbsp;</span>
+        </div>
+
+        <div class="row">
+            <span class="label">Make/Model</span>
+            <span class="line model-line"><?= h($row['part_number'] ?? '') ?></span>
+        </div>
+
+        <div class="compliance">
+            was Cleared / Purged / Destroyed in accordance with DoD<br>
+            I 8500.01, DOD M 4160.21 Vol 4; and NIST SP800-88 Rev 1
+        </div>
+
+        <div class="row">
+            <strong><em>(Date)</em></strong>
+            <span class="line date-line"><?= h(certDate($row)) ?></span>
+        </div>
+
+        <table class="method-table">
+            <tr>
+                <td><strong>Method Type</strong></td>
+                <td><span class="box"></span> Clear</td>
+                <td><span class="box"></span> Purge</td>
+                <td><span class="box">X</span> Destroy</td>
+            </tr>
+            <tr>
+                <td><strong>Method Used</strong></td>
+                <td><span class="box">X</span> Degauss</td>
+                <td><span class="box"></span> Overwrite</td>
+                <td><span class="box"></span> Block Erase</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><span class="box"></span> Crypto Erase</td>
+                <td><span class="box"></span> Other</td>
+                <td></td>
+            </tr>
+        </table>
+
+        <div class="row">
+            <span class="label">Software / Degausser</span>
+            <span class="line long-line">DATA Security INC., NSA Certified</span>
+        </div>
+        <div class="note">(Manufacturer, Product Version, Date)</div>
+
+        <div class="row">
+            <span class="label">Method of Destruction</span>
+            <span class="line long-line">DEGAUSSED/PUNCHED</span>
+        </div>
+        <div class="note">(e.g., approved metal destruction facility)</div>
+
+        <div class="row">
+            <span class="label">DTID No. / Hand Receipt No.</span>
+            <span class="line long-line">&nbsp;</span>
+        </div>
+
+        <div class="row">
+            <span class="label">Printed Name</span>
+            <span class="line long-line">KEVIN SMITH</span>
+        </div>
+
+        <div class="row">
+            <span class="label">Organization Unit Name</span>
+            <span class="line long-line">MESC Greenbrier Chesapeake, VA</span>
+        </div>
+
+        <div class="row">
+            <span class="label">Email</span>
+            <span class="line long-line">kevin.t.smith26.civ@us.navy.mil</span>
+        </div>
+
+        <div class="row">
+            <span class="label">Phone</span>
+            <span class="line phone-line">757-320-1927</span>
+            <span class="label">Rank/Grade</span>
+            <span class="line rank-line">CIV</span>
+        </div>
+
+        <div class="signature-row">
+            <span class="sig-left">Signature</span>
+            <span class="sig-right">Date</span>
+        </div>
+
+        <div class="footer">
+            DLA FORM 2500, NOV 2022 (Replaces all similar forms)
+        </div>
+    </div>
+    <?php
+}
+
+$pages = array_chunk($records, 4);
+
+ob_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <style>
 @page {
-    margin: 0.15in;
+    margin: 0.12in;
 }
 
 body {
@@ -63,17 +173,22 @@ body {
     color: #000;
 }
 
-.page {
-    width: 8.2in;
-    height: 10.7in;
+.page-table {
+    width: 100%;
+    border-collapse: collapse;
     page-break-after: always;
 }
 
+.page-table td {
+    width: 50%;
+    height: 5.32in;
+    vertical-align: top;
+    padding: 0.025in;
+}
+
 .cert {
-    width: 3.95in;
-    height: 5.15in;
-    float: left;
-    margin: 0.03in;
+    width: 100%;
+    height: 5.22in;
     border: 1px dashed #aaa;
     padding: 0.04in;
     box-sizing: border-box;
@@ -132,23 +247,23 @@ body {
 }
 
 .serial-line {
-    width: 1.05in;
+    width: 0.95in;
 }
 
 .barcode-line {
-    width: 1.05in;
+    width: 0.95in;
 }
 
 .model-line {
-    width: 2.85in;
+    width: 2.75in;
 }
 
 .long-line {
-    width: 2.35in;
+    width: 2.25in;
 }
 
 .date-line {
-    width: 1.25in;
+    width: 1.2in;
 }
 
 .compliance {
@@ -179,15 +294,15 @@ body {
 }
 
 .phone-line {
-    width: 1.05in;
+    width: 0.95in;
 }
 
 .rank-line {
-    width: 0.75in;
+    width: 0.65in;
 }
 
 .signature-row {
-    margin-top: 10px;
+    margin-top: 9px;
 }
 
 .sig-left {
@@ -202,7 +317,7 @@ body {
 }
 
 .footer {
-    margin-top: 8px;
+    margin-top: 7px;
     font-size: 6.5px;
 }
 </style>
@@ -214,120 +329,23 @@ body {
 <?php else: ?>
 
 <?php foreach ($pages as $pageRecords): ?>
-<div class="page">
-    <?php foreach ($pageRecords as $row): ?>
-        <div class="cert">
-            <div class="cert-header">
-                CERTIFICATION OF<br>
-                INFORMATION TECHNOLOGY DISPOSITION
-            </div>
+    <?php
+    $slots = $pageRecords;
+    while (count($slots) < 4) {
+        $slots[] = null;
+    }
+    ?>
 
-            <div class="checkbox-row">
-                <span class="box"></span>
-                Check box if hard drive/data storage components have been removed.
-            </div>
-
-            <div class="certifies">This certifies this hard drive:</div>
-
-            <div class="row">
-                <span class="label">Serial No.</span>
-                <span class="line serial-line"><?= h($row['serial_number'] ?? '') ?></span>
-                <span class="label">Barcode No.</span>
-                <span class="line barcode-line"></span>
-            </div>
-
-            <div class="row">
-                <span class="label">Make/Model</span>
-                <span class="line model-line"><?= h($row['part_number'] ?? '') ?></span>
-            </div>
-
-            <div class="compliance">
-                was Cleared / Purged / Destroyed in accordance with DoD<br>
-                I 8500.01, DOD M 4160.21 Vol 4; and NIST SP800-88 Rev 1
-            </div>
-
-            <div class="row">
-                <strong><em>(Date)</em></strong>
-                <span class="line date-line"><?= h(certDate($row)) ?></span>
-            </div>
-
-            <table class="method-table">
-                <tr>
-                    <td><strong>Method Type</strong></td>
-                    <td><span class="box"></span> Clear</td>
-                    <td><span class="box"></span> Purge</td>
-                    <td><span class="box">X</span> Destroy</td>
-                </tr>
-                <tr>
-                    <td><strong>Method Used</strong></td>
-                    <td><span class="box">X</span> Degauss</td>
-                    <td><span class="box"></span> Overwrite</td>
-                    <td><span class="box"></span> Block Erase</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td><span class="box"></span> Crypto Erase</td>
-                    <td><span class="box"></span> Other</td>
-                    <td></td>
-                </tr>
-            </table>
-
-            <div class="row">
-                <span class="label">Software / Degausser</span>
-                <span class="line long-line">DATA Security INC., NSA Certified</span>
-            </div>
-            <div class="note">(Manufacturer, Product Version, Date)</div>
-
-            <div class="row">
-                <span class="label">Method of Destruction</span>
-                <span class="line long-line">DEGAUSSED/PUNCHED</span>
-            </div>
-            <div class="note">(e.g., approved metal destruction facility)</div>
-
-            <div class="row">
-                <span class="label">DTID No. / Hand Receipt No.</span>
-                <span class="line long-line"></span>
-            </div>
-
-            <div class="row">
-                <span class="label">Printed Name</span>
-                <span class="line long-line">KEVIN SMITH</span>
-            </div>
-
-            <div class="row">
-                <span class="label">Organization Unit Name</span>
-                <span class="line long-line">MESC Greenbrier Chesapeake, VA</span>
-            </div>
-
-            <div class="row">
-                <span class="label">Email</span>
-                <span class="line long-line">kevin.t.smith26.civ@us.navy.mil</span>
-            </div>
-
-            <div class="row">
-                <span class="label">Phone</span>
-                <span class="line phone-line">757-320-1927</span>
-                <span class="label">Rank/Grade</span>
-                <span class="line rank-line">CIV</span>
-            </div>
-
-            <div class="signature-row">
-                <span class="sig-left">Signature</span>
-                <span class="sig-right">Date</span>
-            </div>
-
-            <div class="footer">
-                DLA FORM 2500, NOV 2022 (Replaces all similar forms)
-            </div>
-        </div>
-    <?php endforeach; ?>
-
-    <?php for ($i = count($pageRecords); $i < 4; $i++): ?>
-        <div class="cert"></div>
-    <?php endfor; ?>
-
-    <div style="clear: both;"></div>
-</div>
+    <table class="page-table">
+        <tr>
+            <td><?php if ($slots[0] !== null) renderCert($slots[0]); ?></td>
+            <td><?php if ($slots[1] !== null) renderCert($slots[1]); ?></td>
+        </tr>
+        <tr>
+            <td><?php if ($slots[2] !== null) renderCert($slots[2]); ?></td>
+            <td><?php if ($slots[3] !== null) renderCert($slots[3]); ?></td>
+        </tr>
+    </table>
 <?php endforeach; ?>
 
 <?php endif; ?>
