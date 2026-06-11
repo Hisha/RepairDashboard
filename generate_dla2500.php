@@ -187,7 +187,7 @@ body {
     border: 1px dashed #aaa;
     padding: 0.03in;
     box-sizing: border-box;
-    font-size: 8px;
+    font-size: 9px;
     overflow: hidden;
 }
 
@@ -203,12 +203,12 @@ body {
 
 .slot-3 {
     left: 0;
-    top: 5.38in;
+    top: 5.05in;
 }
 
 .slot-4 {
     left: 4.13in;
-    top: 5.38in;
+    top: 5.05in;
 }
 
 .cert-header {
