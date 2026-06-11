@@ -58,25 +58,29 @@ class DLA2500Helper
         
         $pdf->SetTextColor(0, 0, 0);
         
-        $pdf->SetFont('Helvetica', '', 6);
-        $pdf->Text($x + 24, $y + 33, $serial);
-        $pdf->Text($x + 18, $y + 43, $part);
-        $pdf->Text($x + 18, $y + 60, $date);
+        // Main fields
+        $pdf->SetFont('Helvetica', '', 7);
+        $pdf->Text($x + 24, $y + 33, $serial); // Serial No
+        $pdf->Text($x + 15, $y + 40, $part);   // Make/Model
+        $pdf->Text($x + 16, $y + 57, $date);   // Date
         
-        $pdf->SetFont('Helvetica', 'B', 9);
-        $pdf->Text($x + 78, $y + 66, 'X'); // Destroy
-        $pdf->Text($x + 30, $y + 76, 'X'); // Degauss
+        // Checkboxes
+        $pdf->SetFont('Helvetica', 'B', 11);
+        $pdf->Text($x + 84, $y + 64, 'X');     // Destroy
+        $pdf->Text($x + 30, $y + 73, 'X');     // Degauss
         
-        $pdf->SetFont('Helvetica', '', 5);
-        $pdf->Text($x + 36, $y + 92, 'DATA Security INC., NSA Certified');
-        $pdf->Text($x + 40, $y + 105, 'DEGAUSSED/PUNCHED');
+        // Cert details
+        $pdf->SetFont('Helvetica', '', 6.5);
+        $pdf->Text($x + 34, $y + 87, 'DATA Security INC., NSA Certified');
+        $pdf->Text($x + 33, $y + 100, 'DEGAUSSED/PUNCHED');
         
-        $pdf->SetFont('Helvetica', '', 5.5);
-        $pdf->Text($x + 25, $y + 119, 'KEVIN SMITH');
-        $pdf->Text($x + 36, $y + 128, 'MESC Greenbrier Chesapeake, VA');
-        $pdf->Text($x + 12, $y + 138, 'kevin.t.smith26.civ@us.navy.mil');
-        $pdf->Text($x + 14, $y + 148, '757-320-1927');
-        $pdf->Text($x + 57, $y + 148, 'CIV');
+        // User info
+        $pdf->SetFont('Helvetica', '', 7);
+        $pdf->Text($x + 24, $y + 112, 'KEVIN SMITH');
+        $pdf->Text($x + 34, $y + 121, 'MESC Greenbrier Chesapeake, VA');
+        $pdf->Text($x + 10, $y + 131, 'kevin.t.smith26.civ@us.navy.mil');
+        $pdf->Text($x + 12, $y + 141, '757-320-1927');
+        $pdf->Text($x + 56, $y + 141, 'CIV');
     }
     
 }
