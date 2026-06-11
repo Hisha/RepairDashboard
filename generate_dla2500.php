@@ -43,10 +43,10 @@ $records = array_values(array_filter($records, function ($row) {
         return date('m/d/Y');
     }
     
-    function renderCert(array $row): void
+    function renderCert(array $row, string $slotClass): void
     {
         ?>
-    <div class="cert">
+    <div class="cert <?= h($slotClass) ?>">
         <div class="cert-header">
             CERTIFICATION OF<br>
             INFORMATION TECHNOLOGY DISPOSITION
@@ -173,20 +173,42 @@ body {
     color: #000;
 }
 
-.page-table {
-    width: 100%;
-    border-collapse: collapse;
+.page {
+    position: relative;
+    width: 8.26in;
+    height: 10.76in;
     page-break-after: always;
 }
 
-.page-table td {
-    height: 4.95in;
-    padding: 0.01in;
+.cert {
+    position: absolute;
+    width: 4.05in;
+    height: 5.25in;
+    border: 1px dashed #aaa;
+    padding: 0.03in;
+    box-sizing: border-box;
+    font-size: 8px;
+    overflow: hidden;
 }
 
-.cert {
-    height: 4.85in;
-    padding: 0.03in;
+.slot-1 {
+    left: 0;
+    top: 0;
+}
+
+.slot-2 {
+    left: 4.13in;
+    top: 0;
+}
+
+.slot-3 {
+    left: 0;
+    top: 5.38in;
+}
+
+.slot-4 {
+    left: 4.13in;
+    top: 5.38in;
 }
 
 .cert-header {
@@ -329,16 +351,12 @@ body {
     }
     ?>
 
-    <table class="page-table">
-        <tr>
-            <td><?php if ($slots[0] !== null) renderCert($slots[0]); ?></td>
-            <td><?php if ($slots[1] !== null) renderCert($slots[1]); ?></td>
-        </tr>
-        <tr>
-            <td><?php if ($slots[2] !== null) renderCert($slots[2]); ?></td>
-            <td><?php if ($slots[3] !== null) renderCert($slots[3]); ?></td>
-        </tr>
-    </table>
+    <div class="page">
+        <?php if ($slots[0] !== null) renderCert($slots[0], 'slot-1'); ?>
+        <?php if ($slots[1] !== null) renderCert($slots[1], 'slot-2'); ?>
+        <?php if ($slots[2] !== null) renderCert($slots[2], 'slot-3'); ?>
+        <?php if ($slots[3] !== null) renderCert($slots[3], 'slot-4'); ?>
+    </div>
 <?php endforeach; ?>
 
 <?php endif; ?>
