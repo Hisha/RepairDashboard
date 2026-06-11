@@ -47,6 +47,34 @@ class DLA2500Helper
 
     private static function writeCertificate(Fpdi $pdf, array $row, array $offset): void
     {
+        $x = $offset['x'];
+        $y = $offset['y'];
+        
+        // Draw the estimated certificate slot box
+        $pdf->SetDrawColor(255, 0, 0);
+        $pdf->Rect($x, $y, 140, 105);
+        
+        // Debug labels
+        $pdf->SetFont('Helvetica', 'B', 8);
+        $pdf->SetTextColor(255, 0, 0);
+        
+        $pdf->Text($x + 20, $y + 20, 'SERIAL');
+        $pdf->Text($x + 20, $y + 30, 'PART');
+        $pdf->Text($x + 20, $y + 40, 'DESTROY');
+        $pdf->Text($x + 20, $y + 50, 'DEGAUSS');
+        $pdf->Text($x + 20, $y + 60, 'SOFTWARE');
+        $pdf->Text($x + 20, $y + 70, 'METHOD');
+        $pdf->Text($x + 20, $y + 80, 'NAME');
+        $pdf->Text($x + 20, $y + 90, 'ORG');
+        
+        // Reset colors
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetDrawColor(0, 0, 0);
+    }
+    
+    /*
+    private static function writeCertificate(Fpdi $pdf, array $row, array $offset): void
+    {
         
         if ($debug) {
             $pdf->SetFont('Helvetica', '', 5);
@@ -71,6 +99,7 @@ class DLA2500Helper
          * Coordinates will need adjustment after first test.
          */
 
+    /*
         $pdf->Text($x + 32, $y + 22, $row['serial_number']);
         $pdf->Text($x + 32, $y + 28, $row['part_number']);
 
@@ -88,4 +117,6 @@ class DLA2500Helper
 
         $pdf->Text($x + 32, $y + 82, date('m/d/Y'));
     }
+    
+    */
 }
