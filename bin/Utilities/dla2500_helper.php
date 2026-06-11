@@ -1,5 +1,7 @@
 <?php
 
+require_once APP_ROOT . '/vendor/autoload.php';
+
 use setasign\Fpdi\Fpdi;
 
 class DLA2500Helper
