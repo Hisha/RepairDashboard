@@ -38,10 +38,10 @@ class DLA2500Helper
     private static function getSlotOffset(int $slot): array
     {
         return match ($slot) {
-            0 => ['x' => 12,  'y' => 17],
-            1 => ['x' => 113, 'y' => 17],
-            2 => ['x' => 12,  'y' => 146],
-            3 => ['x' => 113, 'y' => 146],
+            0 => ['x' => 3,   'y' => 4],
+            1 => ['x' => 111, 'y' => 4],
+            2 => ['x' => 3,   'y' => 141],
+            3 => ['x' => 111, 'y' => 141],
         };
     }
 
@@ -58,29 +58,25 @@ class DLA2500Helper
         
         $pdf->SetTextColor(0, 0, 0);
         
-        // Main fields
         $pdf->SetFont('Helvetica', '', 6);
-        $pdf->Text($x + 16, $y + 32, $serial); // Serial No
-        $pdf->Text($x + 18, $y + 39, $part);   // Make/Model
-        $pdf->Text($x + 18, $y + 58, $date);   // Date
+        $pdf->Text($x + 17, $y + 35, $serial);
+        $pdf->Text($x + 18, $y + 43, $part);
+        $pdf->Text($x + 18, $y + 60, $date);
         
-        // Checkboxes
         $pdf->SetFont('Helvetica', 'B', 9);
-        $pdf->Text($x + 83, $y + 65, 'X');     // Destroy
-        $pdf->Text($x + 30, $y + 74, 'X');     // Degauss
+        $pdf->Text($x + 78, $y + 66, 'X'); // Destroy
+        $pdf->Text($x + 30, $y + 76, 'X'); // Degauss
         
-        // Cert details
+        $pdf->SetFont('Helvetica', '', 5);
+        $pdf->Text($x + 36, $y + 92, 'DATA Security INC., NSA Certified');
+        $pdf->Text($x + 40, $y + 105, 'DEGAUSSED/PUNCHED');
+        
         $pdf->SetFont('Helvetica', '', 5.5);
-        $pdf->Text($x + 34, $y + 90, 'DATA Security INC., NSA Certified');
-        $pdf->Text($x + 40, $y + 103, 'DEGAUSSED/PUNCHED');
-        
-        // User info
-        $pdf->SetFont('Helvetica', '', 6);
-        $pdf->Text($x + 28, $y + 117, 'KEVIN SMITH');
-        $pdf->Text($x + 38, $y + 126, 'MESC Greenbrier Chesapeake, VA');
-        $pdf->Text($x + 12, $y + 136, 'kevin.t.smith26.civ@us.navy.mil');
-        $pdf->Text($x + 14, $y + 146, '757-320-1927');
-        $pdf->Text($x + 58, $y + 146, 'CIV');
+        $pdf->Text($x + 25, $y + 119, 'KEVIN SMITH');
+        $pdf->Text($x + 36, $y + 128, 'MESC Greenbrier Chesapeake, VA');
+        $pdf->Text($x + 12, $y + 138, 'kevin.t.smith26.civ@us.navy.mil');
+        $pdf->Text($x + 14, $y + 148, '757-320-1927');
+        $pdf->Text($x + 57, $y + 148, 'CIV');
     }
     
 }
