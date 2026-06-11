@@ -4,7 +4,7 @@ use setasign\Fpdi\Fpdi;
 
 class DLA2500Helper
 {
-    public static function generate(array $records): void
+    public static function generate(array $records, bool $debug = false): void
     {
         $pdf = new Fpdi();
 
@@ -45,6 +45,21 @@ class DLA2500Helper
 
     private static function writeCertificate(Fpdi $pdf, array $row, array $offset): void
     {
+        
+        if ($debug) {
+            $pdf->SetFont('Helvetica', '', 5);
+            
+            for ($gx = 0; $gx <= 140; $gx += 5) {
+                $pdf->Text($x + $gx, $y + 5, (string)$gx);
+            }
+            
+            for ($gy = 0; $gy <= 105; $gy += 5) {
+                $pdf->Text($x + 2, $y + $gy, (string)$gy);
+            }
+            
+            $pdf->SetFont('Helvetica', '', 8);
+        }
+        
         $x = $offset['x'];
         $y = $offset['y'];
 

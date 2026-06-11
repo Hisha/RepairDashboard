@@ -35,4 +35,5 @@ if (empty($records)) {
     die('No records found.');
 }
 
-DLA2500Helper::generate(array_values($records));
+//DLA2500Helper::generate(array_values($records));
+DLA2500Helper::generate(array_values(array_slice($records, 0, 1)), true);
