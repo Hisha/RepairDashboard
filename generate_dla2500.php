@@ -1,6 +1,11 @@
 <?php
+
 require_once __DIR__ . '/bootstrap.php';
+require_once APP_ROOT . '/vendor/autoload.php';
 require_once APP_ROOT . '/bin/Model/DriveDestruction.php';
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 $model = new DriveDestruction();
 
@@ -39,45 +44,41 @@ $records = array_values(array_filter($records, function ($row) {
     }
     
     $pages = array_chunk($records, 4);
+    
+    ob_start();
     ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>DLA Form 2500 Certificates</title>
-
 <style>
 @page {
-    size: letter portrait;
-    margin: 0.25in;
+    margin: 0.15in;
 }
 
 body {
     margin: 0;
+    padding: 0;
     font-family: Arial, Helvetica, sans-serif;
     color: #000;
 }
 
-.no-print {
-    margin: 10px;
-}
-
 .page {
-    width: 8in;
-    height: 10.5in;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 0.12in;
+    width: 8.2in;
+    height: 10.7in;
     page-break-after: always;
 }
 
 .cert {
-    border: 1px dashed #bbb;
-    padding: 0.07in;
-    font-size: 9px;
+    width: 3.95in;
+    height: 5.15in;
+    float: left;
+    margin: 0.03in;
+    border: 1px dashed #aaa;
+    padding: 0.04in;
     box-sizing: border-box;
-    position: relative;
+    font-size: 8px;
+    overflow: hidden;
 }
 
 .cert-header {
@@ -85,113 +86,128 @@ body {
     border: 1px solid #000;
     text-align: center;
     font-weight: bold;
-    font-size: 11px;
+    font-size: 10px;
     padding: 3px;
     line-height: 1.1;
-    text-transform: uppercase;
 }
 
 .checkbox-row {
     margin-top: 3px;
-    display: flex;
-    align-items: flex-start;
-    gap: 4px;
 }
 
 .box {
-    display: inline-flex;
-    width: 11px;
-    height: 11px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
     border: 1px solid #000;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
     font-weight: bold;
-    font-size: 10px;
-    line-height: 1;
+    font-size: 9px;
+    line-height: 10px;
+    vertical-align: middle;
 }
 
 .certifies {
     font-style: italic;
     font-weight: bold;
-    margin: 5px 0 4px;
+    margin: 4px 0;
 }
 
-.line-row {
-    display: grid;
-    grid-template-columns: auto 1fr auto 1fr;
-    gap: 4px;
-    align-items: end;
+.row {
+    clear: both;
     margin: 3px 0;
 }
 
-.line-row.two {
-    grid-template-columns: auto 1fr;
+.label {
+    display: inline-block;
+    white-space: nowrap;
 }
 
 .line {
+    display: inline-block;
     border-bottom: 1px solid #000;
-    min-height: 12px;
+    min-height: 11px;
     padding-left: 3px;
     font-weight: bold;
-    font-size: 10px;
+}
+
+.serial-line {
+    width: 1.05in;
+}
+
+.barcode-line {
+    width: 1.05in;
+}
+
+.model-line {
+    width: 2.85in;
+}
+
+.long-line {
+    width: 2.35in;
+}
+
+.date-line {
+    width: 1.25in;
 }
 
 .compliance {
     font-weight: bold;
     font-style: italic;
-    margin: 6px 0 2px;
+    margin: 5px 0 2px;
     line-height: 1.15;
 }
 
-.method-grid {
-    display: grid;
-    grid-template-columns: auto 1fr auto 1fr auto 1fr;
-    gap: 4px 8px;
-    align-items: center;
-    margin: 5px 0;
+.method-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
-.field-note {
+.method-table td {
+    font-size: 8px;
+    padding: 1px 2px;
+    white-space: nowrap;
+}
+
+.note {
     text-align: center;
-    font-size: 7px;
+    font-size: 6.5px;
     font-style: italic;
     margin-top: -2px;
 }
 
-.footer {
-    position: absolute;
-    left: 0.07in;
-    right: 0.07in;
-    bottom: 0.05in;
-    font-size: 7px;
+.phone-line {
+    width: 1.05in;
+}
+
+.rank-line {
+    width: 0.75in;
 }
 
 .signature-row {
-    display: grid;
-    grid-template-columns: 1fr 0.7fr;
-    gap: 20px;
-    margin-top: 14px;
+    margin-top: 10px;
 }
 
-@media print {
-    .no-print {
-        display: none;
-    }
+.sig-left {
+    display: inline-block;
+    width: 1.7in;
+}
 
-    .page {
-        page-break-after: always;
-    }
+.sig-right {
+    display: inline-block;
+    width: 1.0in;
+    text-align: center;
+}
+
+.footer {
+    margin-top: 8px;
+    font-size: 6.5px;
 }
 </style>
 </head>
-
 <body>
-
-<div class="no-print">
-    <button onclick="window.print()">Print</button>
-    <button onclick="window.close()">Close</button>
-    <strong>Records:</strong> <?= number_format(count($records)) ?>
-</div>
 
 <?php if (empty($records)): ?>
     <p>No non-shredded records found for the selected filters.</p>
@@ -208,21 +224,21 @@ body {
 
             <div class="checkbox-row">
                 <span class="box"></span>
-                <span>Check box if hard drive/data storage components have been removed.</span>
+                Check box if hard drive/data storage components have been removed.
             </div>
 
             <div class="certifies">This certifies this hard drive:</div>
 
-            <div class="line-row">
-                <span>Serial No.</span>
-                <span class="line"><?= h($row['serial_number'] ?? '') ?></span>
-                <span>Barcode No.</span>
-                <span class="line"></span>
+            <div class="row">
+                <span class="label">Serial No.</span>
+                <span class="line serial-line"><?= h($row['serial_number'] ?? '') ?></span>
+                <span class="label">Barcode No.</span>
+                <span class="line barcode-line"></span>
             </div>
 
-            <div class="line-row two">
-                <span>Make/Model</span>
-                <span class="line"><?= h($row['part_number'] ?? '') ?></span>
+            <div class="row">
+                <span class="label">Make/Model</span>
+                <span class="line model-line"><?= h($row['part_number'] ?? '') ?></span>
             </div>
 
             <div class="compliance">
@@ -230,69 +246,74 @@ body {
                 I 8500.01, DOD M 4160.21 Vol 4; and NIST SP800-88 Rev 1
             </div>
 
-            <div class="line-row two">
-                <span><strong><em>(Date)</em></strong></span>
-                <span class="line"><?= h(certDate($row)) ?></span>
+            <div class="row">
+                <strong><em>(Date)</em></strong>
+                <span class="line date-line"><?= h(certDate($row)) ?></span>
             </div>
 
-            <div class="method-grid">
-                <strong>Method Type</strong>
-                <span><span class="box"></span> Clear</span>
-                <span><span class="box"></span> Purge</span>
-                <span><span class="box">X</span> Destroy</span>
-                <span></span>
-                <span></span>
+            <table class="method-table">
+                <tr>
+                    <td><strong>Method Type</strong></td>
+                    <td><span class="box"></span> Clear</td>
+                    <td><span class="box"></span> Purge</td>
+                    <td><span class="box">X</span> Destroy</td>
+                </tr>
+                <tr>
+                    <td><strong>Method Used</strong></td>
+                    <td><span class="box">X</span> Degauss</td>
+                    <td><span class="box"></span> Overwrite</td>
+                    <td><span class="box"></span> Block Erase</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><span class="box"></span> Crypto Erase</td>
+                    <td><span class="box"></span> Other</td>
+                    <td></td>
+                </tr>
+            </table>
 
-                <strong>Method Used</strong>
-                <span><span class="box">X</span> Degauss</span>
-                <span><span class="box"></span> Overwrite</span>
-                <span><span class="box"></span> Block Erase</span>
-                <span><span class="box"></span> Crypto Erase</span>
-                <span><span class="box"></span> Other</span>
+            <div class="row">
+                <span class="label">Software / Degausser</span>
+                <span class="line long-line">DATA Security INC., NSA Certified</span>
+            </div>
+            <div class="note">(Manufacturer, Product Version, Date)</div>
+
+            <div class="row">
+                <span class="label">Method of Destruction</span>
+                <span class="line long-line">DEGAUSSED/PUNCHED</span>
+            </div>
+            <div class="note">(e.g., approved metal destruction facility)</div>
+
+            <div class="row">
+                <span class="label">DTID No. / Hand Receipt No.</span>
+                <span class="line long-line"></span>
             </div>
 
-            <div class="line-row two">
-                <span>Software / Degausser</span>
-                <span class="line">DATA Security INC., NSA Certified</span>
-            </div>
-            <div class="field-note">(Manufacturer, Product Version, Date)</div>
-
-            <div class="line-row two">
-                <span>Method of Destruction</span>
-                <span class="line">DEGAUSSED/PUNCHED</span>
-            </div>
-            <div class="field-note">(e.g., approved metal destruction facility)</div>
-
-            <div class="line-row two">
-                <span>DTID No. / Hand Receipt No.</span>
-                <span class="line"></span>
+            <div class="row">
+                <span class="label">Printed Name</span>
+                <span class="line long-line">KEVIN SMITH</span>
             </div>
 
-            <div class="line-row two">
-                <span>Printed Name</span>
-                <span class="line">KEVIN SMITH</span>
+            <div class="row">
+                <span class="label">Organization Unit Name</span>
+                <span class="line long-line">MESC Greenbrier Chesapeake, VA</span>
             </div>
 
-            <div class="line-row two">
-                <span>Organization Unit Name</span>
-                <span class="line">MESC Greenbrier Chesapeake, VA</span>
+            <div class="row">
+                <span class="label">Email</span>
+                <span class="line long-line">kevin.t.smith26.civ@us.navy.mil</span>
             </div>
 
-            <div class="line-row two">
-                <span>Email</span>
-                <span class="line">kevin.t.smith26.civ@us.navy.mil</span>
-            </div>
-
-            <div class="line-row">
-                <span>Phone</span>
-                <span class="line">757-320-1927</span>
-                <span>Rank/Grade</span>
-                <span class="line">CIV</span>
+            <div class="row">
+                <span class="label">Phone</span>
+                <span class="line phone-line">757-320-1927</span>
+                <span class="label">Rank/Grade</span>
+                <span class="line rank-line">CIV</span>
             </div>
 
             <div class="signature-row">
-                <div>Signature</div>
-                <div>Date</div>
+                <span class="sig-left">Signature</span>
+                <span class="sig-right">Date</span>
             </div>
 
             <div class="footer">
@@ -304,16 +325,29 @@ body {
     <?php for ($i = count($pageRecords); $i < 4; $i++): ?>
         <div class="cert"></div>
     <?php endfor; ?>
+
+    <div style="clear: both;"></div>
 </div>
 <?php endforeach; ?>
-
-<script>
-window.onload = function () {
-    window.print();
-};
-</script>
 
 <?php endif; ?>
 
 </body>
 </html>
+<?php
+$html = ob_get_clean();
+
+$options = new Options();
+$options->set('isRemoteEnabled', true);
+$options->set('isHtml5ParserEnabled', true);
+
+$dompdf = new Dompdf($options);
+$dompdf->setPaper('letter', 'portrait');
+$dompdf->loadHtml($html);
+$dompdf->render();
+
+$dompdf->stream('DLA2500_Certificates.pdf', [
+    'Attachment' => false
+]);
+
+exit;
