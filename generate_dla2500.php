@@ -187,7 +187,7 @@ body {
     border: 1px dashed #aaa;
     padding: 0.03in;
     box-sizing: border-box;
-    font-size: 9px;
+    font-size: 9.5px;
     overflow: hidden;
 }
 
