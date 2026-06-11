@@ -36,4 +36,4 @@ if (empty($records)) {
 }
 
 //DLA2500Helper::generate(array_values($records));
-DLA2500Helper::generate(array_values(array_slice($records, 0, 1)), true);
+DLA2500Helper::generate(array_values($records));

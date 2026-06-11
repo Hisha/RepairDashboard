@@ -17,8 +17,8 @@ class DLA2500Helper
 
         foreach (array_chunk($records, 4) as $pageRecords) {
 
-            $pdf->AddPage('L');
-            $pdf->useTemplate($templateId);
+            $pdf->AddPage('P', 'Letter');
+            $pdf->useTemplate($templateId, 0, 0, 216);
 
             foreach ($pageRecords as $index => $record) {
 
@@ -38,10 +38,10 @@ class DLA2500Helper
     private static function getSlotOffset(int $slot): array
     {
         return match ($slot) {
-            0 => ['x' => 0,   'y' => 0],
-            1 => ['x' => 140, 'y' => 0],
-            2 => ['x' => 0,   'y' => 105],
-            3 => ['x' => 140, 'y' => 105],
+            0 => ['x' => 12,  'y' => 17],
+            1 => ['x' => 113, 'y' => 17],
+            2 => ['x' => 12,  'y' => 146],
+            3 => ['x' => 113, 'y' => 146],
         };
     }
 
@@ -50,73 +50,37 @@ class DLA2500Helper
         $x = $offset['x'];
         $y = $offset['y'];
         
-        // Draw the estimated certificate slot box
-        $pdf->SetDrawColor(255, 0, 0);
-        $pdf->Rect($x, $y, 140, 105);
+        $serial = (string)($row['serial_number'] ?? '');
+        $part   = (string)($row['part_number'] ?? '');
+        $date   = !empty($row['destruction_date'])
+        ? date('m/d/Y', strtotime($row['destruction_date']))
+        : date('m/d/Y');
         
-        // Debug labels
-        $pdf->SetFont('Helvetica', 'B', 8);
-        $pdf->SetTextColor(255, 0, 0);
-        
-        $pdf->Text($x + 20, $y + 20, 'SERIAL');
-        $pdf->Text($x + 20, $y + 30, 'PART');
-        $pdf->Text($x + 20, $y + 40, 'DESTROY');
-        $pdf->Text($x + 20, $y + 50, 'DEGAUSS');
-        $pdf->Text($x + 20, $y + 60, 'SOFTWARE');
-        $pdf->Text($x + 20, $y + 70, 'METHOD');
-        $pdf->Text($x + 20, $y + 80, 'NAME');
-        $pdf->Text($x + 20, $y + 90, 'ORG');
-        
-        // Reset colors
         $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetDrawColor(0, 0, 0);
+        
+        // Main fields
+        $pdf->SetFont('Helvetica', '', 6);
+        $pdf->Text($x + 18, $y + 38, $serial); // Serial No
+        $pdf->Text($x + 18, $y + 47, $part);   // Make/Model
+        $pdf->Text($x + 18, $y + 67, $date);   // Date
+        
+        // Checkboxes
+        $pdf->SetFont('Helvetica', 'B', 9);
+        $pdf->Text($x + 76, $y + 75, 'X');     // Destroy
+        $pdf->Text($x + 31, $y + 84, 'X');     // Degauss
+        
+        // Cert details
+        $pdf->SetFont('Helvetica', '', 5.5);
+        $pdf->Text($x + 38, $y + 98, 'DATA Security INC., NSA Certified');
+        $pdf->Text($x + 38, $y + 112, 'DEGAUSSED/PUNCHED');
+        
+        // User info
+        $pdf->SetFont('Helvetica', '', 6);
+        $pdf->Text($x + 30, $y + 126, 'KEVIN SMITH');
+        $pdf->Text($x + 39, $y + 136, 'MESC Greenbrier Chesapeake, VA');
+        $pdf->Text($x + 13, $y + 146, 'kevin.t.smith26.civ@us.navy.mil');
+        $pdf->Text($x + 13, $y + 156, '757-320-1927');
+        $pdf->Text($x + 57, $y + 156, 'CIV');
     }
     
-    /*
-    private static function writeCertificate(Fpdi $pdf, array $row, array $offset): void
-    {
-        
-        if ($debug) {
-            $pdf->SetFont('Helvetica', '', 5);
-            
-            for ($gx = 0; $gx <= 140; $gx += 5) {
-                $pdf->Text($x + $gx, $y + 5, (string)$gx);
-            }
-            
-            for ($gy = 0; $gy <= 105; $gy += 5) {
-                $pdf->Text($x + 2, $y + $gy, (string)$gy);
-            }
-            
-            $pdf->SetFont('Helvetica', '', 8);
-        }
-        
-        $x = $offset['x'];
-        $y = $offset['y'];
-
-        $pdf->SetFont('Helvetica', '', 8);
-
-        /*
-         * Coordinates will need adjustment after first test.
-         */
-
-    /*
-        $pdf->Text($x + 32, $y + 22, $row['serial_number']);
-        $pdf->Text($x + 32, $y + 28, $row['part_number']);
-
-        $pdf->Text($x + 85, $y + 28, 'X'); // Destroy
-        $pdf->Text($x + 108, $y + 34, 'X'); // Degauss
-
-        $pdf->Text($x + 32, $y + 40, 'DATA Security INC., NSA Certified');
-        $pdf->Text($x + 32, $y + 46, 'DEGAUSSED/PUNCHED');
-
-        $pdf->Text($x + 32, $y + 58, 'KEVIN SMITH');
-        $pdf->Text($x + 32, $y + 64, 'MESC Greenbrier Chesapeake, VA');
-        $pdf->Text($x + 32, $y + 70, 'kevin.t.smith26.civ@us.navy.mil');
-        $pdf->Text($x + 32, $y + 76, '757-320-1927');
-        $pdf->Text($x + 105, $y + 76, 'CIV');
-
-        $pdf->Text($x + 32, $y + 82, date('m/d/Y'));
-    }
-    
-    */
 }
