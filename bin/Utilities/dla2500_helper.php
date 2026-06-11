@@ -59,7 +59,7 @@ class DLA2500Helper
         $pdf->SetTextColor(0, 0, 0);
         
         $pdf->SetFont('Helvetica', '', 6);
-        $pdf->Text($x + 17, $y + 30, $serial);
+        $pdf->Text($x + 20, $y + 33, $serial);
         $pdf->Text($x + 18, $y + 43, $part);
         $pdf->Text($x + 18, $y + 60, $date);
         
