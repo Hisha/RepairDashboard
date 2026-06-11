@@ -25,6 +25,7 @@ Thumbs.db
 # Composer / Dependencies
 # =========================
 /vendor/
+/composer.phar
 
 # =========================
 # Environment / Config (IMPORTANT)
