@@ -130,9 +130,9 @@ INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VA
 INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('JXA/N94','C4I PBL-O METRICS','Jenna Pickings','N94');
 INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('DEPOT','PBL-O METRICS','- -','DEPOT');
 INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('SSEE INC E/F','PBL-O METRICS','- -','SSEE INC E/F');
-INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('SCCTV','PBL-O METRICS','- -','SCCTV');
-INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('NAVMACS','PBL-O METRICS','- -','NAVMACS');
-INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('URC109','PBL-O METRICS','- -','URC109');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('SCCTV','PBL-O METRICS','Linda Kuffa','SCCTV');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('NAVMACS','PBL-O METRICS','Linda Kuffa','NAVMACS');
+INSERT INTO `SYS_powerpoint_filler` (`program`, `title`, `pm`, `programname`) VALUES ('URC109','PBL-O METRICS','Linda Kuffa','URC109');
 
 -- Last Update Table --
 

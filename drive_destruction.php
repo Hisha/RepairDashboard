@@ -620,6 +620,11 @@ require_once APP_ROOT . '/menu.php';
                 <div>
                     <label>&nbsp;</label>
                     <a href="?<?php echo h(buildQueryString(['export' => 'xlsx'])); ?>" class="btn btn-export">Export XLSX</a>
+                    <a href="generate_dla2500.php?<?php echo h(buildQueryString(['export' => null])); ?>"
+                       class="btn btn-export"
+                       target="_blank">
+                        Print DLA2500
+                    </a>
                 </div>
             </div>
         </form>
