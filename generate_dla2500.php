@@ -180,20 +180,13 @@ body {
 }
 
 .page-table td {
-    width: 50%;
-    height: 5.32in;
-    vertical-align: top;
-    padding: 0.025in;
+    height: 4.95in;
+    padding: 0.01in;
 }
 
 .cert {
-    width: 100%;
-    height: 5.22in;
-    border: 1px dashed #aaa;
-    padding: 0.04in;
-    box-sizing: border-box;
-    font-size: 8px;
-    overflow: hidden;
+    height: 4.85in;
+    padding: 0.03in;
 }
 
 .cert-header {
