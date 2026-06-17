@@ -142,6 +142,11 @@ class excelupload
                     continue;
                 }
 
+                // Skip subtotal/calculation rows that do not contain any required column values
+                if (self::isMissingAllRequiredColumns($rawRow, $dbColumns, $requiredColumns, $columnTypes)) {
+                    continue;
+                }
+                
                 $emptyRowStreak = 0;
                 $normalizedRow = [];
 
@@ -308,6 +313,33 @@ class excelupload
             }
         }
         return true;
+    }
+    
+    private static function isMissingAllRequiredColumns(
+        array $rawRow,
+        array $dbColumns,
+        array $requiredColumns,
+        array $columnTypes
+        ): bool {
+            if (empty($requiredColumns)) {
+                return false;
+            }
+            
+            foreach ($dbColumns as $i => $columnName) {
+                if (!in_array($columnName, $requiredColumns, true)) {
+                    continue;
+                }
+                
+                $rawValue = $rawRow[$i] ?? null;
+                $type = $columnTypes[$columnName] ?? 'string';
+                $normalizedValue = self::normalizeValue($rawValue, $type);
+                
+                if ($normalizedValue !== null && $normalizedValue !== '') {
+                    return false;
+                }
+            }
+            
+            return true;
     }
 
     private static function makeValuesReferenced(array $arr): array
