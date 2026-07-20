@@ -25,6 +25,7 @@ class Procurements
             procurements.quote_request_date AS 'Quote Request Date',
             procurements.date_submitted AS 'Date Submitted',
             procurements.contract_num AS 'Contract Number',
+            procurements.clin_num AS 'Clin Number',
             procurements.quote_num AS 'Quote Number',
             procurements.po_num AS 'PO Number',
             procurements.qty_ordered AS 'Qty Ordered',

@@ -29,6 +29,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
         'Quote Request Date',
         'Date Submitted',
         'Contract Number',
+        'Clin Number',
         'Quote Number',
         'PO Number',
         'Qty Ordered',
@@ -265,6 +266,7 @@ include 'menu.php';
                     <th onclick="sortTable(13)">Quote Request Date<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(14)">Date Submitted<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(15)">Contract Number<span class="sort-indicator"></span></th>
+                    <th onclick="sortTable(15)">Clin Number<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(16)">Quote Number<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(17)">PO Number<span class="sort-indicator"></span></th>
                     <th onclick="sortTable(18)">Qty Ordered<span class="sort-indicator"></span></th>
@@ -294,6 +296,7 @@ include 'menu.php';
                             <td><?= htmlspecialchars((string)($row['Quote Request Date'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Date Submitted'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Contract Number'] ?? '')) ?></td>
+                            <td><?= htmlspecialchars((string)($row['Clin Number'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Quote Number'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['PO Number'] ?? '')) ?></td>
                             <td><?= htmlspecialchars((string)($row['Qty Ordered'] ?? '')) ?></td>
