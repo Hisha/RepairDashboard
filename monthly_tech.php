@@ -6,7 +6,7 @@ require_once APP_ROOT . '/bin/Utilities/xlsx_styled_helper.php';
 require_once APP_ROOT . '/bin/Model/Repairs.php';
 require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
-$allowedTabs = ['overview', 'tech_numbers', 'tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'repair_sheets', 'battery_tracker', 'repairs_by_month'];
+$allowedTabs = ['overview', 'tech_numbers', 'tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'repair_sheets', '853_labels', 'battery_tracker', 'repairs_by_month'];
 $selectedTab = $_GET['tab'] ?? 'overview';
 
 if (!in_array($selectedTab, $allowedTabs, true)) {
@@ -614,6 +614,9 @@ if ($selectedTab === 'repair_priority') {
    		   
    		<a class="tab-link <?= $selectedTab === 'repair_sheets' ? 'active' : '' ?>"
    			href="monthly_tech.php?tab=repair_sheets&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Repair Sheets</a>
+   			
+   		<a class="tab-link <?= $selectedTab === '853_labels' ? 'active' : '' ?>"
+   			href="monthly_tech.php?tab=853_labels&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">853 Labels</a>	
    		   
    		<a class="tab-link <?= $selectedTab === 'battery_tracker' ? 'active' : '' ?>"
    			href="monthly_tech.php?tab=battery_tracker&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Battery Tracker</a>
@@ -643,6 +646,10 @@ if ($selectedTab === 'repair_priority') {
                 
             case 'repair_sheets':
                 require_once APP_ROOT . '/bin/Tabs/monthly_tech_repair_sheets.php';
+                break;
+                
+            case '853_labels':
+                require_once APP_ROOT . '/bin/Tabs/monthly_tech_853_labels.php';
                 break;
                 
             case 'battery_tracker':
