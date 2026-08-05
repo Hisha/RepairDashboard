@@ -285,7 +285,7 @@ function formatLabelDate(string $date): string
         </div>
 
         <div class="label-form-card">
-            <form method="post" action="853_labels.php">
+            <form method="post">
                 <div class="form-row">
                     <div class="form-field">
                         <label for="build_date">
