@@ -172,58 +172,64 @@ function formatLabelDate(string $date): string
          * against the actual printer and label stock.
          */
         .battery-label {
-            width: 4in;
-            height: 2.4in;
-            padding: 0.15in 0.2in;
+            width: 5in;
+            height: 3in;
+            padding: 0.22in 0.30in;
             background: #fff;
             border: 2px solid #000;
             box-sizing: border-box;
             color: #000;
             overflow: hidden;
-            page-break-inside: avoid;
             break-inside: avoid;
+            page-break-inside: avoid;
         }
-
+        
         .label-part-number {
-            margin-top: 0.03in;
+            margin-top: 0.04in;
             text-align: center;
-            font-size: 16pt;
+            font-size: 18pt;
             font-weight: bold;
             line-height: 1.05;
         }
-
+        
         .label-module-name {
-            margin-top: 0.05in;
+            margin-top: 0.07in;
             text-align: center;
-            font-size: 15pt;
+            font-size: 17pt;
             font-weight: bold;
             line-height: 1.05;
         }
-
+        
         .label-serial {
-            margin-top: 0.13in;
+            margin-top: 0.15in;
             text-align: center;
-            font-size: 15pt;
+            font-size: 17pt;
             font-weight: bold;
             line-height: 1.05;
         }
-
+        
+        /*
+         * The entire date block is centered horizontally.
+         * Text within the left column remains right-aligned.
+         */
         .label-dates {
             display: grid;
-            grid-template-columns: 1fr auto;
-            column-gap: 0.18in;
-            row-gap: 0.05in;
-            margin-top: 0.19in;
-            font-size: 11.5pt;
+            grid-template-columns: max-content max-content;
+            justify-content: center;
+            column-gap: 0.22in;
+            row-gap: 0.06in;
+            width: fit-content;
+            margin: 0.28in auto 0;
+            font-size: 12.5pt;
             font-weight: bold;
             line-height: 1.15;
         }
-
+        
         .label-date-name {
             text-align: right;
             white-space: nowrap;
         }
-
+        
         .label-date-value {
             text-align: left;
             white-space: nowrap;
@@ -346,7 +352,7 @@ function formatLabelDate(string $date): string
             <button
                 type="button"
                 class="print-button"
-                onclick="window.print()"
+                id="printLabelsButton"
             >
                 Print Labels
             </button>
@@ -420,3 +426,150 @@ function formatLabelDate(string $date): string
 
 </body>
 </html>
+
+<script>
+(() => {
+    const printButton = document.getElementById('printLabelsButton');
+
+    if (!printButton) {
+        return;
+    }
+
+    printButton.addEventListener('click', () => {
+        const labels = Array.from(
+            document.querySelectorAll('.battery-label')
+        );
+
+        if (labels.length === 0) {
+            alert('There are no labels to print.');
+            return;
+        }
+
+        const printWindow = window.open(
+            '',
+            'battery853LabelPrint',
+            'width=900,height=700'
+        );
+
+        if (!printWindow) {
+            alert(
+                'The print window was blocked. Allow pop-ups for this site and try again.'
+            );
+            return;
+        }
+
+        const labelHtml = labels
+            .map(label => label.outerHTML)
+            .join('');
+
+        printWindow.document.open();
+
+        printWindow.document.write(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>853 Battery Labels</title>
+
+    <style>
+        @page {
+            size: 5in 3in;
+            margin: 0;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+
+        .battery-label {
+            width: 5in;
+            height: 3in;
+            padding: 0.22in 0.30in;
+            background: #fff;
+            color: #000;
+            border: none;
+            box-sizing: border-box;
+            overflow: hidden;
+            break-inside: avoid;
+            page-break-inside: avoid;
+            page-break-after: always;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .battery-label:last-child {
+            page-break-after: auto;
+        }
+
+        .label-part-number {
+            margin-top: 0.04in;
+            text-align: center;
+            font-size: 18pt;
+            font-weight: bold;
+            line-height: 1.05;
+        }
+
+        .label-module-name {
+            margin-top: 0.07in;
+            text-align: center;
+            font-size: 17pt;
+            font-weight: bold;
+            line-height: 1.05;
+        }
+
+        .label-serial {
+            margin-top: 0.15in;
+            text-align: center;
+            font-size: 17pt;
+            font-weight: bold;
+            line-height: 1.05;
+        }
+
+        .label-dates {
+            display: grid;
+            grid-template-columns: max-content max-content;
+            justify-content: center;
+            column-gap: 0.22in;
+            row-gap: 0.06in;
+            width: fit-content;
+            margin: 0.28in auto 0;
+            font-size: 12.5pt;
+            font-weight: bold;
+            line-height: 1.15;
+        }
+
+        .label-date-name {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .label-date-value {
+            text-align: left;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    ${labelHtml}
+
+    <script>
+        window.addEventListener('load', () => {
+            window.focus();
+            window.print();
+        });
+
+        window.addEventListener('afterprint', () => {
+            window.close();
+        });
+    <\/script>
+</body>
+</html>
+        `);
+
+        printWindow.document.close();
+    });
+})();
+</script>
