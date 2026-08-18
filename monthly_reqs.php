@@ -26,7 +26,7 @@ use PhpOffice\PhpPresentation\Style\Color;
 use PhpOffice\PhpPresentation\Style\Font;
 
 $selectedTab = $_GET['tab'] ?? ($_POST['tab'] ?? 'overview');
-$allowedTabs = ['overview', 'shipment_data', 'program_niin', 'last_5_quarters', 'drmo', 'reportable_numbers', 'powerpoint_report'];
+$allowedTabs = ['overview', 'shipment_data', 'program_niin', 'last_5_quarters', 'no_shipment_inventory', 'drmo', 'reportable_numbers', 'powerpoint_report'];
 
 if (!in_array($selectedTab, $allowedTabs, true)) {
     $selectedTab = 'overview';
@@ -1689,6 +1689,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
        			
        		<a class="tab-link <?= $selectedTab === 'last_5_quarters' ? 'active' : '' ?>"
    				href="monthly_reqs.php?tab=last_5_quarters&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Last 5 Quarters</a>
+       		
+       		<a class="tab-link <?= $selectedTab === 'no_shipment_inventory' ? 'active' : '' ?>"
+               href="monthly_reqs.php?tab=no_shipment_inventory&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">No Shipment Inventory</a>
        			
        		<a class="tab-link <?= $selectedTab === 'drmo' ? 'active' : '' ?>"
    				href="monthly_reqs.php?tab=drmo&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">DRMO</a>
@@ -1714,6 +1717,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 break;
             case 'last_5_quarters':
                 require_once APP_ROOT . '/bin/Tabs/monthly_reqs_last_5_quarters.php';
+                break;
+            case 'no_shipment_inventory':
+                require_once APP_ROOT . '/bin/Tabs/monthly_reqs_no_shipment_inventory.php';
                 break;
             case 'drmo':
                 require_once APP_ROOT . '/bin/Tabs/monthly_reqs_drmo.php';
