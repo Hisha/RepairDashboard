@@ -88,6 +88,22 @@ $rows = $model->getReport();
 #printNoShipmentInventory {
     cursor: pointer;
 }
+
+.export-button {
+    display: inline-block;
+    padding: 6px 10px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #fff;
+    background: #198754;
+    border: 1px solid #198754;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.export-button:hover {
+    background: #157347;
+}
 </style>
 
 <div class="no-ship-report">
@@ -140,7 +156,10 @@ $rows = $model->getReport();
         >
             Reset
         </button>
-
+        <a href="monthly_reqs.php?tab=no_shipment_inventory&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>&export=xlsx"
+            class="export-button"
+        >Export Excel</a>
+        
         <button
             type="button"
             id="printNoShipmentInventory"

@@ -138,6 +138,55 @@ if (
     }
 
 if (
+    $selectedTab === 'no_shipment_inventory'
+    && isset($_GET['export'])
+    && $_GET['export'] === 'xlsx'
+    ) {
+        require_once APP_ROOT . '/bin/Model/NoShipmentInventory.php';
+        
+        $model = new NoShipmentInventory();
+        $data = $model->getReport();
+        
+        $headers = [
+            'NIIN',
+            'Nomen',
+            'Part',
+            'Program',
+            'A OnHand',
+            'D OnHand',
+            'F OnHand',
+            'G OnHand',
+            'K OnHand',
+            'Last Ship Date'
+        ];
+        
+        $rows = [];
+        
+        foreach ($data as $row) {
+            $rows[] = [
+                'NIIN' => $row['NIIN'] ?? '',
+                'Nomen' => $row['Nomen'] ?? '',
+                'Part' => $row['Part'] ?? '',
+                'Program' => $row['Program'] ?? '',
+                'A OnHand' => (int)($row['A OnHand'] ?? 0),
+                'D OnHand' => (int)($row['D OnHand'] ?? 0),
+                'F OnHand' => (int)($row['F OnHand'] ?? 0),
+                'G OnHand' => (int)($row['G OnHand'] ?? 0),
+                'K OnHand' => (int)($row['K OnHand'] ?? 0),
+                'Last Ship Date' => $row['LastShipDate'] ?? ''
+            ];
+        }
+        
+        xlsx_helper::download(
+            'no_shipment_inventory_' . date('Y-m-d') . '.xlsx',
+            $headers,
+            $rows,
+            ['NIIN', 'Part'],
+            'No Shipment Inventory'
+            );
+    }
+    
+if (
     $selectedTab === 'drmo'
     && isset($_GET['export'])
     && $_GET['export'] === 'xlsx'
