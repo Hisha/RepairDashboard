@@ -156,16 +156,18 @@ $rows = $model->getReport();
         >
             Reset
         </button>
-        <a href="monthly_reqs.php?tab=no_shipment_inventory&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>&export=xlsx"
-            class="export-button"
-        >Export Excel</a>
-        
+                
         <button
             type="button"
             id="printNoShipmentInventory"
         >
             Print Report
         </button>
+        
+        <a href="monthly_reqs.php?tab=no_shipment_inventory&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>&export=xlsx"
+            class="export-button"
+        >Export Excel</a>
+        
     </div>
 
     <div class="no-ship-count">
