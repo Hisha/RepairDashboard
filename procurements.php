@@ -259,7 +259,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
 
     <div class="tab-bar">
         <a class="tab-link <?= $selectedTab === 'procurements' ? 'active' : '' ?>"
-           href="procurements.php?tab=procurements">Procurements</a>
+           href="procurements.php?tab=procurements">All Procurements</a>
 
         <a class="tab-link <?= $selectedTab === 'backorder_procurements' ? 'active' : '' ?>"
            href="procurements.php?tab=backorder_procurements">Backorder Procurements</a>
