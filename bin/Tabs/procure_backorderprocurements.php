@@ -107,6 +107,7 @@ tr.no-open-procurement-row:hover {
                 <th onclick="sortBackorderTable(9)">On Order Qty<span class="sort-indicator"></span></th>
                 <th onclick="sortBackorderTable(10)">Purchase Vehicle<span class="sort-indicator"></span></th>
                 <th onclick="sortBackorderTable(11)">Contract Info<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(11)">Comments<span class="sort-indicator"></span></th>
             </tr>
         </thead>
         <tbody>
@@ -131,6 +132,7 @@ tr.no-open-procurement-row:hover {
                         <td class="number-cell"><?= htmlspecialchars((string)($row['On Order Qty'] ?? '')) ?></td>
                         <td><?= htmlspecialchars((string)($row['Purchase Vehicle'] ?? '')) ?></td>
                         <td class="contract-info-cell"><?= htmlspecialchars((string)($row['Contract Info'] ?? '')) ?></td>
+                        <td><?= htmlspecialchars((string)($row['Comments'] ?? '')) ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>

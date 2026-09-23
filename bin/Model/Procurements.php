@@ -62,7 +62,8 @@ class Procurements
             COALESCE(p.requested_qty, 0) AS 'Requested Qty',
             COALESCE(p.on_order_qty, 0) AS 'On Order Qty',
             COALESCE(p.purchase_vehicle, '') AS 'Purchase Vehicle',
-            COALESCE(p.contract_info, '') AS 'Contract Info'
+            COALESCE(p.contract_info, '') AS 'Contract Info',
+            p.comments AS 'Comments'
         FROM
         (
             SELECT
@@ -99,8 +100,8 @@ class Procurements
                     )
                     ORDER BY edd_date
                     SEPARATOR ', '
-                ) AS contract_info
-            
+                ) AS contract_info,
+                comments
             FROM RepairDashboard.procurements
             WHERE status NOT IN ('CANCELED', 'COMPLETED')
             GROUP BY niin
