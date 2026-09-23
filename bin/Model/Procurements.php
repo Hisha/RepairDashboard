@@ -52,8 +52,13 @@ class Procurements
         $sql = "
         SELECT
             c.niin AS 'NIIN',
-            c.support_qty AS 'Support Qty',
-            c.io_qty AS 'I.O. Qty',
+            c.program as 'Program',
+            c.support_qty AS 'UCOs',
+            c.io_qty AS 'FRWQs',
+            COALESCE(i.A_qty, 0) AS 'A On Hand',
+            COALESCE(i.D_qty, 0) AS 'D On Hand',
+            COALESCE(i.F_qty, 0) AS 'F On Hand',
+            COALESCE(i.G_qty, 0) AS 'G On Hand',
             COALESCE(p.requested_qty, 0) AS 'Requested Qty',
             COALESCE(p.on_order_qty, 0) AS 'On Order Qty',
             COALESCE(p.purchase_vehicle, '') AS 'Purchase Vehicle',
@@ -62,6 +67,7 @@ class Procurements
         (
             SELECT
                 niin,
+                program,
                 SUM(CASE WHEN priority <> 'I.O.' THEN qty ELSE 0 END) AS support_qty,
                 SUM(CASE WHEN priority = 'I.O.' THEN qty ELSE 0 END) AS io_qty
             FROM RepairDashboard.cav_requisitions_north
@@ -99,7 +105,19 @@ class Procurements
             WHERE status NOT IN ('CANCELED', 'COMPLETED')
             GROUP BY niin
         ) p
-            ON c.niin = p.niin;
+            ON c.niin = p.niin
+        LEFT JOIN
+        (
+			SELECT 
+				niin,
+				SUM(CASE WHEN materialcode = 'A' then onhandqty ELSE 0 END) as A_qty,
+                SUM(CASE WHEN materialcode = 'D' then onhandqty ELSE 0 END) as D_qty,
+                SUM(CASE WHEN materialcode = 'F' AND purposecode <> 'Z' then onhandqty ELSE 0 END) as F_qty,
+                SUM(CASE WHEN materialcode = 'G' then onhandqty ELSE 0 END) as G_qty
+            FROM RepairDashboard.inventory
+            GROUP BY niin
+        ) i
+			ON c.niin = i.niin;
     ";
         
         $results = $db->query($sql)->fetchAll();

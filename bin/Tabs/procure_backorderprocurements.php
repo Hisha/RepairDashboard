@@ -42,6 +42,12 @@ tr.no-open-procurement-row:hover {
     background-color: #ffe69c !important;
 }
 
+#backorderProcureTable th,
+#backorderProcureTable td {
+    text-align: center;
+    vertical-align: middle;
+}
+
 #backorderProcureTable td.contract-info-cell {
     white-space: normal;
     min-width: 280px;
@@ -49,7 +55,7 @@ tr.no-open-procurement-row:hover {
 }
 
 #backorderProcureTable td.number-cell {
-    text-align: right;
+    text-align: center;
 }
 </style>
 
@@ -90,12 +96,17 @@ tr.no-open-procurement-row:hover {
         <thead>
             <tr>
                 <th onclick="sortBackorderTable(0)">NIIN<span class="sort-indicator"></span></th>
-                <th onclick="sortBackorderTable(1)">Support Qty<span class="sort-indicator"></span></th>
-                <th onclick="sortBackorderTable(2)">I.O. Qty<span class="sort-indicator"></span></th>
-                <th onclick="sortBackorderTable(3)">Requested Qty<span class="sort-indicator"></span></th>
-                <th onclick="sortBackorderTable(4)">On Order Qty<span class="sort-indicator"></span></th>
-                <th onclick="sortBackorderTable(5)">Purchase Vehicle<span class="sort-indicator"></span></th>
-                <th onclick="sortBackorderTable(6)">Contract Info<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(1)">Program<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(2)">UCOs<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(3)">FRWQs<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(4)">A On Hand<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(5)">D On Hand<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(6)">F On Hand<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(7)">G On Hand<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(8)">Requested Qty<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(9)">On Order Qty<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(10)">Purchase Vehicle<span class="sort-indicator"></span></th>
+                <th onclick="sortBackorderTable(11)">Contract Info<span class="sort-indicator"></span></th>
             </tr>
         </thead>
         <tbody>
@@ -109,8 +120,13 @@ tr.no-open-procurement-row:hover {
                     ?>
                     <tr class="<?= $rowClass ?>">
                         <td><?= htmlspecialchars((string)($row['NIIN'] ?? '')) ?></td>
-                        <td class="number-cell"><?= htmlspecialchars((string)($row['Support Qty'] ?? '')) ?></td>
-                        <td class="number-cell"><?= htmlspecialchars((string)($row['I.O. Qty'] ?? '')) ?></td>
+                        <td><?= htmlspecialchars((string)($row['Program'] ?? '')) ?></td>
+                        <td class="number-cell"><?= htmlspecialchars((string)($row['UCOs'] ?? '')) ?></td>
+                        <td class="number-cell"><?= htmlspecialchars((string)($row['FRWAs'] ?? '')) ?></td>
+                        <td class="number-cell"><?= htmlspecialchars((string)($row['A On Hand'] ?? '')) ?></td>
+                        <td class="number-cell"><?= htmlspecialchars((string)($row['D On Hand'] ?? '')) ?></td>
+                        <td class="number-cell"><?= htmlspecialchars((string)($row['F On Hand'] ?? '')) ?></td>
+                        <td class="number-cell"><?= htmlspecialchars((string)($row['G On Hand'] ?? '')) ?></td>
                         <td class="number-cell"><?= htmlspecialchars((string)($row['Requested Qty'] ?? '')) ?></td>
                         <td class="number-cell"><?= htmlspecialchars((string)($row['On Order Qty'] ?? '')) ?></td>
                         <td><?= htmlspecialchars((string)($row['Purchase Vehicle'] ?? '')) ?></td>
