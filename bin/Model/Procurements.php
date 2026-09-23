@@ -8,7 +8,7 @@ class Procurements
         $db = new db();
         
         $sql = "
-        SELECT 
+        SELECT
             procurements.folder AS 'Folder',
 	        procurements.program AS 'Program',
             procurements.request_date AS 'Request Date',
@@ -46,18 +46,18 @@ class Procurements
     
     public function getBackOrderProcurements():array
     {
-     
+        
         $db = new db();
         
         $sql = "
         SELECT
-            c.niin,
-            c.support_qty,
-            c.io_qty,
-            COALESCE(p.requested_qty, 0) AS requested_qty,
-            COALESCE(p.on_order_qty, 0) AS on_order_qty,
-            COALESCE(p.purchase_vehicle, '') AS purchase_vehicle,
-            COALESCE(p.contract_info, '') AS contract_info
+            c.niin AS 'NIIN',
+            c.support_qty AS 'Support Qty',
+            c.io_qty AS 'I.O. Qty',
+            COALESCE(p.requested_qty, 0) AS 'Requested Qty',
+            COALESCE(p.on_order_qty, 0) AS 'On Order Qty',
+            COALESCE(p.purchase_vehicle, '') AS 'Purchase Vehicle',
+            COALESCE(p.contract_info, '') AS 'Contract Info'
         FROM
         (
             SELECT
@@ -74,7 +74,7 @@ class Procurements
                 niin,
                 SUM(qty_requested) AS requested_qty,
                 SUM(qty_ordered) AS on_order_qty,
-        
+            
                 GROUP_CONCAT(
                     DISTINCT CASE
                         WHEN purchase_vehicle <> 'null'
@@ -83,7 +83,7 @@ class Procurements
                     ORDER BY purchase_vehicle
                     SEPARATOR ', '
                 ) AS purchase_vehicle,
-        
+            
                 GROUP_CONCAT(
                     DISTINCT CONCAT_WS(
                         ' ',
@@ -94,7 +94,7 @@ class Procurements
                     ORDER BY edd_date
                     SEPARATOR ', '
                 ) AS contract_info
-        
+            
             FROM RepairDashboard.procurements
             WHERE status NOT IN ('CANCELED', 'COMPLETED')
             GROUP BY niin
