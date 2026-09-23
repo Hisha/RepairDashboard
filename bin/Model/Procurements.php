@@ -43,4 +43,70 @@ class Procurements
         
         return $results;
     }
+    
+    public function getBackOrderProcurements():array
+    {
+     
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            c.niin,
+            c.support_qty,
+            c.io_qty,
+            COALESCE(p.requested_qty, 0) AS requested_qty,
+            COALESCE(p.on_order_qty, 0) AS on_order_qty,
+            COALESCE(p.purchase_vehicle, '') AS purchase_vehicle,
+            COALESCE(p.contract_info, '') AS contract_info
+        FROM
+        (
+            SELECT
+                niin,
+                SUM(CASE WHEN priority <> 'I.O.' THEN qty ELSE 0 END) AS support_qty,
+                SUM(CASE WHEN priority = 'I.O.' THEN qty ELSE 0 END) AS io_qty
+            FROM RepairDashboard.cav_requisitions_north
+            WHERE status = 'BACKORDERED'
+            GROUP BY niin
+        ) c
+        LEFT JOIN
+        (
+            SELECT
+                niin,
+                SUM(qty_requested) AS requested_qty,
+                SUM(qty_ordered) AS on_order_qty,
+        
+                GROUP_CONCAT(
+                    DISTINCT CASE
+                        WHEN purchase_vehicle <> 'null'
+                        THEN purchase_vehicle
+                    END
+                    ORDER BY purchase_vehicle
+                    SEPARATOR ', '
+                ) AS purchase_vehicle,
+        
+                GROUP_CONCAT(
+                    DISTINCT CONCAT_WS(
+                        ' ',
+                        contract_num,
+                        clin_num,
+                        CONCAT('EDD: ', edd_date)
+                    )
+                    ORDER BY edd_date
+                    SEPARATOR ', '
+                ) AS contract_info
+        
+            FROM RepairDashboard.procurements
+            WHERE status NOT IN ('CANCELED', 'COMPLETED')
+            GROUP BY niin
+        ) p
+            ON c.niin = p.niin;
+    ";
+        
+        $results = $db->query($sql)->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+        
+    }
 }
