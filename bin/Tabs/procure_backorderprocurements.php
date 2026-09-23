@@ -122,7 +122,7 @@ tr.no-open-procurement-row:hover {
                         <td><?= htmlspecialchars((string)($row['NIIN'] ?? '')) ?></td>
                         <td><?= htmlspecialchars((string)($row['Program'] ?? '')) ?></td>
                         <td class="number-cell"><?= htmlspecialchars((string)($row['UCOs'] ?? '')) ?></td>
-                        <td class="number-cell"><?= htmlspecialchars((string)($row['FRWAs'] ?? '')) ?></td>
+                        <td class="number-cell"><?= htmlspecialchars((string)($row['FRWQs'] ?? '')) ?></td>
                         <td class="number-cell"><?= htmlspecialchars((string)($row['A On Hand'] ?? '')) ?></td>
                         <td class="number-cell"><?= htmlspecialchars((string)($row['D On Hand'] ?? '')) ?></td>
                         <td class="number-cell"><?= htmlspecialchars((string)($row['F On Hand'] ?? '')) ?></td>
