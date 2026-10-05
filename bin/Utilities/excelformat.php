@@ -620,7 +620,7 @@ class excelformat
                     'REQUEST DATE',
                     'NIIN',
                     'PART #',
-                    'Manufacturer',
+                    'MANUFACTURER',
                     'NOMEN',
                     'Purchase Type',
                     'QTY REQUESTED',
