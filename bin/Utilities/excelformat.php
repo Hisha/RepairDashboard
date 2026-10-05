@@ -718,7 +718,7 @@ class excelformat
                         `request_date` DATE NOT NULL,
                         `niin` VARCHAR(12) NOT NULL,
                         `part` VARCHAR(100) NOT NULL,
-                        `manufacturer` VARCHAR(255) NOT NULL,
+                        `manufacturer` VARCHAR(255) NULL,
                         `nomen` VARCHAR(255) NOT NULL,
                         `purchase_type` VARCHAR(50) NOT NULL,
                         `qty_requested` INT(11) NOT NULL,
