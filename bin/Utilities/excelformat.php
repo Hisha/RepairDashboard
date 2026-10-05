@@ -675,7 +675,6 @@ class excelformat
                     'request_date',
                     'niin',
                     'part',
-                    'manufacturer',
                     'nomen',
                     'purchase_type',
                     'qty_requested',
