@@ -14,6 +14,7 @@ class Procurements
             procurements.request_date AS 'Request Date',
             procurements.niin AS 'NIIN',
             procurements.part AS 'Part',
+            procurements.manufacturer AS 'Manufacturer',
             procurements.nomen AS 'Nomen',
             procurements.purchase_type AS 'Purchase Type',
             procurements.qty_requested AS 'Qty Requested',

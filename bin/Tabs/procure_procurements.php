@@ -79,25 +79,26 @@ tr.completed-row:hover {
                 <th onclick="sortProcurementTable(2)">Request Date<span class="sort-indicator"></span></th>
                 <th onclick="sortProcurementTable(3)">NIIN<span class="sort-indicator"></span></th>
                 <th onclick="sortProcurementTable(4)">Part<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(5)">Nomen<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(6)">Purchase Type<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(7)">Qty Requested<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(8)">Requested By<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(9)">Status<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(10)">Purchase Vehicle<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(11)">Item Cost (each)<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(12)">Extended Cost<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(13)">Quote Request Date<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(14)">Date Submitted<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(15)">Contract Number<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(16)">Clin Number<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(17)">Quote Number<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(18)">PO Number<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(19)">Qty Ordered<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(20)">Award Date<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(21)">EDD Date<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(22)">Receive Date<span class="sort-indicator"></span></th>
-                <th onclick="sortProcurementTable(23)">Comments<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(5)">Manufacturer<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(6)">Nomen<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(7)">Purchase Type<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(8)">Qty Requested<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(9)">Requested By<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(10)">Status<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(11)">Purchase Vehicle<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(12)">Item Cost (each)<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(13)">Extended Cost<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(14)">Quote Request Date<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(15)">Date Submitted<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(16)">Contract Number<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(17)">Clin Number<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(18)">Quote Number<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(19)">PO Number<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(20)">Qty Ordered<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(21)">Award Date<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(22)">EDD Date<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(23)">Receive Date<span class="sort-indicator"></span></th>
+                <th onclick="sortProcurementTable(24)">Comments<span class="sort-indicator"></span></th>
             </tr>
         </thead>
         <tbody>
@@ -109,6 +110,7 @@ tr.completed-row:hover {
                         <td><?= htmlspecialchars((string)($row['Request Date'] ?? '')) ?></td>
                         <td><?= htmlspecialchars((string)($row['NIIN'] ?? '')) ?></td>
                         <td><?= htmlspecialchars((string)($row['Part'] ?? '')) ?></td>
+                        <td><?= htmlspecialchars((string)($row['Manufacturer'] ?? '')) ?></td>
                         <td><?= htmlspecialchars((string)($row['Nomen'] ?? '')) ?></td>
                         <td><?= htmlspecialchars((string)($row['Purchase Type'] ?? '')) ?></td>
                         <td><?= htmlspecialchars((string)($row['Qty Requested'] ?? '')) ?></td>

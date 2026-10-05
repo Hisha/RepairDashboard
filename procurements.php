@@ -47,6 +47,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
             'Request Date',
             'NIIN',
             'Part',
+            'Manufacturer',
             'Nomen',
             'Purchase Type',
             'Qty Requested',
