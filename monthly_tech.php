@@ -6,7 +6,7 @@ require_once APP_ROOT . '/bin/Utilities/xlsx_styled_helper.php';
 require_once APP_ROOT . '/bin/Model/Repairs.php';
 require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
-$allowedTabs = ['overview', 'tech_numbers', 'tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'repair_sheets', '853_labels', 'battery_tracker', 'repairs_by_month'];
+$allowedTabs = ['overview', 'tech_numbers', 'tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'repair_sheets', '853_labels', 'battery_tracker', 'repairs_by_month', 'installed'];
 $selectedTab = $_GET['tab'] ?? 'overview';
 
 if (!in_array($selectedTab, $allowedTabs, true)) {
@@ -306,7 +306,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
                     ]
                     );
                 break;
-            
+                
         case 'battery_tracker':
             require_once APP_ROOT . '/bin/Model/Batteries.php';
             $batteryModel = new Batteries();
@@ -317,6 +317,13 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
         case 'repairs_by_month':
             $rows = $repairsModel->getRepairsByMonthAndSubgroup($fyRange['start_date'], $fyRange['end_date']);
             $filename = 'repairs_by_month_' . date('Y-m-d') . '.xlsx';
+            break;
+            
+        case 'installed':
+            require_once APP_ROOT . '/bin/Model/Installed.php';
+            $installedModel = new Installed();
+            $rows = $installedModel->getInstalledSupportByFiscalYear($fyRange['start_date'], $fyRange['end_date']);
+            $filename = 'installed_support_' . date('Y-m-d') . '.xlsx';
             break;
             
         default:
@@ -413,6 +420,24 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
                     'Sum of Qty' => $row['Qty']
                 ];
             }
+            break;
+            
+        case 'installed':
+            $headers = !empty($rows) ? array_keys($rows[0]) : [
+            'Part',
+            'Nomen',
+            'NIIN',
+            'Qty Installed FY',
+            'Qty Installed Prior FY',
+            'On Shelf Qty',
+            'Avg Monthly Installs',
+            'Recommended Shelf Qty',
+            'Shelf Gap',
+            'Unit Price'
+                ];
+            $exportRows = $rows;
+            $textColumns = ['Part', 'Nomen', 'NIIN'];
+            $sheetTitle = 'Installed Support';
             break;
             
         default:
@@ -590,7 +615,7 @@ if ($selectedTab === 'repair_priority') {
                 </select>
             </form>
 
-            <?php if (in_array($selectedTab, ['tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'battery_tracker', 'repairs_by_month'], true)): ?>
+            <?php if (in_array($selectedTab, ['tech_numbers_expanded', 'tech_repairs', 'repair_priority', 'battery_tracker', 'repairs_by_month', 'installed'], true)): ?>
                 <a class="export-link" href="<?= htmlspecialchars($exportUrl) ?>">Export Excel</a>
             <?php endif; ?>
         </div>
@@ -623,6 +648,9 @@ if ($selectedTab === 'repair_priority') {
    			
    		<a class="tab-link <?= $selectedTab === 'repairs_by_month' ? 'active' : '' ?>"
    			href="monthly_tech.php?tab=repairs_by_month&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Repairs by Month</a>
+
+   		<a class="tab-link <?= $selectedTab === 'installed' ? 'active' : '' ?>"
+   			href="monthly_tech.php?tab=installed&fy=<?= urlencode((string)$fyRange['fiscal_year']) ?>">Installed / Shelf</a>
     </div>
 
     <div class="tab-panel">
@@ -658,6 +686,10 @@ if ($selectedTab === 'repair_priority') {
                 
             case 'repairs_by_month':
                 require_once APP_ROOT . '/bin/Tabs/monthly_tech_repairs_by_month.php';
+                break;
+
+            case 'installed':
+                require_once APP_ROOT . '/bin/Tabs/monthly_tech_installed.php';
                 break;
                 
             case 'overview':
