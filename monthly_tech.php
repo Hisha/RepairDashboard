@@ -28,9 +28,20 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
             break;
             
         case 'tech_repairs':
-            $data = $repairsModel->getRepairsByFiscalYear($fyRange['start_date'], $fyRange['end_date']);
-            $filename = 'tech_repairs_' . date('Y-m-d') . '.xlsx';
-            
+            $isWeeklyExport = isset($_GET['view']) && $_GET['view'] === 'weekly';
+
+            if ($isWeeklyExport) {
+                $exportStart = date('Y-m-d', strtotime('-7 days'));
+                $exportEnd   = date('Y-m-d');
+                $filename    = 'tech_repairs_weekly_' . date('Y-m-d') . '.xlsx';
+            } else {
+                $exportStart = $fyRange['start_date'];
+                $exportEnd   = $fyRange['end_date'];
+                $filename    = 'tech_repairs_' . date('Y-m-d') . '.xlsx';
+            }
+
+            $data = $repairsModel->getRepairsByFiscalYear($exportStart, $exportEnd);
+
             $groupedData = [];
             $grandTotals = [
                 'A Reps' => 0,
@@ -45,10 +56,10 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
                 'H Hours' => 0,
                 'Total Value' => 0
             ];
-            
+
             foreach ($data as $row) {
                 $program = $row['Program'] ?? 'Unknown';
-                
+
                 if (!isset($groupedData[$program])) {
                     $groupedData[$program] = [
                         'rows' => [],
@@ -67,133 +78,172 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
                         ]
                     ];
                 }
-                
+
                 $groupedData[$program]['rows'][] = $row;
-                
+
                 foreach ($groupedData[$program]['subtotal'] as $key => $value) {
                     $groupedData[$program]['subtotal'][$key] += (float)($row[$key] ?? 0);
                     $grandTotals[$key] += (float)($row[$key] ?? 0);
                 }
             }
-            
-            $headers = [
-                'NIIN',
-                'Program',
-                'STD Price',
-                'A Reps',
-                'A Hours',
-                'D Reps',
-                'D Hours',
-                'F Reps',
-                'F Hours',
-                'G Reps',
-                'G Hours',
-                'H Reps',
-                'H Hours',
-                'Total Value'
-            ];
-            
-            $exportRows = [];
-            
-            foreach ($groupedData as $program => $programData) {
-                $exportRows[] = [
-                    '_row_type' => 'highlight_blue',
-                    'NIIN' => '',
-                    'Program' => $program,
-                    'STD Price' => '',
-                    'A Reps' => '',
-                    'A Hours' => '',
-                    'D Reps' => '',
-                    'D Hours' => '',
-                    'F Reps' => '',
-                    'F Hours' => '',
-                    'G Reps' => '',
-                    'G Hours' => '',
-                    'H Reps' => '',
-                    'H Hours' => '',
-                    'Total Value' => ''
-                ];
-                
-                foreach ($programData['rows'] as $row) {
+
+            ksort($groupedData, SORT_NATURAL | SORT_FLAG_CASE);
+
+            if ($isWeeklyExport) {
+                // Condensed weekly export: Program | A Reps | Value
+                $headers = ['Program', 'A Reps', 'Value'];
+                $exportRows = [];
+
+                foreach ($groupedData as $program => $programData) {
                     $exportRows[] = [
                         '_row_type' => 'normal',
-                        'NIIN' => $row['NIIN'] ?? '',
-                        'Program' => $row['Program'] ?? '',
-                        'STD Price' => (float)($row['STD Price'] ?? 0),
-                        'A Reps' => (float)($row['A Reps'] ?? 0),
-                        'A Hours' => (float)($row['A Hours'] ?? 0),
-                        'D Reps' => (float)($row['D Reps'] ?? 0),
-                        'D Hours' => (float)($row['D Hours'] ?? 0),
-                        'F Reps' => (float)($row['F Reps'] ?? 0),
-                        'F Hours' => (float)($row['F Hours'] ?? 0),
-                        'G Reps' => (float)($row['G Reps'] ?? 0),
-                        'G Hours' => (float)($row['G Hours'] ?? 0),
-                        'H Reps' => (float)($row['H Reps'] ?? 0),
-                        'H Hours' => (float)($row['H Hours'] ?? 0),
-                        'Total Value' => (float)($row['Total Value'] ?? 0)
+                        'Program'   => $program,
+                        'A Reps'    => $programData['subtotal']['A Reps'],
+                        'Value'     => $programData['subtotal']['Total Value']
                     ];
                 }
-                
+
                 $exportRows[] = [
-                    '_row_type' => 'subtotal',
-                    'NIIN' => '',
-                    'Program' => $program . ' Subtotal',
-                    'STD Price' => '',
-                    'A Reps' => $programData['subtotal']['A Reps'],
-                    'A Hours' => $programData['subtotal']['A Hours'],
-                    'D Reps' => $programData['subtotal']['D Reps'],
-                    'D Hours' => $programData['subtotal']['D Hours'],
-                    'F Reps' => $programData['subtotal']['F Reps'],
-                    'F Hours' => $programData['subtotal']['F Hours'],
-                    'G Reps' => $programData['subtotal']['G Reps'],
-                    'G Hours' => $programData['subtotal']['G Hours'],
-                    'H Reps' => $programData['subtotal']['H Reps'],
-                    'H Hours' => $programData['subtotal']['H Hours'],
-                    'Total Value' => $programData['subtotal']['Total Value']
+                    '_row_type' => 'grand_total',
+                    'Program'   => 'Totals:',
+                    'A Reps'    => $grandTotals['A Reps'],
+                    'Value'     => $grandTotals['Total Value']
                 ];
-            }
-            
-            $exportRows[] = [
-                '_row_type' => 'grand_total',
-                'NIIN' => '',
-                'Program' => 'Grand Total',
-                'STD Price' => '',
-                'A Reps' => $grandTotals['A Reps'],
-                'A Hours' => $grandTotals['A Hours'],
-                'D Reps' => $grandTotals['D Reps'],
-                'D Hours' => $grandTotals['D Hours'],
-                'F Reps' => $grandTotals['F Reps'],
-                'F Hours' => $grandTotals['F Hours'],
-                'G Reps' => $grandTotals['G Reps'],
-                'G Hours' => $grandTotals['G Hours'],
-                'H Reps' => $grandTotals['H Reps'],
-                'H Hours' => $grandTotals['H Hours'],
-                'Total Value' => $grandTotals['Total Value']
-            ];
-            
-            xlsx_styled_helper::download(
-                $filename,
-                $headers,
-                $exportRows,
-                [
-                    'sheetTitle' => 'Tech Repairs',
-                    'textColumns' => ['NIIN'],
-                    'numberFormats' => [
-                        'STD Price' => '$#,##0.00',
-                        'A Reps' => '0',
-                        'A Hours' => '0.00',
-                        'D Reps' => '0',
-                        'D Hours' => '0.00',
-                        'F Reps' => '0',
-                        'F Hours' => '0.00',
-                        'G Reps' => '0',
-                        'G Hours' => '0.00',
-                        'H Reps' => '0',
-                        'H Hours' => '0.00',
-                        'Total Value' => '$#,##0.00'
+
+                xlsx_styled_helper::download(
+                    $filename,
+                    $headers,
+                    $exportRows,
+                    [
+                        'sheetTitle' => 'Weekly Tech Repairs',
+                        'textColumns' => ['Program'],
+                        'numberFormats' => [
+                            'A Reps' => '0',
+                            'Value'  => '$#,##0.00'
+                        ]
                     ]
-                ]
                 );
+            } else {
+                // Full detail export (original)
+                $headers = [
+                    'NIIN',
+                    'Program',
+                    'STD Price',
+                    'A Reps',
+                    'A Hours',
+                    'D Reps',
+                    'D Hours',
+                    'F Reps',
+                    'F Hours',
+                    'G Reps',
+                    'G Hours',
+                    'H Reps',
+                    'H Hours',
+                    'Total Value'
+                ];
+
+                $exportRows = [];
+
+                foreach ($groupedData as $program => $programData) {
+                    $exportRows[] = [
+                        '_row_type' => 'highlight_blue',
+                        'NIIN' => '',
+                        'Program' => $program,
+                        'STD Price' => '',
+                        'A Reps' => '',
+                        'A Hours' => '',
+                        'D Reps' => '',
+                        'D Hours' => '',
+                        'F Reps' => '',
+                        'F Hours' => '',
+                        'G Reps' => '',
+                        'G Hours' => '',
+                        'H Reps' => '',
+                        'H Hours' => '',
+                        'Total Value' => ''
+                    ];
+
+                    foreach ($programData['rows'] as $row) {
+                        $exportRows[] = [
+                            '_row_type' => 'normal',
+                            'NIIN' => $row['NIIN'] ?? '',
+                            'Program' => $row['Program'] ?? '',
+                            'STD Price' => (float)($row['STD Price'] ?? 0),
+                            'A Reps' => (float)($row['A Reps'] ?? 0),
+                            'A Hours' => (float)($row['A Hours'] ?? 0),
+                            'D Reps' => (float)($row['D Reps'] ?? 0),
+                            'D Hours' => (float)($row['D Hours'] ?? 0),
+                            'F Reps' => (float)($row['F Reps'] ?? 0),
+                            'F Hours' => (float)($row['F Hours'] ?? 0),
+                            'G Reps' => (float)($row['G Reps'] ?? 0),
+                            'G Hours' => (float)($row['G Hours'] ?? 0),
+                            'H Reps' => (float)($row['H Reps'] ?? 0),
+                            'H Hours' => (float)($row['H Hours'] ?? 0),
+                            'Total Value' => (float)($row['Total Value'] ?? 0)
+                        ];
+                    }
+
+                    $exportRows[] = [
+                        '_row_type' => 'subtotal',
+                        'NIIN' => '',
+                        'Program' => $program . ' Subtotal',
+                        'STD Price' => '',
+                        'A Reps' => $programData['subtotal']['A Reps'],
+                        'A Hours' => $programData['subtotal']['A Hours'],
+                        'D Reps' => $programData['subtotal']['D Reps'],
+                        'D Hours' => $programData['subtotal']['D Hours'],
+                        'F Reps' => $programData['subtotal']['F Reps'],
+                        'F Hours' => $programData['subtotal']['F Hours'],
+                        'G Reps' => $programData['subtotal']['G Reps'],
+                        'G Hours' => $programData['subtotal']['G Hours'],
+                        'H Reps' => $programData['subtotal']['H Reps'],
+                        'H Hours' => $programData['subtotal']['H Hours'],
+                        'Total Value' => $programData['subtotal']['Total Value']
+                    ];
+                }
+
+                $exportRows[] = [
+                    '_row_type' => 'grand_total',
+                    'NIIN' => '',
+                    'Program' => 'Grand Total',
+                    'STD Price' => '',
+                    'A Reps' => $grandTotals['A Reps'],
+                    'A Hours' => $grandTotals['A Hours'],
+                    'D Reps' => $grandTotals['D Reps'],
+                    'D Hours' => $grandTotals['D Hours'],
+                    'F Reps' => $grandTotals['F Reps'],
+                    'F Hours' => $grandTotals['F Hours'],
+                    'G Reps' => $grandTotals['G Reps'],
+                    'G Hours' => $grandTotals['G Hours'],
+                    'H Reps' => $grandTotals['H Reps'],
+                    'H Hours' => $grandTotals['H Hours'],
+                    'Total Value' => $grandTotals['Total Value']
+                ];
+
+                xlsx_styled_helper::download(
+                    $filename,
+                    $headers,
+                    $exportRows,
+                    [
+                        'sheetTitle' => 'Tech Repairs',
+                        'textColumns' => ['NIIN'],
+                        'numberFormats' => [
+                            'STD Price' => '$#,##0.00',
+                            'A Reps' => '0',
+                            'A Hours' => '0.00',
+                            'D Reps' => '0',
+                            'D Hours' => '0.00',
+                            'F Reps' => '0',
+                            'F Hours' => '0.00',
+                            'G Reps' => '0',
+                            'G Hours' => '0.00',
+                            'H Reps' => '0',
+                            'H Hours' => '0.00',
+                            'Total Value' => '$#,##0.00'
+                        ]
+                    ]
+                );
+            }
             break;
             
         case 'repair_priority':
@@ -306,7 +356,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
                     ]
                     );
                 break;
-                
+            
         case 'battery_tracker':
             require_once APP_ROOT . '/bin/Model/Batteries.php';
             $batteryModel = new Batteries();
@@ -318,7 +368,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
             $rows = $repairsModel->getRepairsByMonthAndSubgroup($fyRange['start_date'], $fyRange['end_date']);
             $filename = 'repairs_by_month_' . date('Y-m-d') . '.xlsx';
             break;
-            
+
         case 'installed':
             require_once APP_ROOT . '/bin/Model/Installed.php';
             $installedModel = new Installed();
@@ -421,20 +471,20 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
                 ];
             }
             break;
-            
+
         case 'installed':
             $headers = !empty($rows) ? array_keys($rows[0]) : [
-            'Part',
-            'Nomen',
-            'NIIN',
-            'Qty Installed FY',
-            'Qty Installed Prior FY',
-            'On Shelf Qty',
-            'Avg Monthly Installs',
-            'Recommended Shelf Qty',
-            'Shelf Gap',
-            'Unit Price'
-                ];
+                'Part',
+                'Nomen',
+                'NIIN',
+                'Qty Installed FY',
+                'Qty Installed Prior FY',
+                'On Shelf Qty',
+                'Avg Monthly Installs',
+                'Recommended Shelf Qty',
+                'Shelf Gap',
+                'Unit Price'
+            ];
             $exportRows = $rows;
             $textColumns = ['Part', 'Nomen', 'NIIN'];
             $sheetTitle = 'Installed Support';
@@ -461,6 +511,10 @@ include 'menu.php';
 $exportUrl = 'monthly_tech.php?tab=' . urlencode($selectedTab)
 . '&fy=' . urlencode((string)$fyRange['fiscal_year'])
 . '&export=xlsx';
+
+if ($selectedTab === 'tech_repairs' && isset($_GET['view']) && $_GET['view'] === 'weekly') {
+    $exportUrl .= '&view=weekly';
+}
 
 if ($selectedTab === 'repair_priority') {
     $exportUrl .= '&rp_search=' . urlencode((string)($_GET['rp_search'] ?? ''));
