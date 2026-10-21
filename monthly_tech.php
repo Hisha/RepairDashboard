@@ -94,6 +94,14 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
                 $headers = ['Program', 'A Reps', 'Value'];
                 $exportRows = [];
 
+                // Date range banner at top of sheet
+                $exportRows[] = [
+                    '_row_type' => 'highlight_blue',
+                    'Program'   => 'Date range: ' . $exportStart . ' – ' . $exportEnd . ' (last 7 days)',
+                    'A Reps'    => '',
+                    'Value'     => ''
+                ];
+
                 foreach ($groupedData as $program => $programData) {
                     $exportRows[] = [
                         '_row_type' => 'normal',
@@ -115,7 +123,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
                     $headers,
                     $exportRows,
                     [
-                        'sheetTitle' => 'Weekly Tech Repairs',
+                        'sheetTitle' => 'Weekly (' . $exportStart . ' – ' . $exportEnd . ')',
                         'textColumns' => ['Program'],
                         'numberFormats' => [
                             'A Reps' => '0',
