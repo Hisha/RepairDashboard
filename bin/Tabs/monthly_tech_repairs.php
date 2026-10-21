@@ -6,10 +6,22 @@ $repairsModel = new Repairs();
 $selectedFiscalYear = isset($_GET['fy']) ? (int)$_GET['fy'] : null;
 $fyRange = helpers::getFiscalYearDateRange($selectedFiscalYear);
 
-$data = $repairsModel->getRepairsByFiscalYear(
-    $fyRange['start_date'],
-    $fyRange['end_date']
-    );
+$view = (isset($_GET['view']) && $_GET['view'] === 'weekly') ? 'weekly' : 'full';
+
+// Weekly: request date back one week. Full: fiscal year range.
+if ($view === 'weekly') {
+    $endDate    = date('Y-m-d');
+    $startDate  = date('Y-m-d', strtotime('-7 days'));
+    $rangeLabel = $startDate . ' – ' . $endDate . ' (last 7 days)';
+    $heading    = 'Weekly Tech Repairs';
+} else {
+    $startDate  = $fyRange['start_date'];
+    $endDate    = $fyRange['end_date'];
+    $rangeLabel = $fyRange['label'] . ' (' . $startDate . ' – ' . $endDate . ')';
+    $heading    = $fyRange['label'] . ' Tech Repairs';
+}
+
+$data = $repairsModel->getRepairsByFiscalYear($startDate, $endDate);
 
 $groupedData = [];
 $grandTotals = [
@@ -28,7 +40,7 @@ $grandTotals = [
 
 foreach ($data as $row) {
     $program = $row['Program'] ?? 'Unknown';
-    
+
     if (!isset($groupedData[$program])) {
         $groupedData[$program] = [
             'rows' => [],
@@ -47,18 +59,69 @@ foreach ($data as $row) {
             ]
         ];
     }
-    
+
     $groupedData[$program]['rows'][] = $row;
-    
+
     foreach ($groupedData[$program]['subtotal'] as $key => $value) {
         $groupedData[$program]['subtotal'][$key] += (float)$row[$key];
         $grandTotals[$key] += (float)$row[$key];
     }
 }
 
+$baseQuery = 'tab=tech_repairs&fy=' . urlencode((string)$fyRange['fiscal_year']);
+$fullUrl   = 'monthly_tech.php?' . $baseQuery;
+$weeklyUrl = 'monthly_tech.php?' . $baseQuery . '&view=weekly';
 ?>
 
 <style>
+.tech-repairs-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.tech-repairs-toolbar h2 {
+    margin: 0;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 8px;
+}
+
+.view-btn {
+    display: inline-block;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 4px;
+    border: 1px solid #0d6efd;
+    color: #0d6efd;
+    background: #fff;
+}
+
+.view-btn:hover {
+    background: #e7f1ff;
+}
+
+.view-btn.active {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.range-info {
+    margin: 0 0 14px 0;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
 .tech-repairs-table-wrap {
     width: 100%;
     overflow-x: auto;
@@ -70,7 +133,7 @@ foreach ($data as $row) {
 
 .tech-repairs-table {
     width: 100%;
-    min-width: 1400px;
+    min-width: <?= $view === 'weekly' ? '420px' : '1400px' ?>;
     border-collapse: collapse;
 }
 
@@ -89,7 +152,7 @@ foreach ($data as $row) {
     z-index: 3;
 }
 
-.tech-repairs-table tbody tr:nth-child(even) {
+.tech-repairs-table tbody tr:nth-child(even):not(.program-header-row):not(.subtotal-row):not(.grand-total-row) {
     background: #fafafa;
 }
 
@@ -115,10 +178,51 @@ foreach ($data as $row) {
 }
 </style>
 
-<h2><?= htmlspecialchars($fyRange['label']) ?> Tech Repairs</h2>
+<div class="tech-repairs-toolbar">
+    <h2><?= htmlspecialchars($heading) ?></h2>
+    <div class="view-toggle">
+        <a class="view-btn <?= $view === 'full' ? 'active' : '' ?>"
+           href="<?= htmlspecialchars($fullUrl) ?>">Full Detail</a>
+        <a class="view-btn <?= $view === 'weekly' ? 'active' : '' ?>"
+           href="<?= htmlspecialchars($weeklyUrl) ?>">Weekly Count</a>
+    </div>
+</div>
+
+<div class="range-info">
+    <strong>Date range:</strong> <?= htmlspecialchars($rangeLabel) ?>
+    <?php if ($view === 'weekly'): ?>
+        &nbsp;|&nbsp; High-level summary by Program (A Reps &amp; Total Value only)
+    <?php endif; ?>
+</div>
 
 <?php if (empty($groupedData)): ?>
     <p>No data found.</p>
+<?php elseif ($view === 'weekly'): ?>
+<div class="tech-repairs-table-wrap">
+    <table class="tech-repairs-table">
+        <thead>
+        <tr>
+            <th>Program</th>
+            <th class="number-cell">A Reps</th>
+            <th class="number-cell">Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($groupedData as $program => $programData): ?>
+            <tr>
+                <td><?= htmlspecialchars($program) ?></td>
+                <td class="number-cell"><?= number_format($programData['subtotal']['A Reps']) ?></td>
+                <td class="number-cell">$<?= number_format($programData['subtotal']['Total Value'], 2) ?></td>
+            </tr>
+        <?php endforeach; ?>
+        <tr class="grand-total-row">
+            <td>Totals:</td>
+            <td class="number-cell"><?= number_format($grandTotals['A Reps']) ?></td>
+            <td class="number-cell">$<?= number_format($grandTotals['Total Value'], 2) ?></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 <?php else: ?>
 <div class="tech-repairs-table-wrap">
     <table class="tech-repairs-table">
