@@ -43,49 +43,136 @@ if (
     && $_GET['export'] === 'xlsx'
     ) {
         $shipmentsModel = new Shipments();
-        
+
         $selectedNiinFilter = $_GET['niin'] ?? null;
         $selectedCogFilter = $_GET['cog'] ?? null;
-        
-        $shipmentData = $shipmentsModel->getShipmentsListByFiscalYear(
-            $selectedNiinFilter !== '' ? $selectedNiinFilter : null,
-            $selectedCogFilter !== '' ? $selectedCogFilter : null,
-            $fyRange['start_date'],
-            $fyRange['end_date']
-            );
-        
-        $headers = [
-            'Ship Date',
-            'NIIN',
-            'Part',
-            'Nomen',
-            'Qty',
-            'Program',
-            'Condition',
-            'Issued To'
-        ];
-        
-        $rows = [];
-        foreach ($shipmentData as $row) {
-            $rows[] = [
-                'Ship Date' => $row['Ship Date'],
-                'NIIN' => $row['NIIN'],
-                'Part' => $row['Part'],
-                'Nomen' => $row['Nomen'],
-                'Qty' => $row['Qty'],
-                'Program' => $row['Program'],
-                'Condition' => $row['Condition'],
-                'Issued To' => $row['Issued To']
-            ];
+        $isWeeklyExport = isset($_GET['view']) && $_GET['view'] === 'weekly';
+
+        if ($isWeeklyExport) {
+            $exportStart = date('Y-m-d', strtotime('-7 days'));
+            $exportEnd   = date('Y-m-d');
+            $filename    = 'shipment_weekly_' . date('Y-m-d') . '.xlsx';
+        } else {
+            $exportStart = $fyRange['start_date'];
+            $exportEnd   = $fyRange['end_date'];
+            $filename    = 'shipment_data_' . $fyRange['label'] . '.xlsx';
         }
-        
-        xlsx_helper::download(
-            'shipment_data_' . $fyRange['label'] . '.xlsx',
-            $headers,
-            $rows,
-            ['NIIN', 'Part'],
-            'Shipment Data'
+
+        // Weekly ignores NIIN filter (aggregate view); COG is still applied
+        $niinForQuery = $isWeeklyExport
+            ? null
+            : ($selectedNiinFilter !== '' ? $selectedNiinFilter : null);
+
+        $shipmentData = $shipmentsModel->getShipmentsListByFiscalYear(
+            $niinForQuery,
+            $selectedCogFilter !== '' ? $selectedCogFilter : null,
+            $exportStart,
+            $exportEnd
             );
+
+        if ($isWeeklyExport) {
+            // Condensed weekly: Program | Condition | Qty
+            $grouped = [];
+            $grandTotal = 0;
+
+            foreach ($shipmentData as $row) {
+                $program   = trim((string)($row['Program'] ?? 'Unknown'));
+                $condition = trim((string)($row['Condition'] ?? ''));
+                $qty       = (float)($row['Qty'] ?? 0);
+                $key       = $program . "\0" . $condition;
+
+                if (!isset($grouped[$key])) {
+                    $grouped[$key] = [
+                        'Program'   => $program,
+                        'Condition' => $condition,
+                        'Qty'       => 0
+                    ];
+                }
+                $grouped[$key]['Qty'] += $qty;
+                $grandTotal += $qty;
+            }
+
+            uasort($grouped, function ($a, $b) {
+                $cmp = strnatcasecmp($a['Program'], $b['Program']);
+                if ($cmp !== 0) {
+                    return $cmp;
+                }
+                return strnatcasecmp($a['Condition'], $b['Condition']);
+            });
+
+            $headers = ['Program', 'Condition', 'Qty'];
+            $exportRows = [];
+
+            // Date-range banner
+            $exportRows[] = [
+                '_row_type' => 'highlight_blue',
+                'Program'   => 'Date range: ' . $exportStart . ' – ' . $exportEnd . ' (last 7 days)',
+                'Condition' => '',
+                'Qty'       => ''
+            ];
+
+            foreach ($grouped as $g) {
+                $exportRows[] = [
+                    '_row_type' => 'normal',
+                    'Program'   => $g['Program'],
+                    'Condition' => $g['Condition'],
+                    'Qty'       => $g['Qty']
+                ];
+            }
+
+            $exportRows[] = [
+                '_row_type' => 'grand_total',
+                'Program'   => 'Totals:',
+                'Condition' => '',
+                'Qty'       => $grandTotal
+            ];
+
+            xlsx_styled_helper::download(
+                $filename,
+                $headers,
+                $exportRows,
+                [
+                    'sheetTitle' => 'Weekly (' . $exportStart . ' – ' . $exportEnd . ')',
+                    'textColumns' => ['Program', 'Condition'],
+                    'numberFormats' => [
+                        'Qty' => '0'
+                    ]
+                ]
+            );
+        } else {
+            $headers = [
+                'Ship Date',
+                'NIIN',
+                'Part',
+                'Nomen',
+                'Qty',
+                'Program',
+                'Condition',
+                'Issued To'
+            ];
+
+            $rows = [];
+            foreach ($shipmentData as $row) {
+                $rows[] = [
+                    'Ship Date' => $row['Ship Date'],
+                    'NIIN' => $row['NIIN'],
+                    'Part' => $row['Part'],
+                    'Nomen' => $row['Nomen'],
+                    'Qty' => $row['Qty'],
+                    'Program' => $row['Program'],
+                    'Condition' => $row['Condition'],
+                    'Issued To' => $row['Issued To']
+                ];
+            }
+
+            xlsx_helper::download(
+                $filename,
+                $headers,
+                $rows,
+                ['NIIN', 'Part'],
+                'Shipment Data'
+            );
+        }
     }
 
 if (
