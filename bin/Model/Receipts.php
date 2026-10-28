@@ -51,7 +51,7 @@ class Receipts
     ORDER BY SYS_repair_program_mapping.normalized_program, receipts.materialcode
     ";
     
-    $results = $db->query($sql, $startDate, $endDate, $locationFilter['params'])->fetchAll();
+        $results = $db->query($sql, $startDate, $endDate, ...$locationFilter['params'])->fetchAll();
     
         $db->close();
     
