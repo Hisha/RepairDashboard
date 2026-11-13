@@ -946,6 +946,114 @@ class excelformat
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
+            ],
+
+            'SHIPMENT TRACKING INFORMATION2' => [
+                'table_name' => 'shipment_tracking',
+                'sheet_name' => 'Sheet1',
+                'updatefield' => 'CAVS',
+                
+                'headers' => [
+                    'DATE',
+                    'DOCUMENT #',
+                    'COMMAND',
+                    'MODE',
+                    'SHIPPING PRIORITY',
+                    'TCN #',
+                    'TMR #',
+                    'DIMS',
+                    'WEIGHT',
+                    'COST',
+                    'RCDN',
+                    'CAV DATE',
+                    'GTO CUSTODY',
+                    'SHIP DATE',
+                    'FINAL SHIP MODE',
+                    'TRACKING #',
+                    'DELIVERY DATE',
+                    'SIGNATURE',
+                    'NOTES'
+                ],
+                
+                'db_columns' => [
+                    'date',
+                    'documentnumber',
+                    'command',
+                    'mode',
+                    'shippingpriority',
+                    'tcnnumber',
+                    'tmrnumber',
+                    'dims',
+                    'weight',
+                    'cost',
+                    'rcdn',
+                    'cavdate',
+                    'gtocustody',
+                    'shipdate',
+                    'finalshipmode',
+                    'trackingnumber',
+                    'deliverydate',
+                    'signature',
+                    'notes'
+                ],
+                
+                'required_columns' => [
+                    'date',
+                    'documentnumber',
+                    'command',
+                    'mode',
+                    'shippingpriority',
+                    'tcnnumber',
+                    'tmrnumber'
+                ],
+                
+                'column_types' => [
+                    'date'    => 'date',
+                    'documentnumber'    => 'string',
+                    'command'    => 'string',
+                    'mode'    => 'string',
+                    'shippingpriority'    => 'string',
+                    'tcnnumber'    => 'string',
+                    'tmrnumber'    => 'string',
+                    'dims'    => 'string',
+                    'weight'    => 'string',
+                    'cost'    => 'decimal',
+                    'rcdn'    => 'string',
+                    'cavdate'    => 'date',
+                    'gtocustody'    => 'datetime',
+                    'shipdate'    => 'date',
+                    'finalshipmode'    => 'string',
+                    'trackingnumber'    => 'string',
+                    'deliverydate'    => 'datetime',
+                    'signature'    => 'string',
+                    'notes'    => 'string'
+                ],
+                
+                'create_sql' => "
+                    CREATE TABLE `shipment_tracking` (
+                        `id` INT NOT NULL AUTO_INCREMENT,
+                        `date` DATE NOT NULL,
+                        `documentnumber` VARCHAR(100) NOT NULL,
+                        `command` VARCHAR(150) NOT NULL,
+                        `mode` VARCHAR(50) NOT NULL,
+                        `shippingpriority` VARCHAR(50) NOT NULL,
+                        `tcnnumber` VARCHAR(50) NOT NULL,
+                        `tmrnumber` VARCHAR(50) NOT NULL,
+                        `dims` VARCHAR(50) NULL,
+                        `weight` VARCHAR(50) NULL,
+                        `cost` DECIMAL (12,2) NULL,
+                        `rcdn` VARCHAR(50) NULL,
+                        `cavdate` DATE NULL,
+                        `gtocustody` DATETIME NULL,
+                        `shipdate` DATE NULL,
+                        `finalshipmode` VARCHAR(150) NULL,
+                        `trackingnumber` VARCHAR(150) NULL,
+                        `deliverydate` DATETIME NULL,
+                        `signature` VARCHAR(150) NULL,
+                        `notes` TEXT NULL,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+                "
             ]
             
         ];
