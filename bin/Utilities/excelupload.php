@@ -267,43 +267,52 @@ class excelupload
     }
 
     private static function normalizeValue($value, string $type)
-    {
-        if ($value === null) {
-            return null;
-        }
+{
+    if ($value === null) {
+        return null;
+    }
 
-        if ($type === 'date' && is_numeric($value)) {
-            try {
-                return ExcelDate::excelToDateTimeObject($value)->format('Y-m-d');
-            } catch (Exception $e) {
-                return null;
+    // Excel serial number (what we get with setReadDataOnly(true) on date cells)
+    // Reasonable range covers ~1955–2173 so we don't accidentally convert other numbers
+    if (is_numeric($value) && $value > 20000 && $value < 100000) {
+        try {
+            $dt = ExcelDate::excelToDateTimeObject($value);
+
+            // Keep time when it is present (GTO CUSTODY / DELIVERY DATE), otherwise date only
+            if ($dt->format('H:i:s') === '00:00:00') {
+                return $dt->format('Y-m-d');
             }
-        }
-
-        $value = trim((string)$value);
-
-        if ($value === '') {
-            return null;
-        }
-
-        switch ($type) {
-            case 'date':
-                $timestamp = strtotime($value);
-                return $timestamp !== false ? date('Y-m-d', $timestamp) : null;
-
-            case 'decimal':
-                $value = str_replace([',', '$'], '', $value);
-                return is_numeric($value) ? $value : null;
-
-            case 'int':
-                $value = str_replace([','], '', $value);
-                return is_numeric($value) ? (int)$value : null;
-
-            case 'string':
-            default:
-                return $value;
+            return $dt->format('Y-m-d H:i:s');
+        } catch (Exception $e) {
+            // Not a valid Excel date – fall through and treat as normal value
         }
     }
+
+    $value = trim((string)$value);
+
+    if ($value === '') {
+        return null;
+    }
+
+    switch ($type) {
+        case 'date':
+            // Legacy support for any remaining 'date' typed columns
+            $timestamp = strtotime($value);
+            return $timestamp !== false ? date('Y-m-d', $timestamp) : $value;
+
+        case 'decimal':
+            $value = str_replace([',', '$'], '', $value);
+            return is_numeric($value) ? $value : null;
+
+        case 'int':
+            $value = str_replace([','], '', $value);
+            return is_numeric($value) ? (int)$value : null;
+
+        case 'string':
+        default:
+            return $value;   // "N/A", "PICK UP", etc. stay exactly as they are
+    }
+}
 
     private static function isEmptyRow(array $row): bool
     {
