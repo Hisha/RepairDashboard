@@ -1044,11 +1044,11 @@ class excelformat
                         `cost` DECIMAL (12,2) NULL,
                         `rcdn` VARCHAR(50) NULL,
                         `cavdate` DATE NULL,
-                        `gtocustody` DATETIME NULL,
+                        `gtocustody` VARCHAR(50) NULL,
                         `shipdate` DATE NULL,
                         `finalshipmode` VARCHAR(150) NULL,
                         `trackingnumber` VARCHAR(150) NULL,
-                        `deliverydate` DATETIME NULL,
+                        `deliverydate` VARCHAR(50) NULL,
                         `signature` VARCHAR(150) NULL,
                         `notes` TEXT NULL,
                         PRIMARY KEY (`id`)
