@@ -1020,11 +1020,11 @@ class excelformat
                     'cost'    => 'decimal',
                     'rcdn'    => 'string',
                     'cavdate'    => 'date',
-                    'gtocustody'    => 'datetime',
+                    'gtocustody'    => 'string',
                     'shipdate'    => 'date',
                     'finalshipmode'    => 'string',
                     'trackingnumber'    => 'string',
-                    'deliverydate'    => 'datetime',
+                    'deliverydate'    => 'string',
                     'signature'    => 'string',
                     'notes'    => 'string'
                 ],
