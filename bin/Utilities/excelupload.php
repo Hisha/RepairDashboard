@@ -272,37 +272,40 @@ class excelupload
         return null;
     }
 
-    // Excel serial number (what we get with setReadDataOnly(true) on date cells)
-    // Reasonable range covers ~1955–2173 so we don't accidentally convert other numbers
+    // Excel serial number (comes from setReadDataOnly(true) on date-formatted cells)
+    // Range roughly covers 1955–2173 so ordinary numbers are left alone
     if (is_numeric($value) && $value > 20000 && $value < 100000) {
         try {
             $dt = ExcelDate::excelToDateTimeObject($value);
-
-            // Keep time when it is present (GTO CUSTODY / DELIVERY DATE), otherwise date only
             if ($dt->format('H:i:s') === '00:00:00') {
                 return $dt->format('Y-m-d');
             }
             return $dt->format('Y-m-d H:i:s');
         } catch (Exception $e) {
-            // Not a valid Excel date – fall through and treat as normal value
+            // fall through
         }
     }
 
     $value = trim((string)$value);
 
     if ($value === '') {
-        return null;
+        return ($type === 'decimal') ? 0 : null;
     }
 
     switch ($type) {
         case 'date':
-            // Legacy support for any remaining 'date' typed columns
             $timestamp = strtotime($value);
             return $timestamp !== false ? date('Y-m-d', $timestamp) : $value;
 
         case 'decimal':
+            // Treat common “no cost” placeholders as zero
+            $upper = strtoupper($value);
+            if (in_array($upper, ['-', '–', '—', 'N/A', 'NA', 'NONE', 'NULL'], true)) {
+                return 0;
+            }
+
             $value = str_replace([',', '$'], '', $value);
-            return is_numeric($value) ? $value : null;
+            return is_numeric($value) ? $value : 0;   // any other garbage → 0
 
         case 'int':
             $value = str_replace([','], '', $value);
@@ -310,10 +313,9 @@ class excelupload
 
         case 'string':
         default:
-            return $value;   // "N/A", "PICK UP", etc. stay exactly as they are
+            return $value;
     }
 }
-
     private static function isEmptyRow(array $row): bool
     {
         foreach ($row as $value) {
