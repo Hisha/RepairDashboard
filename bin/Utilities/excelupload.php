@@ -5,6 +5,7 @@ require_once APP_ROOT . '/bin/Model/SYS_LastUpdate.php';
 require_once APP_ROOT . '/bin/Utilities/db.php';
 require_once APP_ROOT . '/bin/Utilities/excelverify.php';
 require_once APP_ROOT . '/bin/Utilities/excelformat.php';
+require_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
@@ -20,40 +21,40 @@ class excelupload
         $spreadsheet = null;
         $sheet = null;
         $reader = null;
-
+        
         ini_set('memory_limit', '1536M');
         set_time_limit(600);
-
+        
         try {
             if (!isset($file['name'], $file['tmp_name'])) {
                 throw new Exception('No file received.');
             }
-
+            
             if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
                 $errorCode = $file['error'] ?? UPLOAD_ERR_NO_FILE;
                 throw new Exception(
                     'File upload failed. PHP upload error code: ' .
                     $errorCode . ' - ' . self::getUploadErrorMessage($errorCode)
-                );
+                    );
             }
-
+            
             $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             if (!in_array($extension, ['xls', 'xlsx'], true)) {
                 throw new Exception('Only .xls and .xlsx files are allowed.');
             }
-
+            
             $verify = excelverify::verifyFileName($file['name']);
             if (!$verify['success']) {
                 throw new Exception($verify['message']);
             }
-
+            
             $excelKey = $verify['excel_key'];
-
+            
             $config = excelformat::getConfig($excelKey);
             if (!$config) {
                 throw new Exception("No format definition found for '{$excelKey}'.");
             }
-
+            
             $tableName       = $config['table_name'];
             $sheetName       = $config['sheet_name'] ?? null;
             $updateField     = $config['updatefield'] ?? null;
@@ -62,33 +63,41 @@ class excelupload
             $requiredColumns = $config['required_columns'] ?? [];
             $columnTypes     = $config['column_types'] ?? [];
             $createSql       = $config['create_sql'];
+            $isCav = in_array($tableName, [
+                'cav_requisitions_north',
+                'cav_requisitions_historic',
+                'cav_requisitions_south'
+            ], true);
+            $insertColumns = $isCav
+            ? array_merge($dbColumns, ['response_time', 'goal_days', 'on_time'])
+            : $dbColumns;
             $headerRow       = max(1, (int)($verify['header_row'] ?? 1));
-
+            
             if (count($expectedHeaders) !== count($dbColumns)) {
                 throw new Exception("Configuration error: headers and db_columns count do not match for '{$excelKey}'.");
             }
-
+            
             $reader = IOFactory::createReaderForFile($file['tmp_name']);
             $reader->setReadDataOnly(true);
-
+            
             $spreadsheet = $reader->load($file['tmp_name']);
             $availableSheets = $spreadsheet->getSheetNames();
-
+            
             if ($sheetName !== null && trim($sheetName) !== '') {
                 $sheet = $spreadsheet->getSheetByName($sheetName);
-
+                
                 if ($sheet === null) {
                     throw new Exception(
                         "Configured sheet '{$sheetName}' was not found in workbook. Available sheets: [" .
                         implode(', ', $availableSheets) . ']'
-                    );
+                            );
                 }
             } else {
                 $sheet = $spreadsheet->getActiveSheet();
             }
-
+            
             $columnCount = count($dbColumns);
-
+            
             // Validate headers
             $actualHeaders = [];
             for ($col = 1; $col <= $columnCount; $col++) {
@@ -119,21 +128,21 @@ class excelupload
                     implode('; ', $headerDifferences)
                     );
             }
-
+            
             $preparedRows = [];
             $highestRow = $sheet->getHighestDataRow();
             $emptyRowStreak = 0;
             $maxEmptyRowStreak = 200;
-
+            
             for ($rowNum = $headerRow + 1; $rowNum <= $highestRow; $rowNum++) {
                 $rawRow = [];
-
+                
                 for ($col = 1; $col <= $columnCount; $col++) {
                     $cellRef = Coordinate::stringFromColumnIndex($col) . $rowNum;
                     $cell = $sheet->getCell($cellRef);
                     $rawRow[] = self::getCellDisplayValue($cell);
                 }
-
+                
                 if (self::isEmptyRow($rawRow)) {
                     $emptyRowStreak++;
                     if ($emptyRowStreak >= $maxEmptyRowStreak) {
@@ -141,7 +150,7 @@ class excelupload
                     }
                     continue;
                 }
-
+                
                 // Skip subtotal/calculation rows that do not contain any required column values
                 if (self::isMissingAllRequiredColumns($rawRow, $dbColumns, $requiredColumns, $columnTypes)) {
                     continue;
@@ -149,176 +158,209 @@ class excelupload
                 
                 $emptyRowStreak = 0;
                 $normalizedRow = [];
-
+                
                 foreach ($dbColumns as $i => $columnName) {
                     $rawValue = $rawRow[$i] ?? null;
                     $type = $columnTypes[$columnName] ?? 'string';
                     $normalizedValue = self::normalizeValue($rawValue, $type);
-
+                    
+                    if ($isCav && $columnName === 'priority_code' && $normalizedValue !== null) {
+                        $code = trim((string)$normalizedValue);
+                        if (preg_match('/^\d{1,2}$/', $code)) {
+                            $normalizedValue = str_pad($code, 2, '0', STR_PAD_LEFT);
+                        }
+                    }
+                    
                     if (in_array($columnName, $requiredColumns, true)) {
                         if ($normalizedValue === null || $normalizedValue === '') {
                             throw new Exception("Required value missing for '{$columnName}' on spreadsheet row {$rowNum}.");
                         }
                     }
-
+                    
                     $normalizedRow[] = $normalizedValue;
                 }
-
+                
+                if ($isCav) {
+                    $row = array_combine($dbColumns, $normalizedRow);
+                    foreach (['date_recv', 'date_shipped'] as $dateColumn) {
+                        if ($row[$dateColumn] !== null && !self::isValidIsoDate($row[$dateColumn])) {
+                            throw new Exception("Invalid {$dateColumn} on spreadsheet row {$rowNum}.");
+                        }
+                    }
+                    $metrics = helpers::calculate(
+                        $row['priority'],
+                        $row['priority_code'],
+                        $row['date_recv'],
+                        $row['date_shipped']
+                        );
+                    $normalizedRow[] = $metrics['response_time'];
+                    $normalizedRow[] = $metrics['goal_days'];
+                    $normalizedRow[] = $metrics['on_time'];
+                }
+                
                 $preparedRows[] = $normalizedRow;
             }
-
+            
             $spreadsheet->disconnectWorksheets();
             unset($spreadsheet, $sheet, $reader);
             $spreadsheet = null;
             $sheet = null;
             $reader = null;
-
+            
             if (empty($preparedRows)) {
                 throw new Exception('No data rows were found to import.');
             }
-
+            
             $db = new db();
-
+            
             $tableExists = $db->query(
                 "SELECT COUNT(*) AS cnt
                  FROM information_schema.tables
                  WHERE table_schema = DATABASE()
                    AND table_name = ?",
                 $tableName
-            )->fetchArray();
-
-            if ((int)$tableExists['cnt'] === 0) {
-                $db->query($createSql);
-            }
-
-            $db->beginTransaction();
-            $db->query("TRUNCATE TABLE `{$tableName}`");
-
-            $insertSql = self::buildInsertSql($tableName, $dbColumns);
-
-            foreach ($preparedRows as $preparedRow) {
-                $params = array_merge([$insertSql], $preparedRow);
-                call_user_func_array([$db, 'query'], self::makeValuesReferenced($params));
-            }
-
-            $sysLastUpdate = new SYS_LastUpdate();
-            $sysLastUpdate->setLastUpdate($updateField);
-
-            return [
-                'success' => true,
-                'message' => "Upload complete. Imported " . count($preparedRows) . " row(s) into '{$tableName}'."
-            ];
-
+                )->fetchArray();
+                
+                if ((int)$tableExists['cnt'] === 0) {
+                    $db->query($createSql);
+                }
+                
+                $db->beginTransaction();
+                $db->query("DELETE FROM `{$tableName}`");
+                
+                $insertSql = self::buildInsertSql($tableName, $insertColumns);
+                
+                foreach ($preparedRows as $preparedRow) {
+                    $params = array_merge([$insertSql], $preparedRow);
+                    call_user_func_array([$db, 'query'], self::makeValuesReferenced($params));
+                }
+                
+                $db->commit();
+                
+                $sysLastUpdate = new SYS_LastUpdate();
+                $sysLastUpdate->setLastUpdate($updateField);
+                
+                return [
+                    'success' => true,
+                    'message' => "Upload complete. Imported " . count($preparedRows) . " row(s) into '{$tableName}'."
+                    ];
+                
         } catch (Exception $e) {
             if ($db) {
                 $db->rollback();
             }
-
+            
             if ($spreadsheet !== null) {
                 $spreadsheet->disconnectWorksheets();
             }
-
+            
             unset($spreadsheet, $sheet, $reader);
-
+            
             return [
                 'success' => false,
                 'message' => $e->getMessage()
             ];
         }
     }
-
+    
+    private static function isValidIsoDate(string $value): bool
+    {
+        $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
+        return $date !== false && $date->format('Y-m-d') === $value;
+    }
+    
     private static function buildInsertSql(string $tableName, array $dbColumns): string
     {
         $columnList = '`' . implode('`, `', $dbColumns) . '`';
         $placeholders = implode(', ', array_fill(0, count($dbColumns), '?'));
-
+        
         return "INSERT INTO `{$tableName}` ({$columnList}) VALUES ({$placeholders})";
     }
-
+    
     private static function getCellDisplayValue(Cell $cell)
     {
         $value = $cell->getValue();
-
+        
         if ($value === null) {
             return null;
         }
-
+        
         // Formula cell: prefer cached calculated value first, then calculate if needed
         if (is_string($value) && strlen($value) > 0 && $value[0] === '=') {
             $cached = $cell->getOldCalculatedValue();
             if ($cached !== null) {
                 return $cached;
             }
-
+            
             try {
                 $calculated = $cell->getCalculatedValue();
-
+                
                 if (is_object($calculated) && method_exists($calculated, '__toString')) {
                     return (string)$calculated;
                 }
-
+                
                 return $calculated;
             } catch (Exception $e) {
                 return null;
             }
         }
-
+        
         return $value;
     }
-
+    
     private static function normalizeValue($value, string $type)
-{
-    if ($value === null) {
-        return ($type === 'decimal') ? 0.0 : null;
-    }
-
-    // Only convert Excel serial numbers on date/string columns
-    // (the ones that used to be DATETIME and are now VARCHAR)
-    if (($type === 'date' || $type === 'string')
-        && is_numeric($value)
-        && $value > 20000
-        && $value < 100000
-    ) {
-        try {
-            $dt = ExcelDate::excelToDateTimeObject($value);
-            if ($dt->format('H:i:s') === '00:00:00') {
-                return $dt->format('Y-m-d');
-            }
-            return $dt->format('Y-m-d H:i:s');
-        } catch (Exception $e) {
-            // fall through
+    {
+        if ($value === null) {
+            return ($type === 'decimal') ? 0.0 : null;
         }
-    }
-
-    $value = trim((string)$value);
-
-    if ($value === '') {
-        return ($type === 'decimal') ? 0.0 : null;
-    }
-
-    switch ($type) {
-        case 'date':
-            $timestamp = strtotime($value);
-            return $timestamp !== false ? date('Y-m-d', $timestamp) : $value;
-
-        case 'decimal':
-            $upper = strtoupper($value);
-            if (in_array($upper, ['-', '–', '—', 'N/A', 'NA', 'NONE', 'NULL'], true)) {
-                return 0.0;
+        
+        // Only convert Excel serial numbers on date/string columns
+        // (the ones that used to be DATETIME and are now VARCHAR)
+        if (($type === 'date' || $type === 'string')
+            && is_numeric($value)
+            && $value > 20000
+            && $value < 100000
+            ) {
+                try {
+                    $dt = ExcelDate::excelToDateTimeObject($value);
+                    if ($dt->format('H:i:s') === '00:00:00') {
+                        return $dt->format('Y-m-d');
+                    }
+                    return $dt->format('Y-m-d H:i:s');
+                } catch (Exception $e) {
+                    // fall through
+                }
             }
-
-            $cleaned = str_replace([',', '$'], '', $value);
-            return is_numeric($cleaned) ? (float)$cleaned : 0.0;
-
-        case 'int':
-            $cleaned = str_replace([','], '', $value);
-            return is_numeric($cleaned) ? (int)$cleaned : null;
-
-        case 'string':
-        default:
-            return $value;
+            
+            $value = trim((string)$value);
+            
+            if ($value === '') {
+                return ($type === 'decimal') ? 0.0 : null;
+            }
+            
+            switch ($type) {
+                case 'date':
+                    $timestamp = strtotime($value);
+                    return $timestamp !== false ? date('Y-m-d', $timestamp) : $value;
+                    
+                case 'decimal':
+                    $upper = strtoupper($value);
+                    if (in_array($upper, ['-', '–', '—', 'N/A', 'NA', 'NONE', 'NULL'], true)) {
+                        return 0.0;
+                    }
+                    
+                    $cleaned = str_replace([',', '$'], '', $value);
+                    return is_numeric($cleaned) ? (float)$cleaned : 0.0;
+                    
+                case 'int':
+                    $cleaned = str_replace([','], '', $value);
+                    return is_numeric($cleaned) ? (int)$cleaned : null;
+                    
+                case 'string':
+                default:
+                    return $value;
+            }
     }
-}
     
     private static function isEmptyRow(array $row): bool
     {
@@ -356,7 +398,7 @@ class excelupload
             
             return true;
     }
-
+    
     private static function makeValuesReferenced(array $arr): array
     {
         $refs = [];
@@ -386,7 +428,7 @@ class excelupload
         
         return $value;
     }
-
+    
     private static function getUploadErrorMessage(int $errorCode): string
     {
         switch ($errorCode) {
