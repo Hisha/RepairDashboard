@@ -378,7 +378,7 @@ class CavRequisitions
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
           AND cav_requisitions.date_shipped BETWEEN ? AND ?
-          AND cav_requisitions.rt >= '270'
+          AND cav_requisitions.response_time >= '270'
     ";
         
         $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
@@ -442,7 +442,7 @@ class CavRequisitions
         
         $sql = "
         SELECT
-            AVG(rt) AS ytdCasrepRT
+            AVG(response_time) AS ytdCasrepRT
         FROM cav_requisitions
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
@@ -465,7 +465,7 @@ class CavRequisitions
         
         $sql = "
         SELECT
-            AVG(rt) AS ytdAllRT
+            AVG(response_time) AS ytdAllRT
         FROM cav_requisitions
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
@@ -488,7 +488,7 @@ class CavRequisitions
         
         $sql = "
         SELECT
-            AVG(rt) AS ytdNonCasrepRT
+            AVG(response_time) AS ytdNonCasrepRT
         FROM cav_requisitions
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
@@ -511,7 +511,7 @@ class CavRequisitions
         
         $sql = "
         SELECT
-            AVG(rt) AS ytdBOShippedRT
+            AVG(response_time) AS ytdBOShippedRT
         FROM cav_requisitions
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program

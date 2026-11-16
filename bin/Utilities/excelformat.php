@@ -81,16 +81,14 @@ class excelformat
                     'COMMAND',
                     'REQ #',
                     'PRIORITY',
+                    'PRIORITY CODE',
                     'NIIN',
                     'PART #',
                     'NOMEN',
                     'QTY',
                     'ITEM COST',
                     'STATUS',
-                    'NOTES',
-                    'RT',
-                    'Goal',
-                    'On Time'
+                    'NOTES'
                 ],
                 
                 'db_columns' => [
@@ -100,16 +98,14 @@ class excelformat
                     'command',
                     'req_number',
                     'priority',
+                    'priority_code',
                     'niin',
                     'part_number',
                     'nomen',
                     'qty',
                     'item_cost',
                     'status',
-                    'notes',
-                    'rt',
-                    'goal',
-                    'on_time'
+                    'notes'
                 ],
                 
                 'required_columns' => [
@@ -117,6 +113,7 @@ class excelformat
                     'date_recv',
                     'req_number',
                     'priority',
+                    'priority_code',
                     'niin',
                     'part_number',
                     'qty',
@@ -130,16 +127,14 @@ class excelformat
                     'command'    => 'string',
                     'req_number'    => 'string',
                     'priority'    => 'string',
+                    'priority_code'     => 'string',
                     'niin'    => 'string',
                     'part_number'    => 'string',
                     'nomen'    => 'string',
                     'qty'    => 'int',
                     'item_cost'    => 'decimal',
                     'status'    => 'string',
-                    'notes'    => 'string',
-                    'rt'    => 'int',
-                    'goal'    => 'int',
-                    'on_time'    => 'int'
+                    'notes'    => 'string'
                 ],
                 
                 'create_sql' => "
@@ -151,6 +146,7 @@ class excelformat
                         `command` VARCHAR(100) NULL,
                         `req_number` VARCHAR(100) NOT NULL,
                         `priority` VARCHAR(50) NOT NULL,
+                        `priority_code` VARCHAR(2) NOT NULL,
                         `niin` VARCHAR(12) NOT NULL,
                         `part_number` VARCHAR(100) NOT NULL,
                         `nomen` VARCHAR(150) NULL,
@@ -158,9 +154,9 @@ class excelformat
                         `item_cost` DECIMAL(12,2) NULL,
                         `status` VARCHAR(100) NOT NULL,
                         `notes` VARCHAR(255) NULL,
-                        `rt` INT(11) NULL,
-                        `goal` INT(11) NULL,
-                        `on_time` INT(11) NULL,
+                        `response_time` INT NULL,
+                        `goal_days` INT NULL,
+                        `on_time` TINYINT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
@@ -178,16 +174,14 @@ class excelformat
                     'COMMAND',
                     'REQ #',
                     'PRIORITY',
+                    'PRIORITY CODE',
                     'NIIN',
                     'PART #',
                     'NOMEN',
                     'QTY',
                     'ITEM COST',
                     'STATUS',
-                    'NOTES',
-                    'RT',
-                    'Goal',
-                    'On Time'
+                    'NOTES'
                 ],
                 
                 'db_columns' => [
@@ -197,16 +191,14 @@ class excelformat
                     'command',
                     'req_number',
                     'priority',
+                    'priority_code',
                     'niin',
                     'part_number',
                     'nomen',
                     'qty',
                     'item_cost',
                     'status',
-                    'notes',
-                    'rt',
-                    'goal',
-                    'on_time'
+                    'notes'
                 ],
                 
                 'required_columns' => [
@@ -214,6 +206,7 @@ class excelformat
                     'date_recv',
                     'req_number',
                     'priority',
+                    'priority_code',
                     'niin',
                     'part_number',
                     'qty',
@@ -227,16 +220,14 @@ class excelformat
                     'command'    => 'string',
                     'req_number'    => 'string',
                     'priority'    => 'string',
+                    'priority_code'     => 'string',
                     'niin'    => 'string',
                     'part_number'    => 'string',
                     'nomen'    => 'string',
                     'qty'    => 'int',
                     'item_cost'    => 'decimal',
                     'status'    => 'string',
-                    'notes'    => 'string',
-                    'rt'    => 'int',
-                    'goal'    => 'int',
-                    'on_time'    => 'int'
+                    'notes'    => 'string'
                 ],
                 
                 'create_sql' => "
@@ -248,6 +239,7 @@ class excelformat
                         `command` VARCHAR(100) NULL,
                         `req_number` VARCHAR(100) NOT NULL,
                         `priority` VARCHAR(50) NOT NULL,
+                        `priority_code` VARCHAR(2) NOT NULL,
                         `niin` VARCHAR(12) NOT NULL,
                         `part_number` VARCHAR(100) NOT NULL,
                         `nomen` VARCHAR(150) NULL,
@@ -255,9 +247,9 @@ class excelformat
                         `item_cost` DECIMAL(12,2) NULL,
                         `status` VARCHAR(100) NOT NULL,
                         `notes` VARCHAR(255) NULL,
-                        `rt` INT(11) NULL,
-                        `goal` INT(11) NULL,
-                        `on_time` INT(11) NULL,
+                        `response_time` INT NULL,
+                        `goal_days` INT NULL,
+                        `on_time` TINYINT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
@@ -275,16 +267,14 @@ class excelformat
                     'COMMAND',
                     'REQ #',
                     'PRIORITY',
+                    'PRIORITY CODE',
                     'NIIN',
                     'PART #',
                     'NOMEN',
                     'QTY',
                     'ITEM COST',
                     'STATUS',
-                    'NOTES',
-                    'RT',
-                    'Goal',
-                    'On Time'
+                    'NOTES'
                 ],
                 
                 'db_columns' => [
@@ -294,22 +284,21 @@ class excelformat
                     'command',
                     'req_number',
                     'priority',
+                    'priority_code',
                     'niin',
                     'part_number',
                     'nomen',
                     'qty',
                     'item_cost',
                     'status',
-                    'notes',
-                    'rt',
-                    'goal',
-                    'on_time'
+                    'notes'
                 ],
                 
                 'required_columns' => [
                     'program',
                     'date_recv',
                     'req_number',
+                    'priority_code',
                     'priority',
                     'niin',
                     'part_number',
@@ -324,16 +313,14 @@ class excelformat
                     'command'    => 'string',
                     'req_number'    => 'string',
                     'priority'    => 'string',
+                    'priority_code'     => 'string',
                     'niin'    => 'string',
                     'part_number'    => 'string',
                     'nomen'    => 'string',
                     'qty'    => 'int',
                     'item_cost'    => 'decimal',
                     'status'    => 'string',
-                    'notes'    => 'string',
-                    'rt'    => 'int',
-                    'goal'    => 'int',
-                    'on_time'    => 'int'
+                    'notes'    => 'string'
                 ],
                 
                 'create_sql' => "
@@ -345,6 +332,7 @@ class excelformat
                         `command` VARCHAR(100) NULL,
                         `req_number` VARCHAR(100) NOT NULL,
                         `priority` VARCHAR(50) NOT NULL,
+                        `priority_code` VARCHAR(2) NOT NULL,
                         `niin` VARCHAR(12) NOT NULL,
                         `part_number` VARCHAR(100) NOT NULL,
                         `nomen` VARCHAR(150) NULL,
@@ -352,9 +340,9 @@ class excelformat
                         `item_cost` DECIMAL(12,2) NULL,
                         `status` VARCHAR(100) NOT NULL,
                         `notes` VARCHAR(255) NULL,
-                        `rt` INT(11) NULL,
-                        `goal` INT(11) NULL,
-                        `on_time` INT(11) NULL,
+                        `response_time` INT NULL,
+                        `goal_days` INT NULL,
+                        `on_time` TINYINT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "

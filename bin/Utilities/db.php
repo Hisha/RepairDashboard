@@ -183,9 +183,11 @@ class db
     
     public function error($error)
     {
-        if ($this->show_errors) {
-            exit($error);
-        }
+        throw new RuntimeException(
+            $this->show_errors
+            ? $error
+            : 'A database error occurred.'
+            );
     }
     
     public function getInfoURL()
