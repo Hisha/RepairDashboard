@@ -81,7 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             ];
         } catch (Throwable $e) {
             error_log('numbersInternal report error: ' . $e->getMessage());
-            $error = 'Unable to generate the report. Please check the server error log.';
+            
+            $error = 'Report Error: ' . $e->getMessage() .
+            ' in ' . $e->getFile() .
+            ' on line ' . $e->getLine();
         }
     }
 }
