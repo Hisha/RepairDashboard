@@ -150,7 +150,7 @@ const r = <?= json_encode($report, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_
 const palette=['#3b6fb6','#c0392b','#2e8b57','#f2a541','#6f42c1','#0b6e6e'];
 const defaults={responsive:true,maintainAspectRatio:false};
 function chart(id,type,labels,datasets,options={}){new Chart(document.getElementById(id),{type,data:{labels,datasets},options:{...defaults,...options}})}
-chart('shipChart','pie',['Shipped','B/O Shipped'],[{data:[r.shipped,r.boShipped],backgroundColor:palette.slice(0,2)}]);
+chart('shipChart','pie',['Shipped','BackOrdered', 'Canceled','B/O Shipped'],[{data:[r.shipped,r.exceptions['New Reqs on Back Order'],r.exceptions['Canceled Reqs'],r.boShipped],backgroundColor:palette.slice(0,2)}]);
 const p=r.doughnut||{};
 chart('priorityChart','doughnut',['Fleet Failure','999','Spare','ANORS','CASREP'],[{data:[p.fleetFailure||0,p.nineNineNine||0,p.spare||0,p.anors||0,p.casrep||0],backgroundColor:palette.slice(0,5)}]);
 const dem=r.demand||{};
