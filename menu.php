@@ -100,9 +100,7 @@ $lastProcurementUpdateFormatted = $lastProcurementUpdate
     <a href="monthly_reqs.php">Shipments</a>
     <a href="cog7_repairables.php">Survival Rates</a>
     <a href="upload_excel.php">Upload Link</a>
-    <?php if ($missingNiinCount > 0): ?>
-        <a href="lms21_missing.php">COG/Price Data Insert</a>
-    <?php endif; ?>
+    <a href="numbersInternal.php">Internal Numbers</a>
   </div>
   
   <?php
