@@ -1,60 +1,59 @@
 <?php
-require_once __DIR__ . "/bootstrap.php";
-require_once APP_ROOT . "/vendor/autoload.php";
-require_once APP_ROOT . "/bin/Utilities/xlsx_helper.php";
-require_once APP_ROOT . "/bin/Model/BackOrders.php";
+require_once __DIR__ . '/bootstrap.php';
+require_once APP_ROOT . '/vendor/autoload.php';
+require_once APP_ROOT . '/bin/Utilities/xlsx_helper.php';
+require_once APP_ROOT . '/bin/Model/BackOrders.php';
 
-$selectedPriority = $_GET['priority'] ?? null;
-
-$reqs = new BackOrders();
-$backorders = $reqs->getBackOrderList($selectedPriority);
-
-/*
- * Export XLSX for Excel
- * Must run before ANY HTML output.
- */
-if (isset($_GET['export']) && $_GET['export'] === 'xlsx') {
-    $headers = !empty($backorders) ? array_keys($backorders[0]) : [
-        'Date Received',
-        'Program',
-        'Priority',
-        'Command',
-        'Req Number',
-        'NIIN',
-        'Nomen',
-        'QTY',
-        'Notes'
-    ];
-
-    xlsx_helper::download(
-        'backorders_' . date('Y-m-d') . '.xlsx',
-        $headers,
-        $backorders,
-        ['Req Number', 'NIIN'],
-        'Backorders'
-    );
+$selectedTab = ($_GET['tab'] ?? 'all') === 'aging' ? 'aging' : 'all';
+$selectedPriority = trim((string)($_GET['priority'] ?? ''));
+$agingBucket = (string)($_GET['age'] ?? '30plus');
+$ageRanges = [
+    '30plus' => ['label' => 'All Over 30 Days', 'min' => 31, 'max' => null],
+    '31-60'  => ['label' => '31–60 Days', 'min' => 31, 'max' => 60],
+    '61-90'  => ['label' => '61–90 Days', 'min' => 61, 'max' => 90],
+    '91-120' => ['label' => '91–120 Days', 'min' => 91, 'max' => 120],
+    '121plus'=> ['label' => '121+ Days', 'min' => 121, 'max' => null],
+];
+if (!isset($ageRanges[$agingBucket])) {
+    $agingBucket = '30plus';
 }
 
-/*
- * Highlight high priority rows
- */
+function backordersUrl(string $tab, string $age, string $priority = '', bool $export = false): string
+{
+    $params = ['tab' => $tab];
+    if ($tab === 'aging') $params['age'] = $age;
+    if ($priority !== '') $params['priority'] = $priority;
+    if ($export) $params['export'] = 'xlsx';
+    return 'backorders.php?' . http_build_query($params);
+}
+
 function isHighPriority(string $priority): bool
 {
-    $priority = strtoupper(trim($priority));
-    
-    $highPriorityValues = [
-        '999',
-        'ANORS',
-        'CASREP'
-    ];
-    
-    return in_array($priority, $highPriorityValues, true);
+    return in_array(strtoupper(trim($priority)), ['999', 'ANORS', 'CASREP'], true);
 }
 
-$exportUrl = $_SERVER['PHP_SELF'] . '?export=xlsx';
+$reqs = new BackOrders();
+$today = new DateTimeImmutable('today');
+if ($selectedTab === 'aging') {
+    $range = $ageRanges[$agingBucket];
+    // Inclusive date boundaries: older than 30 days starts at 31 days.
+    $endDate = $today->modify('-' . $range['min'] . ' days')->format('Y-m-d');
+    $startDate = $range['max'] === null
+    ? '1000-01-01'
+        : $today->modify('-' . $range['max'] . ' days')->format('Y-m-d');
+        $backorders = $reqs->getBackOrderListByDateRange($startDate, $endDate);
+        if ($selectedPriority !== '') {
+            $backorders = array_values(array_filter($backorders, static fn($r) => (string)($r['Priority'] ?? '') === $selectedPriority));
+        }
+} else {
+    $backorders = $reqs->getBackOrderList($selectedPriority !== '' ? $selectedPriority : null);
+}
 
-if (!empty($selectedPriority)) {
-    $exportUrl .= '&priority=' . urlencode($selectedPriority);
+if (($_GET['export'] ?? '') === 'xlsx') {
+    $headers = ['Date Received', 'Program', 'Priority', 'Command', 'Req Number', 'NIIN', 'Nomen', 'QTY', 'Notes'];
+    $filename = $selectedTab === 'aging' ? 'backorders_aging_' . $agingBucket . '_' : 'backorders_';
+    xlsx_helper::download($filename . date('Y-m-d') . '.xlsx', $headers, $backorders, ['Req Number', 'NIIN'], 'Backorders');
+    exit;
 }
 
 include 'menu.php';
@@ -206,93 +205,71 @@ include 'menu.php';
             font-size: 14px;
             color: #555;
         }
+        .page-header { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:15px; }
+        .page-header h1 { margin:0; }
+        .tab-bar { display:flex; gap:6px; align-items:flex-end; flex-wrap:wrap; }
+        .tab-link { padding:12px 20px; text-decoration:none; color:#212529; background:#d9dee3; border:1px solid #bfc7cf; border-bottom:none; border-radius:10px 10px 0 0; font-weight:bold; }
+        .tab-link.active { background:#fff; position:relative; top:1px; z-index:2; }
+        .tab-panel { background:#fff; border:1px solid #bfc7cf; border-radius:0 8px 8px 8px; padding:20px; min-height:500px; }
+        .aging-controls { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:15px; }
+        .aging-link { padding:8px 12px; background:#e9ecef; color:#212529; text-decoration:none; border:1px solid #ced4da; border-radius:5px; }
+        .aging-link.active { background:#0d6efd; border-color:#0d6efd; color:white; }
+        .aging-info { margin:0 0 15px; color:#555; }
+        .count { font-weight:bold; }
     </style>
 </head>
 <body>
-
 <div class="page-wrap">
-
-    <h1>
-        Backordered Requisitions
-        <?php if (!empty($selectedPriority)): ?>
-            - Priority: <?= htmlspecialchars($selectedPriority) ?>
-        <?php endif; ?>
-    </h1>
-
-    <?php if (!empty($selectedPriority)): ?>
-        <div class="filter-info">
-            Showing only records for priority <strong><?= htmlspecialchars($selectedPriority) ?></strong>
-            <a class="clear-filter" href="backorders.php">Clear Filter</a>
-        </div>
-    <?php endif; ?>
-
-    <div class="toolbar">
-        <div class="search-box">
-            <input
-                type="text"
-                id="tableSearch"
-                placeholder="Search backorders..."
-                onkeyup="filterTable()"
-            >
-        </div>
-
-        <div class="legend">
-            <span class="priority-chip"></span> High Priority Highlighted
-        </div>
-
-        <div>
-            <a class="export-btn" href="<?= htmlspecialchars($exportUrl) ?>">Export to Excel</a>
-        </div>
+    <div class="page-header">
+        <h1>Backordered Requisitions</h1>
+        <span class="count"><?= number_format(count($backorders)) ?> records</span>
     </div>
-
-    <div class="table-wrap">
-        <table id="backorderTable">
-            <thead>
-                <tr>
-                    <th onclick="sortTable(0)">Date Received<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(1)">Program<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(2)">Priority<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(3)">Command<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(4)">Req Number<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(5)">NIIN<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(6)">Nomen<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(7)">QTY<span class="sort-indicator"></span></th>
-                    <th onclick="sortTable(8)">Notes<span class="sort-indicator"></span></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($backorders)): ?>
+    <div class="tab-bar">
+        <a class="tab-link <?= $selectedTab === 'all' ? 'active' : '' ?>" href="<?= htmlspecialchars(backordersUrl('all', '30plus', $selectedPriority)) ?>">All Backorders</a>
+        <a class="tab-link <?= $selectedTab === 'aging' ? 'active' : '' ?>" href="<?= htmlspecialchars(backordersUrl('aging', $agingBucket, $selectedPriority)) ?>">Aging Backorders</a>
+    </div>
+    <div class="tab-panel">
+        <?php if ($selectedTab === 'aging'): ?>
+            <div class="aging-controls">
+                <?php foreach ($ageRanges as $key => $range): ?>
+                    <a class="aging-link <?= $agingBucket === $key ? 'active' : '' ?>" href="<?= htmlspecialchars(backordersUrl('aging', $key, $selectedPriority)) ?>"><?= htmlspecialchars($range['label']) ?></a>
+                <?php endforeach; ?>
+            </div>
+            <p class="aging-info">Showing currently backordered requisitions received <?= htmlspecialchars($ageRanges[$agingBucket]['label']) ?> ago, measured in calendar days through <?= htmlspecialchars($today->format('Y-m-d')) ?>.</p>
+        <?php endif; ?>
+        <?php if ($selectedPriority !== ''): ?>
+            <div class="filter-info">Showing priority <strong><?= htmlspecialchars($selectedPriority) ?></strong>
+                <a class="clear-filter" href="<?= htmlspecialchars(backordersUrl($selectedTab, $agingBucket)) ?>">Clear Filter</a>
+            </div>
+        <?php endif; ?>
+        <div class="toolbar">
+            <div class="search-box"><input type="text" id="tableSearch" placeholder="Search backorders..." oninput="filterTable()"></div>
+            <div class="legend"><span class="priority-chip"></span> High Priority Highlighted</div>
+            <a class="export-btn" href="<?= htmlspecialchars(backordersUrl($selectedTab, $agingBucket, $selectedPriority, true)) ?>">Export to Excel</a>
+        </div>
+        <div class="table-wrap">
+            <table id="backorderTable">
+                <thead><tr>
+                    <?php foreach (['Date Received', 'Program', 'Priority', 'Command', 'Req Number', 'NIIN', 'Nomen', 'QTY', 'Notes'] as $i => $header): ?>
+                        <th onclick="sortTable(<?= $i ?>)"><?= htmlspecialchars($header) ?><span class="sort-indicator"></span></th>
+                    <?php endforeach; ?>
+                </tr></thead>
+                <tbody>
                     <?php foreach ($backorders as $row): ?>
-                        <?php $rowClass = isHighPriority((string)($row['Priority'] ?? '')) ? 'high-priority' : ''; ?>
-                        <tr class="<?= htmlspecialchars($rowClass) ?>">
-                            <td><?= htmlspecialchars((string)($row['Date Received'] ?? '')) ?></td>
-                            <td><?= htmlspecialchars((string)($row['Program'] ?? '')) ?></td>
-                            <td><?= htmlspecialchars((string)($row['Priority'] ?? '')) ?></td>
-                            <td><?= htmlspecialchars((string)($row['Command'] ?? '')) ?></td>
-                            <td><?= htmlspecialchars((string)($row['Req Number'] ?? '')) ?></td>
-                            <td><?= htmlspecialchars((string)($row['NIIN'] ?? '')) ?></td>
-                            <td><?= htmlspecialchars((string)($row['Nomen'] ?? '')) ?></td>
-                            <td><?= htmlspecialchars((string)($row['QTY'] ?? '')) ?></td>
-                            <td><?= htmlspecialchars((string)($row['Notes'] ?? '')) ?></td>
+                        <tr class="<?= isHighPriority((string)($row['Priority'] ?? '')) ? 'high-priority' : '' ?>">
+                            <?php foreach (['Date Received', 'Program', 'Priority', 'Command', 'Req Number', 'NIIN', 'Nomen', 'QTY', 'Notes'] as $column): ?>
+                                <td><?= htmlspecialchars((string)($row[$column] ?? '')) ?></td>
+                            <?php endforeach; ?>
                         </tr>
                     <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="9" style="text-align:center; padding:20px;">
-                            No backordered requisitions found.
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-
-        <div id="noResultsMessage" class="no-results">
-            No matching records found.
+                </tbody>
+            </table>
+            <div id="noResultsMessage" class="no-results">No matching records found.</div>
         </div>
     </div>
 </div>
-
 <script>
+document.addEventListener('DOMContentLoaded', filterTable);
 let currentSortColumn = -1;
 let currentSortDirection = 'asc';
 
