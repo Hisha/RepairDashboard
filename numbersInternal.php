@@ -49,6 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
             $doughnut = $internalNumbers->getShippedDoughnutData($selectedProgram, $ms, $me);
             $good = (int)$internalNumbers->getYTDFillRateGood($selectedProgram, $ys, $ye);
             $missed = (int)$internalNumbers->getYTDFillRateMissed($selectedProgram, $ys, $ye);
+            $backOrder = (int)$internalNumbers->getBackorderReqs($selectedProgram, $ms, $me);
+            $canceled = (int)$internalNumbers->getCanceledReqs($selectedProgram, $ms, $me);
             $report = [
                 'dates' => $dates, 'filler' => is_array($filler) ? $filler : [],
                 'shipped' => $shipped, 'boShipped' => $boShipped, 'doughnut' => $doughnut,
@@ -56,16 +58,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
                 'uniqueNiins' => $internalNumbers->getYTDUniqueNiins($selectedProgram, $ys, $ye),
                 'totalNiins' => $internalNumbers->getYTDTotalNiins($selectedProgram, $ys, $ye),
                 'over270' => $internalNumbers->getYTDTwoSeventyReqs($selectedProgram, $ys, $ye),
-                'fillRate' => niPercent($good, $good + $missed),
+                'fillRate' => niPercent($good, $good + $missed + $backOrder),
                 'casrepRT' => $internalNumbers->getYTDCasrepRT($selectedProgram, $ys, $ye),
                 'allRT' => $internalNumbers->getYTDAllRT($selectedProgram, $ys, $ye),
                 'exceptions' => [
                     'NIIN Changes' => $internalNumbers->getNiinChangeReqs($selectedProgram, $ms, $me),
-                    'Canceled Reqs' => $internalNumbers->getCanceledReqs($selectedProgram, $ms, $me),
+                    'Canceled Reqs' => $canceled,
                     'Pending Reqs' => $internalNumbers->getPendingReqs($selectedProgram, $ms, $me),
                     'DRMO, I.O, Surge Buy Reqs' => $internalNumbers->getDISReqs($selectedProgram, $ms, $me),
                     'ESRS Case Reqs' => $internalNumbers->getESRSReqs($selectedProgram, $ms, $me),
-                    'New Reqs on Back Order' => $internalNumbers->getBackorderReqs($selectedProgram, $ms, $me),
+                    'New Reqs on Back Order' => $backOrder,
                 ],
                 'demand' => $internalNumbers->getYTDDemandMisses($selectedProgram, $ys, $ye),
                 'averages' => $internalNumbers->getYTDYearlyAverages($selectedProgram, $ys, $ye),
