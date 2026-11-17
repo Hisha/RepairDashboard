@@ -121,7 +121,7 @@ select,button{padding:10px 12px;font-size:15px;border-radius:5px;border:1px soli
 <p class="meta"><?= niEsc(trim(($f['pm'] ?? '') . ' ' . ($f['programname'] ?? ''))) ?></p>
 <p><strong>Month:</strong> <?= niEsc($d['month_start']) ?> to <?= niEsc($d['month_end']) ?> &nbsp; <strong>YTD:</strong> <?= niEsc($d['ytd_start']) ?> to <?= niEsc($d['ytd_end']) ?></p></div>
 <div class="panel"><h2>Requisitions Shipped</h2><div class="metrics">
-<?php foreach (['Reqs Received'=>$report['monthRecv'],'Shipped'=>$report['shipped'],'B/O Shipped'=>$report['boShipped'],'Total Shipped'=>$report['shipped']+$report['boShipped'],'Shipped %'=>niPercent($report['monthRecv'],$report['shipped']+$report['boShipped']).'%'] as $label=>$value): ?>
+<?php foreach (['Reqs Received'=>$report['monthRecv'],'Shipped'=>$report['shipped'],'B/O Shipped'=>$report['boShipped'],'Total Shipped'=>$report['shipped']+$report['boShipped'],'Shipped %'=>niPercent($report['shipped']+$report['boShipped'],$report['monthRecv']).'%'] as $label=>$value): ?>
 <div class="metric"><div class="name"><?= niEsc($label) ?></div><div class="value"><?= niEsc($value) ?></div></div><?php endforeach; ?></div>
 <div class="charts"><div><h3>Shipment Status</h3><div class="chartbox"><canvas id="shipChart"></canvas></div></div><div><h3>Shipped by Priority</h3><div class="chartbox"><canvas id="priorityChart"></canvas></div></div></div></div>
 <div class="panel"><h2>Year-to-Date Performance</h2><div class="metrics">
