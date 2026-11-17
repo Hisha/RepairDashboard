@@ -4,6 +4,7 @@ include_once APP_ROOT . '/bin/Utilities/helpers.php';
 
 class InternalNumbers
 {
+    protected $_tableName = 'cav_requisitions';
     
     public function getDistinctRecvMonths()
     {
