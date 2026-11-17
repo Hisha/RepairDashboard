@@ -419,7 +419,7 @@ class InternalNumbers
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
           AND cav_requisitions.date_recv BETWEEN ? AND ?
-          AND cav_requisitions.on_time = 0
+          AND (cav_requisitions.on_time = 0 OR cav_requisitions.on_time IS NULL)
           AND cav_requisitions.status <> 'CANCELED'
           AND cav_requisitions.priority IN ('CASREP', 'ANORS', 'SPARE', '999', 'FLEET FAILURE')
     ";
