@@ -107,7 +107,7 @@ select,button{padding:10px 12px;font-size:15px;border-radius:5px;border:1px soli
 <h1>Internal Program Report</h1>
 <div class="panel form-panel"><form method="post" action="numbersInternal.php" class="form-row">
 <div class="field"><label for="ddlDistinctNormalizedProgram">Program</label><?= $programMapping->getDDLDistinctNormalizedProgram($selectedProgram) ?></div>
-<div class="field"><label for="ddlRecvMonth">Reporting Month</label><?= $cavRequisitions->getDDLRecvMonths($selectedMonth) ?></div>
+<div class="field"><label for="ddlRecvMonth">Reporting Month</label><?= $internalNumbers->getDDLRecvMonths($selectedMonth) ?></div>
 <button type="submit" name="btnGenerateReport" value="1">Generate Report</button></form></div>
 <?php if ($error !== ''): ?><div class="error"><?= niEsc($error) ?></div><?php endif; ?>
 <?php if ($report !== null): $d = $report['dates']; $f = $report['filler']; ?>
