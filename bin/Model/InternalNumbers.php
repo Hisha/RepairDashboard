@@ -603,4 +603,237 @@ class InternalNumbers
         ];
     }
     
+    public function getTop5ByPriority(string $selectedProgram, string $startDate, string $endDate, string|array $priorities): array
+    {
+        $db = new db();
+        
+        // Normalize to array
+        if (!is_array($priorities)) {
+            $priorities = [$priorities];
+        }
+        
+        if (empty($priorities)) {
+            return [];
+        }
+        
+        $placeholders = implode(',', array_fill(0, count($priorities), '?'));
+        
+        $sql = "
+        SELECT
+            niin,
+            nomen,
+            SUM(qty) AS total
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
+          AND cav_requisitions.status IN ('SHIPPED', 'PICK UP')
+          AND cav_requisitions.priority IN ($placeholders)
+        GROUP BY cav_requisitions.niin, cav_requisitions.nomen
+        ORDER BY total DESC
+        LIMIT 5
+    ";
+        
+        $params = array_merge([$selectedProgram, $startDate, $endDate], $priorities);
+        
+        $results = call_user_func_array([$db, 'query'], array_merge([$sql], $params))->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
+    public function getTop5ByStatusByDate_Recv(string $selectedProgram, string $startDate, string $endDate, string|array $status): array
+    {
+        $db = new db();
+        
+        // Normalize to array
+        if (!is_array($status)) {
+            $status = [$status];
+        }
+        
+        if (empty($status)) {
+            return [];
+        }
+        
+        $placeholders = implode(',', array_fill(0, count($status), '?'));
+        
+        $sql = "
+        SELECT
+            niin,
+            nomen,
+            SUM(qty) AS total
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
+          AND cav_requisitions.status IN ($placeholders)
+        GROUP BY cav_requisitions.niin, cav_requisitions.nomen
+        ORDER BY total DESC
+        LIMIT 5
+    ";
+        
+        $params = array_merge([$selectedProgram, $startDate, $endDate], $status);
+        
+        $results = call_user_func_array([$db, 'query'], array_merge([$sql], $params))->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
+    public function getTop5ByStatusByDate_Shipped(string $selectedProgram, string $startDate, string $endDate, string|array $status): array
+    {
+        $db = new db();
+        
+        // Normalize to array
+        if (!is_array($status)) {
+            $status = [$status];
+        }
+        
+        if (empty($status)) {
+            return [];
+        }
+        
+        $placeholders = implode(',', array_fill(0, count($status), '?'));
+        
+        $sql = "
+        SELECT
+            niin,
+            nomen,
+            SUM(qty) AS total
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.status IN ($placeholders)
+        GROUP BY cav_requisitions.niin, cav_requisitions.nomen
+        ORDER BY total DESC
+        LIMIT 5
+    ";
+        
+        $params = array_merge([$selectedProgram, $startDate, $endDate], $status);
+        
+        $results = call_user_func_array([$db, 'query'], array_merge([$sql], $params))->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
+    public function getBackOrderListByDate_Recv(string $selectedProgram, string $startDate, string $endDate): array
+    {
+        $db = new db();
+        
+        $sql = "
+        SELECT
+            CONCAT(niin, ' (', nomen, ')') AS label,
+            SUM(qty) AS total
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE SYS_program_mapping.normalized_program = ?
+            AND cav_requisitions.date_recv BETWEEN ? AND ?
+            AND cav_requisitions.status = 'BACKORDERED'
+        GROUP BY niin, nomen
+        ORDER BY total ASC
+    ";
+        
+        $results = $db->query($sql, $selectedProgram, $startDate, $endDate)->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
+    public function getBackorderActionList(): array
+    {
+        $db = new db();
+        
+        $locationFilter = $this->getLocationFilter();
+        
+        $sql = "
+    SELECT
+        b.NIIN,
+        b.Program,
+        b.Nomen,
+        b.`Backorder Qty`,
+        b.Priority,
+        b.`Oldest Backorder Date`,
+        COALESCE(i.`Repairable F Qty`, 0) AS `Repairable F Qty`,
+        COALESCE(i.`F Awaiting Vendor Qty`, 0) AS `F Awaiting Vendor Qty`,
+        COALESCE(p.`Active Procurement Count`, 0) AS `Active Procurement Count`,
+        GREATEST(b.`Backorder Qty` - COALESCE(i.`Repairable F Qty`, 0), 0) AS `Qty Short`,
+        CASE
+            WHEN COALESCE(i.`Repairable F Qty`, 0) >= b.`Backorder Qty` THEN 'REPAIR'
+            WHEN COALESCE(i.`Repairable F Qty`, 0) > 0 THEN 'PARTIAL REPAIR'
+            WHEN COALESCE(p.`Active Procurement Count`, 0) > 0 THEN 'IN PROCUREMENT'
+            ELSE 'PROCURE'
+        END AS `Action`
+    FROM
+    (
+        SELECT
+            cav_requisitions.niin AS NIIN,
+            MAX(SYS_program_mapping.normalized_program) AS Program,
+            MAX(cav_requisitions.nomen) AS Nomen,
+            SUM(cav_requisitions.qty) AS `Backorder Qty`,
+            MIN(cav_requisitions.priority) AS Priority,
+            MIN(cav_requisitions.date_recv) AS `Oldest Backorder Date`
+        FROM cav_requisitions
+        INNER JOIN SYS_program_mapping
+            ON cav_requisitions.program = SYS_program_mapping.source_program
+        WHERE cav_requisitions.status = 'BACKORDERED'
+        {$locationFilter['sql']}
+        GROUP BY cav_requisitions.niin
+    ) b
+    LEFT JOIN
+    (
+        SELECT
+            inventory.niin AS NIIN,
+            SUM(CASE
+                WHEN inventory.materialcode = 'F' AND inventory.purposecode <> 'Z'
+                THEN inventory.onhandqty
+                ELSE 0
+            END) AS `Repairable F Qty`,
+            SUM(CASE
+                WHEN inventory.materialcode = 'F' AND inventory.purposecode = 'Z'
+                THEN inventory.onhandqty
+                ELSE 0
+            END) AS `F Awaiting Vendor Qty`
+        FROM inventory
+        GROUP BY inventory.niin
+    ) i
+        ON b.NIIN = i.NIIN
+    LEFT JOIN
+    (
+        SELECT
+            procurements.niin AS NIIN,
+            COUNT(*) AS `Active Procurement Count`
+        FROM procurements
+        WHERE procurements.status NOT IN ('CANCELED', 'COMPLETED')
+        GROUP BY procurements.niin
+    ) p
+        ON b.NIIN = p.NIIN
+    ORDER BY
+        CASE
+            WHEN COALESCE(i.`Repairable F Qty`, 0) >= b.`Backorder Qty` THEN 1
+            WHEN COALESCE(i.`Repairable F Qty`, 0) > 0 THEN 2
+            WHEN COALESCE(p.`Active Procurement Count`, 0) > 0 THEN 4
+            ELSE 3
+        END,
+        b.Priority ASC,
+        b.`Backorder Qty` DESC,
+        b.NIIN ASC
+    ";
+        
+        $results = $db->query($sql, ...$locationFilter['params'])->fetchAll();
+        
+        $db->close();
+        
+        return $results;
+    }
+    
 }
