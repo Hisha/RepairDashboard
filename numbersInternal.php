@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/bootstrap.php';
 require_once APP_ROOT . '/vendor/autoload.php';
-require_once APP_ROOT . '/bin/Model/CavRequisitions.php';
+require_once APP_ROOT . '/bin/Model/InternalNumbers.php';
 require_once APP_ROOT . '/bin/Model/SYS_PowerPointFiller.php';
 require_once APP_ROOT . '/bin/Model/SYS_ProgramMapping.php';
 
@@ -27,7 +27,7 @@ function niTable(array $rows): void {
 }
 
 $programMapping = new SYS_ProgramMapping();
-$cavRequisitions = new CavRequisitions();
+$internalNumbers = new InternalNumbers();
 $powerPointFiller = new SYS_PowerPointFiller();
 $selectedProgram = trim((string)($_POST['ddlDistinctNormalizedProgram'] ?? ''));
 $selectedMonth = trim((string)($_POST['ddlRecvMonth'] ?? ''));
@@ -39,45 +39,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnGenerateReport']))
         $error = 'Please select a program and reporting month.';
     } else {
         try {
-            $dates = $cavRequisitions->getReportDateRanges($selectedMonth);
+            $dates = $internalNumbers->getReportDateRanges($selectedMonth);
             $filler = $powerPointFiller->getPPFiller($selectedProgram);
             if (isset($filler[0]) && is_array($filler[0])) $filler = $filler[0];
             $ms = $dates['month_start']; $me = $dates['month_end'];
             $ys = $dates['ytd_start']; $ye = $dates['ytd_end'];
-            $shipped = (int)$cavRequisitions->getPieData_Shipped($selectedProgram, $ms, $me);
-            $boShipped = (int)$cavRequisitions->getPieData_BOShipped($selectedProgram, $ms, $me);
-            $doughnut = $cavRequisitions->getShippedDoughnutData($selectedProgram, $ms, $me);
-            $good = (int)$cavRequisitions->getYTDFillRateGood($selectedProgram, $ys, $ye);
-            $missed = (int)$cavRequisitions->getYTDFillRateMissed($selectedProgram, $ys, $ye);
+            $shipped = (int)$internalNumbers->getPieData_Shipped($selectedProgram, $ms, $me);
+            $boShipped = (int)$internalNumbers->getPieData_BOShipped($selectedProgram, $ms, $me);
+            $doughnut = $internalNumbers->getShippedDoughnutData($selectedProgram, $ms, $me);
+            $good = (int)$internalNumbers->getYTDFillRateGood($selectedProgram, $ys, $ye);
+            $missed = (int)$internalNumbers->getYTDFillRateMissed($selectedProgram, $ys, $ye);
             $report = [
                 'dates' => $dates, 'filler' => is_array($filler) ? $filler : [],
                 'shipped' => $shipped, 'boShipped' => $boShipped, 'doughnut' => $doughnut,
-                'totalReceived' => $cavRequisitions->getYTDReqsRecvd($selectedProgram, $ys, $ye),
-                'uniqueNiins' => $cavRequisitions->getYTDUniqueNiins($selectedProgram, $ys, $ye),
-                'totalNiins' => $cavRequisitions->getYTDTotalNiins($selectedProgram, $ys, $ye),
-                'over270' => $cavRequisitions->getYTDTwoSeventyReqs($selectedProgram, $ys, $ye),
+                'totalReceived' => $internalNumbers->getYTDReqsRecvd($selectedProgram, $ys, $ye),
+                'uniqueNiins' => $internalNumbers->getYTDUniqueNiins($selectedProgram, $ys, $ye),
+                'totalNiins' => $internalNumbers->getYTDTotalNiins($selectedProgram, $ys, $ye),
+                'over270' => $internalNumbers->getYTDTwoSeventyReqs($selectedProgram, $ys, $ye),
                 'fillRate' => niPercent($good, $good + $missed),
-                'casrepRT' => $cavRequisitions->getYTDCasrepRT($selectedProgram, $ys, $ye),
-                'allRT' => $cavRequisitions->getYTDAllRT($selectedProgram, $ys, $ye),
+                'casrepRT' => $internalNumbers->getYTDCasrepRT($selectedProgram, $ys, $ye),
+                'allRT' => $internalNumbers->getYTDAllRT($selectedProgram, $ys, $ye),
                 'exceptions' => [
-                    'NIIN Changes' => $cavRequisitions->getNiinChangeReqs($selectedProgram, $ms, $me),
-                    'Canceled Reqs' => $cavRequisitions->getCanceledReqs($selectedProgram, $ms, $me),
-                    'Pending Reqs' => $cavRequisitions->getPendingReqs($selectedProgram, $ms, $me),
-                    'DRMO, I.O, Surge Buy Reqs' => $cavRequisitions->getDISReqs($selectedProgram, $ms, $me),
-                    'ESRS Case Reqs' => $cavRequisitions->getESRSReqs($selectedProgram, $ms, $me),
-                    'New Reqs on Back Order' => $cavRequisitions->getBackorderReqs($selectedProgram, $ms, $me),
+                    'NIIN Changes' => $internalNumbers->getNiinChangeReqs($selectedProgram, $ms, $me),
+                    'Canceled Reqs' => $internalNumbers->getCanceledReqs($selectedProgram, $ms, $me),
+                    'Pending Reqs' => $internalNumbers->getPendingReqs($selectedProgram, $ms, $me),
+                    'DRMO, I.O, Surge Buy Reqs' => $internalNumbers->getDISReqs($selectedProgram, $ms, $me),
+                    'ESRS Case Reqs' => $internalNumbers->getESRSReqs($selectedProgram, $ms, $me),
+                    'New Reqs on Back Order' => $internalNumbers->getBackorderReqs($selectedProgram, $ms, $me),
                 ],
-                'demand' => $cavRequisitions->getYTDDemandMisses($selectedProgram, $ys, $ye),
-                'averages' => $cavRequisitions->getYTDYearlyAverages($selectedProgram, $ys, $ye),
+                'demand' => $internalNumbers->getYTDDemandMisses($selectedProgram, $ys, $ye),
+                'averages' => $internalNumbers->getYTDYearlyAverages($selectedProgram, $ys, $ye),
                 'top5' => [
-                    'CASREPs' => $cavRequisitions->getTop5ByPriority($selectedProgram, $ms, $me, 'CASREP'),
-                    'ANORS / 999' => $cavRequisitions->getTop5ByPriority($selectedProgram, $ms, $me, ['999', 'ANORS']),
-                    'Fleet Failure' => $cavRequisitions->getTop5ByPriority($selectedProgram, $ms, $me, 'Fleet Failure'),
-                    'Backorders' => $cavRequisitions->getTop5ByStatusByDate_Recv($selectedProgram, $ms, $me, 'BACKORDERED'),
-                    'B/O Shipped' => $cavRequisitions->getTop5ByStatusByDate_Shipped($selectedProgram, $ms, $me, 'B/O SHIPPED'),
-                    'Shipped / Pick Up' => $cavRequisitions->getTop5ByStatusByDate_Shipped($selectedProgram, $ms, $me, ['SHIPPED', 'PICK UP']),
+                    'CASREPs' => $internalNumbers->getTop5ByPriority($selectedProgram, $ms, $me, 'CASREP'),
+                    'ANORS / 999' => $internalNumbers->getTop5ByPriority($selectedProgram, $ms, $me, ['999', 'ANORS']),
+                    'Fleet Failure' => $internalNumbers->getTop5ByPriority($selectedProgram, $ms, $me, 'Fleet Failure'),
+                    'Backorders' => $internalNumbers->getTop5ByStatusByDate_Recv($selectedProgram, $ms, $me, 'BACKORDERED'),
+                    'B/O Shipped' => $internalNumbers->getTop5ByStatusByDate_Shipped($selectedProgram, $ms, $me, 'B/O SHIPPED'),
+                    'Shipped / Pick Up' => $internalNumbers->getTop5ByStatusByDate_Shipped($selectedProgram, $ms, $me, ['SHIPPED', 'PICK UP']),
                 ],
-                'backorders' => $cavRequisitions->getBackOrderListByDate_Recv($selectedProgram, $ms, $me),
+                'backorders' => $internalNumbers->getBackOrderListByDate_Recv($selectedProgram, $ms, $me),
             ];
         } catch (Throwable $e) {
             error_log('numbersInternal report error: ' . $e->getMessage());
