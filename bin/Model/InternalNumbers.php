@@ -442,9 +442,9 @@ class InternalNumbers
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
-          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
           AND cav_requisitions.priority = 'CASREP'
-          AND cav_requisitions.status IN ('SHIPPED','PICK UP')
+          AND cav_requisitions.status <> 'CANCELED'
     ";
         
         $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
@@ -465,9 +465,9 @@ class InternalNumbers
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
-          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
           AND cav_requisitions.priority IN ('CASREP', 'ANORS', 'SPARE', '999', 'FLEET FAILURE')
-          AND cav_requisitions.status IN ('SHIPPED','PICK UP')
+          AND cav_requisitions.status <> 'CANCELED'
     ";
         
         $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
@@ -488,9 +488,9 @@ class InternalNumbers
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
-          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
           AND cav_requisitions.priority IN ('ANORS', 'SPARE', '999', 'FLEET FAILURE')
-          AND cav_requisitions.status IN ('SHIPPED','PICK UP')
+          AND cav_requisitions.status <> 'CANCELED'
     ";
         
         $row = $db->query($sql, $selectedProgram, $ytdStart, $ytdEnd)->fetchArray();
@@ -511,7 +511,7 @@ class InternalNumbers
         INNER JOIN SYS_program_mapping
             ON cav_requisitions.program = SYS_program_mapping.source_program
         WHERE SYS_program_mapping.normalized_program = ?
-          AND cav_requisitions.date_shipped BETWEEN ? AND ?
+          AND cav_requisitions.date_recv BETWEEN ? AND ?
           AND cav_requisitions.status = 'B/O SHIPPED'
     ";
         
