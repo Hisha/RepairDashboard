@@ -191,7 +191,7 @@ class excelupload
                         $row['priority'],
                         $row['priority_code'],
                         $row['date_recv'],
-                        $row['date_shipped']
+                        $row['ship_date']
                         );
                     $normalizedRow[] = $metrics['response_time'];
                     $normalizedRow[] = $metrics['goal_days'];

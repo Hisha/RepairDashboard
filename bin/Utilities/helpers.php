@@ -228,8 +228,9 @@ class helpers
         ?string $priority,
         ?string $priorityCode,
         ?string $dateRecv,
-        ?string $dateShipped
+        ?string $shipDate
         ): array {
+            
             $goalDays = self::getGoalDays(
                 $priority,
                 $priorityCode
@@ -240,15 +241,15 @@ class helpers
             
             if (
                 !empty($dateRecv) &&
-                !empty($dateShipped)
+                !empty($shipDate)
                 ) {
                     $received = new DateTimeImmutable($dateRecv);
-                    $shipped = new DateTimeImmutable($dateShipped);
+                    $shipped = new DateTimeImmutable($shipDate);
                     
                     if ($shipped >= $received) {
                         $responseTime = helpers::getBusinessDays(
                             $dateRecv,
-                            $dateShipped
+                            $shipDate
                             );
                     }
                 }
