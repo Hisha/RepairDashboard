@@ -88,7 +88,22 @@ class excelformat
                     'QTY',
                     'ITEM COST',
                     'STATUS',
-                    'NOTES'
+                    'NOTES',
+                    'MODE',
+                    'SHIPPING PRIORITY',
+                    'TCN #',
+                    'TMR #',
+                    'DIMS',
+                    'WEIGHT',
+                    'SHIPPING COST',
+                    'RCDN',
+                    'GTO CUSTODY',
+                    'SHIP DATE',
+                    'FINAL SHIP MODE',
+                    'TRACKING #',
+                    'DELIVERY DATE',
+                    'SIGNATURE',
+                    'Shipment Notes'
                 ],
                 
                 'db_columns' => [
@@ -105,7 +120,22 @@ class excelformat
                     'qty',
                     'item_cost',
                     'status',
-                    'notes'
+                    'notes',
+                    'mode',
+                    'shipping_priority',
+                    'tcn_number',
+                    'tmr_number',
+                    'dims',
+                    'weight',
+                    'shipping_cost',
+                    'rcdn',
+                    'gto_custody',
+                    'ship_date',
+                    'final_ship_mode',
+                    'tracking_number',
+                    'delivery_date',
+                    'signature',
+                    'shipment_notes'
                 ],
                 
                 'required_columns' => [
@@ -134,7 +164,22 @@ class excelformat
                     'qty'    => 'int',
                     'item_cost'    => 'decimal',
                     'status'    => 'string',
-                    'notes'    => 'string'
+                    'notes'    => 'string',
+                    'mode'    => 'string',
+                    'shipping_priority'    => 'string',
+                    'tcn_number'    => 'string',
+                    'tmr_number'    => 'string',
+                    'dims'    => 'string',
+                    'weight'    => 'string',
+                    'shipping_cost'    => 'string',
+                    'rcdn'    => 'string',
+                    'gto_custody'    => 'string',
+                    'ship_date'    => 'string',
+                    'final_ship_mode'    => 'string',
+                    'tracking_number'    => 'string',
+                    'delivery_date'    => 'string',
+                    'signature'    => 'string',
+                    'shipment_notes'    => 'string'
                 ],
                 
                 'create_sql' => "
@@ -157,6 +202,21 @@ class excelformat
                         `response_time` INT NULL,
                         `goal_days` INT NULL,
                         `on_time` TINYINT NULL,
+                        `mode` VARCHAR(150) NULL,
+                        `shipping_priority` VARCHAR(150) NULL,
+                        `tcn_number` VARCHAR(150) NULL,
+                        `tmr_number` VARCHAR(150) NULL,
+                        `dims` VARCHAR(150) NULL,
+                        `weight` VARCHAR(150) NULL,
+                        `shipping_cost` VARCHAR(150) NULL,
+                        `rcdn` VARCHAR(150) NULL,
+                        `gto_custody` VARCHAR(150) NULL,
+                        `ship_date` VARCHAR(150) NULL,
+                        `final_ship_mode` VARCHAR(150) NULL,
+                        `tracking_number` VARCHAR(150) NULL,
+                        `delivery_date` VARCHAR(150) NULL,
+                        `signature` VARCHAR(150) NULL,
+                        `shipment_notes` TEXT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
@@ -181,7 +241,22 @@ class excelformat
                     'QTY',
                     'ITEM COST',
                     'STATUS',
-                    'NOTES'
+                    'NOTES',
+                    'MODE',
+                    'SHIPPING PRIORITY',
+                    'TCN #',
+                    'TMR #',
+                    'DIMS',
+                    'WEIGHT',
+                    'SHIPPING COST',
+                    'RCDN',
+                    'GTO CUSTODY',
+                    'SHIP DATE',
+                    'FINAL SHIP MODE',
+                    'TRACKING #',
+                    'DELIVERY DATE',
+                    'SIGNATURE',
+                    'Shipment Notes'
                 ],
                 
                 'db_columns' => [
@@ -198,7 +273,22 @@ class excelformat
                     'qty',
                     'item_cost',
                     'status',
-                    'notes'
+                    'notes',
+                    'mode',
+                    'shipping_priority',
+                    'tcn_number',
+                    'tmr_number',
+                    'dims',
+                    'weight',
+                    'shipping_cost',
+                    'rcdn',
+                    'gto_custody',
+                    'ship_date',
+                    'final_ship_mode',
+                    'tracking_number',
+                    'delivery_date',
+                    'signature',
+                    'shipment_notes'
                 ],
                 
                 'required_columns' => [
@@ -227,7 +317,22 @@ class excelformat
                     'qty'    => 'int',
                     'item_cost'    => 'decimal',
                     'status'    => 'string',
-                    'notes'    => 'string'
+                    'notes'    => 'string',
+                    'mode'    => 'string',
+                    'shipping_priority'    => 'string',
+                    'tcn_number'    => 'string',
+                    'tmr_number'    => 'string',
+                    'dims'    => 'string',
+                    'weight'    => 'string',
+                    'shipping_cost'    => 'string',
+                    'rcdn'    => 'string',
+                    'gto_custody'    => 'string',
+                    'ship_date'    => 'string',
+                    'final_ship_mode'    => 'string',
+                    'tracking_number'    => 'string',
+                    'delivery_date'    => 'string',
+                    'signature'    => 'string',
+                    'shipment_notes'    => 'string'
                 ],
                 
                 'create_sql' => "
@@ -250,6 +355,21 @@ class excelformat
                         `response_time` INT NULL,
                         `goal_days` INT NULL,
                         `on_time` TINYINT NULL,
+                        `mode` VARCHAR(150) NULL,
+                        `shipping_priority` VARCHAR(150) NULL,
+                        `tcn_number` VARCHAR(150) NULL,
+                        `tmr_number` VARCHAR(150) NULL,
+                        `dims` VARCHAR(150) NULL,
+                        `weight` VARCHAR(150) NULL,
+                        `shipping_cost` VARCHAR(150) NULL,
+                        `rcdn` VARCHAR(150) NULL,
+                        `gto_custody` VARCHAR(150) NULL,
+                        `ship_date` VARCHAR(150) NULL,
+                        `final_ship_mode` VARCHAR(150) NULL,
+                        `tracking_number` VARCHAR(150) NULL,
+                        `delivery_date` VARCHAR(150) NULL,
+                        `signature` VARCHAR(150) NULL,
+                        `shipment_notes` TEXT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
@@ -274,7 +394,22 @@ class excelformat
                     'QTY',
                     'ITEM COST',
                     'STATUS',
-                    'NOTES'
+                    'NOTES',
+                    'MODE',
+                    'SHIPPING PRIORITY',
+                    'TCN #',
+                    'TMR #',
+                    'DIMS',
+                    'WEIGHT',
+                    'SHIPPING COST',
+                    'RCDN',
+                    'GTO CUSTODY',
+                    'SHIP DATE',
+                    'FINAL SHIP MODE',
+                    'TRACKING #',
+                    'DELIVERY DATE',
+                    'SIGNATURE',
+                    'Shipment Notes'
                 ],
                 
                 'db_columns' => [
@@ -291,7 +426,22 @@ class excelformat
                     'qty',
                     'item_cost',
                     'status',
-                    'notes'
+                    'notes',
+                    'mode',
+                    'shipping_priority',
+                    'tcn_number',
+                    'tmr_number',
+                    'dims',
+                    'weight',
+                    'shipping_cost',
+                    'rcdn',
+                    'gto_custody',
+                    'ship_date',
+                    'final_ship_mode',
+                    'tracking_number',
+                    'delivery_date',
+                    'signature',
+                    'shipment_notes'
                 ],
                 
                 'required_columns' => [
@@ -320,7 +470,22 @@ class excelformat
                     'qty'    => 'int',
                     'item_cost'    => 'decimal',
                     'status'    => 'string',
-                    'notes'    => 'string'
+                    'notes'    => 'string',
+                    'mode'    => 'string',
+                    'shipping_priority'    => 'string',
+                    'tcn_number'    => 'string',
+                    'tmr_number'    => 'string',
+                    'dims'    => 'string',
+                    'weight'    => 'string',
+                    'shipping_cost'    => 'string',
+                    'rcdn'    => 'string',
+                    'gto_custody'    => 'string',
+                    'ship_date'    => 'string',
+                    'final_ship_mode'    => 'string',
+                    'tracking_number'    => 'string',
+                    'delivery_date'    => 'string',
+                    'signature'    => 'string',
+                    'shipment_notes'    => 'string'
                 ],
                 
                 'create_sql' => "
@@ -343,6 +508,21 @@ class excelformat
                         `response_time` INT NULL,
                         `goal_days` INT NULL,
                         `on_time` TINYINT NULL,
+                        `mode` VARCHAR(150) NULL,
+                        `shipping_priority` VARCHAR(150) NULL,
+                        `tcn_number` VARCHAR(150) NULL,
+                        `tmr_number` VARCHAR(150) NULL,
+                        `dims` VARCHAR(150) NULL,
+                        `weight` VARCHAR(150) NULL,
+                        `shipping_cost` VARCHAR(150) NULL,
+                        `rcdn` VARCHAR(150) NULL,
+                        `gto_custody` VARCHAR(150) NULL,
+                        `ship_date` VARCHAR(150) NULL,
+                        `final_ship_mode` VARCHAR(150) NULL,
+                        `tracking_number` VARCHAR(150) NULL,
+                        `delivery_date` VARCHAR(150) NULL,
+                        `signature` VARCHAR(150) NULL,
+                        `shipment_notes` TEXT NULL,
                         PRIMARY KEY (`id`)
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
                 "
