@@ -361,7 +361,7 @@ h3 {
 				backorders under 90 days, and no requisitions at or beyond 270 days.</p>
 		</div>
 		<div class="panel">
-			<h2>YTD Demand, Misses and Fill Rate</h2>
+			<h2>YTD Within MOA, Misses and Fill Rate</h2>
 			<div class="chartbox">
 				<canvas id="demandChart"></canvas>
 			</div>
@@ -371,7 +371,7 @@ h3 {
     foreach (($demand['labels'] ?? []) as $i => $label)
         $monthly[] = [
             'Month' => $label,
-            'Demand' => $demand['demand'][$i] ?? '',
+            'Within MOA' => $demand['demand'][$i] ?? '',
             'Misses' => $demand['misses'][$i] ?? '',
             'Fill Rate %' => $demand['fillRate'][$i] ?? ''
         ];
